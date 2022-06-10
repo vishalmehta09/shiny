@@ -11,6 +11,7 @@ urlpatterns = [
     # The home page
     path('', views.index, name='home'),
     path('generate_bar_chart', views.generate_bar_chart, name='generate_bar_chart'),
+    
 
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),

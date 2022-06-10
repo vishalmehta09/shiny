@@ -23,6 +23,13 @@
         <canvas id="pie-chart3"></canvas>
     </div>
 
+    <div id="container3" style="width: 20%; margin-right: 50px;">
+        <canvas id="bar-chart4"></canvas>
+    </div>
+
+    <div id="container4" style="width: 20%; margin-right: 50px;">
+        <canvas id="line-chart"></canvas>
+    </div>
 
     <script>
         // ctx.height(100);
@@ -32,6 +39,7 @@
         type: 'pie',
         data: {
             datasets: [{
+                
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
@@ -56,15 +64,13 @@
     var ctx2 = document.getElementById('bar-chart').getContext('2d');
     var myNewChart2 = new Chart(ctx2, config);
 
-   
-
-
     var df2 = {{ keys| safe}}
         var df1 = {{ values| safe}}
         var config = {
         type: 'bar',
         data: {
             datasets: [{
+                label: df2,
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
@@ -82,14 +88,63 @@
     var myNewChart3 = new Chart(ctx3, config);
 
 
+    var df = {{ keys3| safe}}
+        var df1 = {{ values3| safe}}
+        var config = {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: df,
+                data: df1,
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+
+            }],
+            labels: df
+        },
+        options: {
+            responsive: true
+        },
+
+    };
+
+    // ####
+
+    var ctx4 = document.getElementById('bar-chart4').getContext('2d');
+    var myNewChart3 = new Chart(ctx4, config);
 
 
     var df = {{ keys3| safe}}
         var df1 = {{ values3| safe}}
         var config = {
-        type: 'pie',
+        type: 'bar',
         data: {
             datasets: [{
+                label: df,
+                data: df1,
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+
+            }],
+            labels: df
+        },
+        options: {
+            responsive: true
+        },
+
+    };
+
+    var ctx5 = document.getElementById('line-chart').getContext('2d');
+    var myNewChart3 = new Chart(ctx5, config);
+
+
+    var df = {{ keys3| safe}}
+        var df1 = {{ values3| safe}}
+        var config = {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: df,
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]

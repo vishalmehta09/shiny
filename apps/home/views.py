@@ -3,19 +3,14 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from calendar import month
 from typing import Counter
-from django import template
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader
-from django.urls import reverse
-import matplotlib
-from matplotlib import pyplot as plt
+
 import pandas as pd
-from wordcloud import WordCloud
-import json
-from matplotlib.figure import Figure
 
 
 @login_required(login_url="/login/")
@@ -46,28 +41,34 @@ def generate_bar_chart(request):
         specialty_chart.append(i)
     
     dashboard3 = dict(Counter(specialty_chart))
-    # print(dashboard3)
+    print(dashboard3)
 
     keys3 = list(dashboard3.keys())
     values3 = list(dashboard3.values())
 
-    year_date_chart = []
-    for i in data['Date']:
+    _year = []
+    for i in data['Date'].dt.year:
 
-        year_date_chart.append(i.year)
+        _year.append(i)
     
-    
-    dashboard4 = dict(Counter(year_date_chart))
-    print(dashboard4)
+    dashboard4 = dict(Counter(_year))
+    # print(dashboard4)
 
-    keys4 = list(dashboard4.keys())
-    values4 = list(dashboard4.values())
-    # print(keys4)
+    _month = []
+    for i in data['Date'].dt.month:
+            
+            _month.append(i)
+    dashboard5 = dict(Counter(_month))
+    print(dashboard5)
+
+
+    
+
 
 
     
  
-    context = {'keys': keys, 'values': values, 'keys3': keys3, 'values3': values3, 'keys4': keys4, 'values4': values4}
+    context = {'keys': keys, 'values': values, 'keys3': keys3, 'values3': values3,  }
     
     
     return render(request, 'home/sample.html', context)
