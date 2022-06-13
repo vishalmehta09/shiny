@@ -1,16 +1,15 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
-from calendar import month
+from urllib.parse import uses_params
+from django.contrib.auth.models import User
 from typing import Counter
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader
-
+from .models import Graphs
 import pandas as pd
+import os
 
 
 @login_required(login_url="/login/")
@@ -21,116 +20,166 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 
+def read_data(file_path):
+        pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, )
+        data_frame = pd.DataFrame(pandas_data_frame)
+        return data_frame
+
+
 @login_required(login_url="/login/")
 def generate_bar_chart(request):
-    
-    pandas_data_frame = pd.read_excel('Ortho.xlsx', sheet_name='RAW', header=2, )
-    data = pd.DataFrame(pandas_data_frame)
 
-    role = []
-    for i in data['Role']:
-        role.append(i)
+    if  request.user.is_superuser:
+
+        user = User.objects.all().exclude(is_superuser=True)
+        id = request.GET.get('id')
+        # print(User.objects.filter(id=id))
+        user = User.objects.filter(id=id)
+        pass
+    
+
+    
+
+        # graph_obj = Graphs.objects.all()
+        # # print(graph_obj.values())
+
+        # get_obj = Graphs.objects.filter(id=id).first()
+        # print(get_obj)
+        
+        return render(request, 'home/admin.html', {'users': user})
   
-    dashboard2 = dict(Counter(role))
-    # print(dashboard2)
-    keys = list(dashboard2.keys())
-    values = list(dashboard2.values())
+    elif request.method == 'GET':
+        
+        obj = Graphs.objects.filter(user=request.user)
+        if obj.exists():
+            obj = obj.first()
+        
+            file_path = obj.upload.path
+        
+            data = read_data(file_path)
+
+            # print(data)
+            role = []
+            for i in data['Role']:
+                role.append(i)
+        
+            dashboard2 = dict(Counter(role))
     
-    specialty_chart = []
-    for i in data['Sub-Specialty']:
-        specialty_chart.append(i)
-    
-    dashboard3 = dict(Counter(specialty_chart))
-    print(dashboard3)
+            keys = list(dashboard2.keys())
+            values = list(dashboard2.values())
 
-    keys3 = list(dashboard3.keys())
-    values3 = list(dashboard3.values())
-
-    _year = []
-    for i in data['Date'].dt.year:
-
-        _year.append(i)
-    
-    dashboard4 = dict(Counter(_year))
-    # print(dashboard4)
-
-    _month = []
-    for i in data['Date'].dt.month:
+            specialty_chart = []
+            for i in data['Sub-Specialty']:
+                specialty_chart.append(i)
             
-            _month.append(i)
-    dashboard5 = dict(Counter(_month))
-    print(dashboard5)
+            dashboard3 = dict(Counter(specialty_chart))
 
+            keys1 = list(dashboard3.keys())
+            values1 = list(dashboard3.values())
+            
+            site = []
+            for i in data['Location']:
+                site.append(i)
+            
+            dashboard6 = dict(Counter(site))
 
+            keys2 = list(dashboard6.keys())
+            values2 = list(dashboard6.values())
+
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2}
+
+            return render(request, 'home/sample.html', context)
+        else:
+            return render(request, 'home/sample.html')
+        
+
+    if request.method == 'POST':
     
-
-
-
-    
+        # Get the data from the form
+        upload_file = request.FILES['document']
  
-    context = {'keys': keys, 'values': values, 'keys3': keys3, 'values3': values3,  }
+
+        #save uploaded file to the server
+        # fs = FileSystemStorage()
+        # filename = fs.save(upload_file.name, upload_file)
+        # path = os.getcwd() 
+        # file_directory = path+"/media/"+filename
+
+        #read the file and convert to data frame.
+        data = read_data(upload_file)
+        # print(data)
+        save_obj = Graphs(user=request.user, upload=upload_file)
+        save_obj.save()
+
+
+        role = []
+        for i in data['Role']:
+            role.append(i)
     
+        dashboard2 = dict(Counter(role))
+  
+        keys = list(dashboard2.keys())
+        values = list(dashboard2.values())
+
+
+        specialty_chart = []
+
+        for i in data['Sub-Specialty']:
+            specialty_chart.append(i)
+        
+        dashboard3 = dict(Counter(specialty_chart))
+        
+
+        keys1 = list(dashboard3.keys())
+        values1 = list(dashboard3.values())
+
+
+        site = []
+        for i in data['Location']:
+            site.append(i)
+        
+        dashboard6 = dict(Counter(site))
+
+        keys2 = list(dashboard6.keys())
+        values2 = list(dashboard6.values())
+        
+        context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
+        
+        
+        return render(request, 'home/sample.html', context)
+    else:
+        return render(request, 'home/sample.html')
+
+        
     
-    return render(request, 'home/sample.html', context)
-    # data_frame_json = json.loads(pandas_data_frame.to_json())
-    # json_data = json.dumps(data_frame_json)
-    # print(json_data)
-    # role = []
-    # for i in range(len(data_frame_json)):
-    #     role.append(['Role', data_frame_json[i]['Role']])
-    # print(role)
+   
+
+
  
-    # for i in data_frame_json:
-    #     role.append(i['Role'])
-    # print(role)
-    # role_count = []
-    # for i in role:
-    #     role_count.append(role.count(i))
-    # print(role_count)
-    # plt.bar(role, role_count)
-    # plt.show()
-    # return HttpResponseRedirect(reverse('home:index'))
 
-    # data = pd.read_excel('Ortho.xlsx', sheet_name='RAW', header=2, index_col=0)
-    # df = pd.DataFrame(data)
-    # data = plt.bar(df['Role'],height=df['Staff'])
-    # for i in data:
+    # _year = []
+    # for i in data['Date'].dt.year:
 
-
-  
-
-
-    # print(df)
-    # plt.bar(df.index,df['Role'],align='edge', width=-0.4)
-  
-    # plt.show()
-    # return HttpResponse("Hello, world. You're at the home index.")
+    #     _year.append(i)
     
+    # dashboard4 = dict(Counter(_year))
+    # # print(dashboard4)
 
+    # _month = []
+    # for i in data['Date'].dt.month_name():
 
+    #     _month.append(i)
+            
+    # dashboard5 = dict(Counter(_month))
+    # # print(dashboard5)
+    # keys7 = list(dashboard4.keys())
+  
+    # values7 = list(dashboard5.keys())
 
-
-# @login_required(login_url="/login/")
-# def pages(request):
-#     context = {}
-#     # All resource paths end in .html.
-#     # Pick out the html file name from the url. And load that template.
-#     try:
-
-#         load_template = request.path.split('/')[-1]
-
-#         if load_template == 'admin':
-#             return HttpResponseRedirect(reverse('admin:index'))
-#         context['segment'] = load_template
-
-#         html_template = loader.get_template('home/' + load_template)
-#         return HttpResponse(html_template.render(context, request))
-
-#     except template.TemplateDoesNotExist:
-
-#         html_template = loader.get_template('home/page-404.html')
-#         return HttpResponse(html_template.render(context, request))
-
-#     except:
-#         html_template = loader.get_template('home/page-500.html')
-#         return HttpResponse(html_template.render(context, request))
+    
+       
+    #  'keys3': keys3, 'values3': values3,  'keys6': keys6, 'values6': values6, 'keys7': keys7, 'values7': values7}
+    
+    
+   
+   

@@ -5,37 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
-  
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
+    <div class="container card" style="...">
+        <div class="row justify-content-center container>
+        <div class="content">
+            <h1>Please enter csv</h1>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="document" id="document" required="required">
+                <button id="submit" class="btn btn-primary" >Upload</button>
+            </form>
+        </div>
+    </div>
+        </div>
+ 
     <div id="container" style="width: 50%; margin-top: 100px ;">
         <canvas id="bar-chart"></canvas>
     </div>
-   
+ 
      <div  id="container2" style="width: 30%;">
-        <canvas id="pie-chart"></canvas>
+        <canvas id="pie-chart1"></canvas>
     </div>
 
     <div id="container3" style="width: 20%; margin-right: 50px;">
-        <canvas id="pie-chart3"></canvas>
+        <canvas id="bar_chart1"></canvas>
     </div>
 
-    <div id="container3" style="width: 20%; margin-right: 50px;">
-        <canvas id="bar-chart4"></canvas>
+    <div id="container3" style="width: 20%; margin-right: 100px;">
+        <canvas id="bar_chart2"></canvas>
     </div>
 
-    <div id="container4" style="width: 20%; margin-right: 50px;">
+    <!-- <div id="container4" style="width: 20%; margin-right: 50px;">
         <canvas id="line-chart"></canvas>
-    </div>
+    </div>  -->
 
     <script>
-        // ctx.height(100);
-        var df = {{ keys| safe}}
-        var df1 = {{ values| safe}}
-        var config = {
+
+        ctx = document.getElementById('bar-chart');
+        console.log("here");
+        // console.log(ctx);
+    //     // ctx.height(100);
+        df = {{ keys| safe}}
+        df1 = {{ values| safe}}
+        config = {
+        type: 'bar',
+        data: {
+            datasets: [{
+                
+                data: df1,
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+
+            }],
+            labels: df
+        },
+        options: {
+            responsive: true
+        },
+
+    };
+    var myPieChart = new Chart(ctx, config);
+
+    ctx2 = document.getElementById('pie-chart1');
+
+    df = {{ keys| safe}}
+        df1 = {{ values| safe}}
+        config2 = {
         type: 'pie',
         data: {
             datasets: [{
@@ -52,49 +92,19 @@
         },
 
     };
-    window.onload = function () {
-        var ctx = document.getElementById('pie-chart').getContext('2d');
-       
-        var myNewChart = new Chart(ctx, config);
+    
+    var myPieChart = new Chart(ctx2, config2);
 
 
+    ctx3 = document.getElementById('bar_chart1');
 
-    };
-
-    var ctx2 = document.getElementById('bar-chart').getContext('2d');
-    var myNewChart2 = new Chart(ctx2, config);
-
-    var df2 = {{ keys| safe}}
-        var df1 = {{ values| safe}}
-        var config = {
+    df = {{ keys1| safe}}
+        df1 = {{ values1| safe}}
+        config = {
         type: 'bar',
         data: {
             datasets: [{
-                label: df2,
-                data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-
-            }],
-            labels: df2
-        },
-        options: {
-            responsive: true
-        },
-
-    };
-
-    var ctx3 = document.getElementById('pie-chart3').getContext('2d');
-    var myNewChart3 = new Chart(ctx3, config);
-
-
-    var df = {{ keys3| safe}}
-        var df1 = {{ values3| safe}}
-        var config = {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: df,
+                
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
@@ -107,20 +117,18 @@
         },
 
     };
+    
+    var myPieChart = new Chart(ctx3, config);
 
-    // ####
+    ctx4 = document.getElementById('bar_chart2');
 
-    var ctx4 = document.getElementById('bar-chart4').getContext('2d');
-    var myNewChart3 = new Chart(ctx4, config);
-
-
-    var df = {{ keys3| safe}}
-        var df1 = {{ values3| safe}}
-        var config = {
+    df = {{ keys2| safe}}
+        df1 = {{ values2| safe}}
+        config = {
         type: 'bar',
         data: {
             datasets: [{
-                label: df,
+                
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
@@ -133,31 +141,11 @@
         },
 
     };
-
-    var ctx5 = document.getElementById('line-chart').getContext('2d');
-    var myNewChart3 = new Chart(ctx5, config);
-
-
-    var df = {{ keys3| safe}}
-        var df1 = {{ values3| safe}}
-        var config = {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: df,
-                data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-
-            }],
-            labels: df
-        },
-        options: {
-            responsive: true
-        },
-
-    };
+    
+    var myPieChart1 = new Chart(ctx4, config);
 
     </script>
 </body>
 </html>
+
+    
