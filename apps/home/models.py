@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+
 class Graphs(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     upload = models.FileField(upload_to='csv_files')

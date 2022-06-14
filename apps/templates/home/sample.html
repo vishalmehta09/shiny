@@ -1,61 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
+    <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
 </head>
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<body class="main_body_section"> 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<div class="container-fluid mobile-section-header">
+  <div class="row">
+    <div class="col-md-2 col-xs-2 side_bar_mbl">
+      <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
+        <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
+        <h3><a href="#">R-shiny</a> </h3>
+      <ul>
+          <li class="active ">
+              <a href="#">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-user-o" aria-hidden="true"></i>
+                <p>User Profile</p>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <p>Logout</p>
+              </a>
+            </li>
+      </ul>
+  </div>
+  <div class="w3-main" style="margin-left:200px">
+  <div class="w3-teal bg_mbl_sectn">
+    <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">☰</button>
+  </div>
+  </div>
+</div>
 
-    <div class="container card" style="...">
-        <div class="row justify-content-center container>
-        <div class="content">
-            <h1>Please enter csv</h1>
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="document" id="document" required="required">
-                <button id="submit" class="btn btn-primary" >Upload</button>
+<div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
+  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Upload CSV File
+    </button>
+</div>
+<div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
+  <nav class="navbar navbar-expand-lg lg_in_out">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                 <div class="nav_video_photo">
+                    <img src="/static/assets/img/anime3.png" alt="Profile Photo">
+                 </div>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+              </ul>
+            </li>
+        </ul></div>
+      </div>
+    </nav>
+</div>
+  </div>
+</div>
+<div class="container-fluid desktop-section-section">
+    <div class="row mt-3">
+        <div class="col-md-2 top_header">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Upload CSV File
+              </button>
+        </div>
+        <div class="col-md-10">
+            <nav class="navbar navbar-expand-lg lg_in_out">
+                <div class="container-fluid">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                  {% if messages %}
+
+                  {% for message in messages %}
+                  
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                  
+                  {% endfor %}
+                  
+                  {% endif %}
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                           <div class="nav_video_photo">
+                              <img src="/static/assets/img/anime3.png" alt="Profile Photo">
+                           </div>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <li><a class="dropdown-item" href="#">Profile</a></li>
+                          <li class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                      </li>
+                  </div>
+                </div>
+              </nav>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row mt-1 mb-5">
+        <div class="col-md-2 desktop-section-section">
+            <div class="django_bg_sidebar">
+              <h3><a href="#">R-shiny</a> </h3>
+            <ul>
+                <li class="active ">
+                    <a href="#">
+                      <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                      <p>Dashboard</p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-user-o" aria-hidden="true"></i>
+                      <p>User Profile</p>
+                    </a>
+                  </li>
+                  <li>
+                   
+                    <a href="#">
+                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <p>Logout</p>
+                    </a>
+                  </li>
+            </ul>
+        </div>
+        </div>
+        <div class="col-lg-10 col-md-12">
+         
+            <div class="row mb-4 main-chart-section">
+                <div class="col-md-6">
+                    <div id="container3" class="bg_main_cntnt">
+                        <canvas id="Role-bar-chart"></canvas>
+                    </div>
+                 </div>
+                 <div class="col-md-6">        
+                    <div id="container3" class="bg_main_cntnt">
+                        <canvas id="specialty-bar-chart"></canvas>
+                    </div>
+                 </div>
+            </div>
+            <div class="row main-chart-section">
+                <div class="col-md-6">
+                    <div id="container" class="bg_main_cntnt">
+                          <canvas id="Role-pie-chart"></canvas>
+                    </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="bg_main_cntnt">
+                        <div id="container4" class="bg_main_cntnt">
+                            <canvas id="site-bar-chart"></canvas>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="row mt-4 main-chart-section">
+                <div class="col-md-12">
+                    <div class="bg_main_cntnt">
+                        <div  id="container2">
+                            <canvas id=""></canvas>
+                        </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+         <!-- Modal -->
+<div class="modal fade main_popup_mdl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center"> 
+            <form form method="POST" enctype="multipart/form-data">
+              {% if messages %}
+
+              {% for message in messages %}
+              
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+              
+              {% endfor %}
+              
+              {% endif %}
+              {%csrf_token%}
+            <div class="file-upload">
+                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
+              
+                <div class="image-upload-wrap">
+                  <input class="file-upload-input" name="document" id="document" required="required" type='file' onchange="readURL(this);"  />
+                  <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                  </div>
+                </div>
+                <div class="file-upload-content">
+                  <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary sbmt_btn">Submit</button>
             </form>
         </div>
+       
+      </div>
     </div>
-        </div>
- 
-    <div id="container" style="width: 50%; margin-top: 100px ;">
-        <canvas id="bar-chart"></canvas>
-    </div>
- 
-     <div  id="container2" style="width: 30%;">
-        <canvas id="pie-chart1"></canvas>
-    </div>
+  </div>
+ <script>
+function readURL(input) {
+  if (input.files && input.files[0]) {
 
-    <div id="container3" style="width: 20%; margin-right: 50px;">
-        <canvas id="bar_chart1"></canvas>
-    </div>
+    var reader = new FileReader();
 
-    <div id="container3" style="width: 20%; margin-right: 100px;">
-        <canvas id="bar_chart2"></canvas>
-    </div>
+    reader.onload = function(e) {
+      $('.image-upload-wrap').hide();
 
-    <!-- <div id="container4" style="width: 20%; margin-right: 50px;">
-        <canvas id="line-chart"></canvas>
-    </div>  -->
+      $('.file-upload-image').attr('src', e.target.result);
+      $('.file-upload-content').show();
 
-    <script>
+      $('.image-title').html(input.files[0].name);
+    };
 
-        ctx = document.getElementById('bar-chart');
+    reader.readAsDataURL(input.files[0]);
+
+  } else {
+    removeUpload();
+  }
+}
+
+function removeUpload() {
+  $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+  $('.file-upload-content').hide();
+  $('.image-upload-wrap').show();
+}
+$('.image-upload-wrap').bind('dragover', function () {
+		$('.image-upload-wrap').addClass('image-dropping');
+	});
+	$('.image-upload-wrap').bind('dragleave', function () {
+		$('.image-upload-wrap').removeClass('image-dropping');
+});
+
+
+role_bar = document.getElementById('Role-bar-chart');
         console.log("here");
-        // console.log(ctx);
-    //     // ctx.height(100);
+
         df = {{ keys| safe}}
         df1 = {{ values| safe}}
-        config = {
+        role_chart_config = {
         type: 'bar',
         data: {
             datasets: [{
+                label: "Role-bar-chart",
                 
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
@@ -69,17 +288,16 @@
         },
 
     };
-    var myPieChart = new Chart(ctx, config);
+    var myPieChart = new Chart(role_bar, role_chart_config);
 
-    ctx2 = document.getElementById('pie-chart1');
-
-    df = {{ keys| safe}}
+    role_pie = document.getElementById('Role-pie-chart');
+        df = {{ keys| safe}}
         df1 = {{ values| safe}}
-        config2 = {
+        role_pie_config = {
         type: 'pie',
         data: {
             datasets: [{
-                
+                label: "Role-pie-chart",
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
                 hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
@@ -92,18 +310,16 @@
         },
 
     };
-    
-    var myPieChart = new Chart(ctx2, config2);
+    var myPieChart = new Chart(role_pie, role_pie_config);
 
-
-    ctx3 = document.getElementById('bar_chart1');
-
-    df = {{ keys1| safe}}
+    specialty_bar = document.getElementById('specialty-bar-chart');
+        df = {{ keys1 | safe}}
         df1 = {{ values1| safe}}
-        config = {
+        specialty_bar_config = {
         type: 'bar',
         data: {
             datasets: [{
+                label: "specialty-bar-chart",
                 
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
@@ -117,17 +333,40 @@
         },
 
     };
-    
-    var myPieChart = new Chart(ctx3, config);
+    var myPieChart = new Chart(specialty_bar, specialty_bar_config);
 
-    ctx4 = document.getElementById('bar_chart2');
 
-    df = {{ keys2| safe}}
+    specialty_bar = document.getElementById('specialty-bar-chart');
+        df = {{ keys1 | safe}}
+        df1 = {{ values1| safe}}
+        specialty_bar_config = {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: "specialty-bar-chart",
+                
+                data: df1,
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+
+            }],
+            labels: df
+        },
+        options: {
+            responsive: true
+        },
+
+    };
+    var myPieChart = new Chart(specialty_bar, specialty_bar_config);
+
+    site_bar = document.getElementById('site-bar-chart');
+        df = {{ keys2 | safe}}
         df1 = {{ values2| safe}}
-        config = {
+        site_bar_config = {
         type: 'bar',
         data: {
             datasets: [{
+                label: "site-bar-chart",
                 
                 data: df1,
                 backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
@@ -141,11 +380,11 @@
         },
 
     };
+    var myPieChart = new Chart(site_bar, site_bar_config);
+
     
-    var myPieChart1 = new Chart(ctx4, config);
 
     </script>
+    
 </body>
 </html>
-
-    

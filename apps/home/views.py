@@ -2,14 +2,15 @@
 from urllib.parse import uses_params
 from django.contrib.auth.models import User
 from typing import Counter
-
+from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
 from .models import Graphs
 import pandas as pd
 import os
+from django.contrib import messages
 
 
 @login_required(login_url="/login/")
@@ -31,28 +32,60 @@ def generate_bar_chart(request):
 
     if  request.user.is_superuser:
 
+        
         user = User.objects.all().exclude(is_superuser=True)
         id = request.GET.get('id')
-        # print(User.objects.filter(id=id))
-        user = User.objects.filter(id=id)
-        pass
-    
+        is_admin = request.GET.get('is_admin',None)
+        try:
+            user_obj = Graphs.objects.filter(user_id=id).last()
+            file_path = user_obj.upload.path
+            data = read_data(file_path)
 
-    
-
-        # graph_obj = Graphs.objects.all()
-        # # print(graph_obj.values())
-
-        # get_obj = Graphs.objects.filter(id=id).first()
-        # print(get_obj)
+            # print(data)
+            role = []
+            for i in data['Role']:
+                role.append(i)
         
-        return render(request, 'home/admin.html', {'users': user})
+            dashboard2 = dict(Counter(role))
+    
+            keys = list(dashboard2.keys())
+            values = list(dashboard2.values())
+            
+
+            specialty_chart = []
+            for i in data['Sub-Specialty']:
+                specialty_chart.append(i)
+            
+            dashboard3 = dict(Counter(specialty_chart))
+
+            keys1 = list(dashboard3.keys())
+            values1 = list(dashboard3.values())
+
+
+            site = []
+            for i in data['Location']:
+                site.append(i)
+            
+            dashboard6 = dict(Counter(site))
+
+            keys2 = list(dashboard6.keys())
+            values2 = list(dashboard6.values())
+
+            if is_admin:
+                return JsonResponse({'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2})
+            return render(request, 'home/sample.html', {'keys': keys, 'values': values})
+        except:
+            pass
+        
+        
+        return render(request, 'home/new_sample.html', {'users': user,})
+    
   
-    elif request.method == 'GET':
-        
+    if request.method == 'GET':
+
         obj = Graphs.objects.filter(user=request.user)
         if obj.exists():
-            obj = obj.first()
+            obj = obj.last()
         
             file_path = obj.upload.path
         
@@ -97,88 +130,66 @@ def generate_bar_chart(request):
     
         # Get the data from the form
         upload_file = request.FILES['document']
- 
 
-        #save uploaded file to the server
-        # fs = FileSystemStorage()
-        # filename = fs.save(upload_file.name, upload_file)
-        # path = os.getcwd() 
-        # file_directory = path+"/media/"+filename
+        file_extension = os.path.splitext(upload_file.name)[1]
+
+        valid_extensions = [ ".csv", ".CSV", ".xlsx", ".XLSX", ".xls", ".XLS"]
+
+        if not file_extension.lower() in valid_extensions:
+            msg = "Invalid file, select a valid CSV file"
+            messages.error(request, msg)
+            return render(request,'home/sample.html')
 
         #read the file and convert to data frame.
         data = read_data(upload_file)
+        if set(['Role','Sub-Specialty', 'Location','Date']).issubset(data.columns):
         # print(data)
-        save_obj = Graphs(user=request.user, upload=upload_file)
-        save_obj.save()
+            save_obj = Graphs(user=request.user, upload=upload_file)
+            save_obj.save()
 
 
-        role = []
-        for i in data['Role']:
-            role.append(i)
+            role = []
+            for i in data['Role']:
+                role.append(i)
+        
+            dashboard2 = dict(Counter(role))
     
-        dashboard2 = dict(Counter(role))
-  
-        keys = list(dashboard2.keys())
-        values = list(dashboard2.values())
+            keys = list(dashboard2.keys())
+            values = list(dashboard2.values())
 
 
-        specialty_chart = []
+            specialty_chart = []
 
-        for i in data['Sub-Specialty']:
-            specialty_chart.append(i)
-        
-        dashboard3 = dict(Counter(specialty_chart))
-        
+            for i in data['Sub-Specialty']:
+                specialty_chart.append(i)
+            
+            dashboard3 = dict(Counter(specialty_chart))
+            
 
-        keys1 = list(dashboard3.keys())
-        values1 = list(dashboard3.values())
+            keys1 = list(dashboard3.keys())
+            values1 = list(dashboard3.values())
 
 
-        site = []
-        for i in data['Location']:
-            site.append(i)
-        
-        dashboard6 = dict(Counter(site))
+            site = []
+            for i in data['Location']:
+                site.append(i)
+            
+            dashboard6 = dict(Counter(site))
 
-        keys2 = list(dashboard6.keys())
-        values2 = list(dashboard6.values())
-        
-        context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
-        
-        
-        return render(request, 'home/sample.html', context)
+            keys2 = list(dashboard6.keys())
+            values2 = list(dashboard6.values())
+            
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
+            
+            
+            return render(request, 'home/sample.html', context)
+        else:
+            messages.error(request, "Invalid header in file")
+
+            return render(request, 'home/sample.html')
     else:
         return render(request, 'home/sample.html')
 
-        
-    
-   
-
-
- 
-
-    # _year = []
-    # for i in data['Date'].dt.year:
-
-    #     _year.append(i)
-    
-    # dashboard4 = dict(Counter(_year))
-    # # print(dashboard4)
-
-    # _month = []
-    # for i in data['Date'].dt.month_name():
-
-    #     _month.append(i)
-            
-    # dashboard5 = dict(Counter(_month))
-    # # print(dashboard5)
-    # keys7 = list(dashboard4.keys())
-  
-    # values7 = list(dashboard5.keys())
-
-    
-       
-    #  'keys3': keys3, 'values3': values3,  'keys6': keys6, 'values6': values6, 'keys7': keys7, 'values7': values7}
     
     
    
