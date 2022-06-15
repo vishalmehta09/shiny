@@ -38,6 +38,8 @@ def generate_bar_chart(request):
         is_admin = request.GET.get('is_admin',None)
         try:
             user_obj = Graphs.objects.filter(user_id=id).last()
+            if user_obj is None:
+                messages.error(request, 'No data found for this user')
             file_path = user_obj.upload.path
             data = read_data(file_path)
 
@@ -76,6 +78,8 @@ def generate_bar_chart(request):
             return render(request, 'home/sample.html', {'keys': keys, 'values': values})
         except:
             pass
+            
+            # return render(request, 'home/sample.html')
         
         
         return render(request, 'home/new_sample.html', {'users': user,})
@@ -118,6 +122,14 @@ def generate_bar_chart(request):
 
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
+
+            date = []
+            for i in data['Date'].dt.date.astype(str):
+                
+                pass
+            
+            
+
 
             context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2}
 
@@ -178,6 +190,9 @@ def generate_bar_chart(request):
 
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
+
+         
+
             
             context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
             messages.success(request, "File uploaded successfully")

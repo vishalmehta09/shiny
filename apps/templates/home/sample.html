@@ -263,7 +263,7 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ keys| safe}}
         df1 = {{ values| safe}}
         role_chart_config = {
-        type: 'bar',
+        type: 'horizontalBar',
         data: {
             datasets: [{
                 label: "Role-bar-chart",
@@ -276,7 +276,7 @@ role_bar = document.getElementById('Role-bar-chart');
             labels: df
         },
         options: {
-            responsive: true
+          responsive: true,
         },
 
     };
@@ -308,7 +308,7 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ keys1 | safe}}
         df1 = {{ values1| safe}}
         specialty_bar_config = {
-        type: 'bar',
+        type: 'horizontalBar',
         data: {
             datasets: [{
                 label: "specialty-bar-chart",
@@ -332,7 +332,7 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ keys1 | safe}}
         df1 = {{ values1| safe}}
         specialty_bar_config = {
-        type: 'bar',
+        type: 'horizontalBar',
         data: {
             datasets: [{
                 label: "specialty-bar-chart",
@@ -355,7 +355,7 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ keys2 | safe}}
         df1 = {{ values2| safe}}
         site_bar_config = {
-        type: 'bar',
+        type: 'horizontalBar',
         data: {
             datasets: [{
                 label: "site-bar-chart",

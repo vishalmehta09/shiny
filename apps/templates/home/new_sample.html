@@ -439,6 +439,7 @@
                         </button>
                         <ul class="dropdown-menu">
                           {% for u in users %}
+
                           <li><a class="dropdown-item abc" href="#"  id="{{u.id}}">{{ u.username }}</a></li>
                           {% endfor %}
                         </ul>
@@ -446,6 +447,8 @@
                       
                     </div>
                 </div>
+              
+               
              <!--End Drop Down menu-->
              <div class="row mb-4">
               <div class="col-md-6">
@@ -516,7 +519,7 @@ $(document).ready(function(){
       const {keys, values} = data;
       console.log(data);
       bar_ctx = document.getElementById('Role-bar-chart');
-      bar_data = make_chart_config(keys, values, 'bar');
+      bar_data = make_chart_config(keys, values, 'horizontalBar');
       var myBarChart = new Chart(bar_ctx, bar_data);
 
       pie_ctx = document.getElementById('Role-pie-chart');
@@ -525,12 +528,12 @@ $(document).ready(function(){
 
       const {keys1, values1} = data;
       specialty_ctx = document.getElementById('Specialty-bar-chart');
-      specialty_data = make_chart_config(keys1, values1, 'bar');
+      specialty_data = make_chart_config(keys1, values1, 'horizontalBar');
       var mySpecialtyChart = new Chart(specialty_ctx, specialty_data);
 
       const {keys2, values2} = data;
       site_ctx = document.getElementById('Site-bar-chart');
-      site_data = make_chart_config(keys2, values2, 'bar');
+      site_data = make_chart_config(keys2, values2, 'horizontalBar');
       var mySiteChart = new Chart(site_ctx, site_data);
 
   };
