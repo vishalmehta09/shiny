@@ -9,7 +9,9 @@ from . import views
 urlpatterns = [
 
     # The home page
-    path('', views.index, name='home'),
+    
+    path('home', views.index, name='home'),
+    path('', views.generate_bar_chart, name='generate_bar_chart'),
     path('generate_bar_chart', views.generate_bar_chart, name='generate_bar_chart'),
     # path('generate_line_chart/<id>', views.generate_line_chart, name='generate_line'),
 

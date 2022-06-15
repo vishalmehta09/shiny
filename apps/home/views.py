@@ -180,8 +180,7 @@ def generate_bar_chart(request):
             values2 = list(dashboard6.values())
             
             context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
-            
-            
+            messages.success(request, "File uploaded successfully")
             return render(request, 'home/sample.html', context)
         else:
             messages.error(request, "Invalid header in file")
