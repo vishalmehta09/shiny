@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 
 class LoginForm(forms.Form):
+
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -26,17 +27,40 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
-    username = forms.CharField(
+    
+    first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Username",
+                "placeholder": "first_name",
                 "class": "form-control"
             }
         ))
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "last_name",
+                "class": "form-control"
+            }
+        ))
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "user_name",
+                "class": "form-control",
+            }
+        ))
+
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
                 "placeholder": "Email",
+                "class": "form-control"
+            }
+        ))
+    school = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "School",
                 "class": "form-control"
             }
         ))
@@ -57,4 +81,4 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'school', 'password1', 'password2')
