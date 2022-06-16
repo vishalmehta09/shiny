@@ -1,4 +1,6 @@
 
+from traceback import print_tb
+from unittest import result
 from urllib.parse import uses_params
 from django.contrib.auth.models import User
 from typing import Counter
@@ -7,9 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
+from numpy import empty
 from .models import Graphs
 import pandas as pd
 import os
+import random
 from django.contrib import messages
 
 
@@ -22,9 +26,14 @@ def index(request):
 
 
 def read_data(file_path):
-        pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, )
+        pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
         data_frame = pd.DataFrame(pandas_data_frame)
         return data_frame
+
+def random_color():
+    
+    color = '#%06x' % random.randint(0, 0xFFFFFF)
+    return color
 
 
 @login_required(login_url="/login/")
@@ -103,7 +112,9 @@ def generate_bar_chart(request):
             dashboard2 = dict(Counter(role))
     
             keys = list(dashboard2.keys())
+            # print(keys)
             values = list(dashboard2.values())
+            # print(values)
 
             specialty_chart = []
             for i in data['Sub-Specialty']:
@@ -123,16 +134,42 @@ def generate_bar_chart(request):
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
 
-            date = []
-            for i in data['Date'].dt.date.astype(str):
+            context_dict = {}
+            roles = {}
+            for i in data['Date'].dt.year:
+                context_dict[i] =  data[data['Date'].dt.year == i]
+                roles[i] = dict(Counter(context_dict[i]['Role']))
+            
+            print(roles)
+            labels = []
+            role_keys = []
+            raw_data = []
+            for role in roles:
+               
+                labels.append(role)
+                role_keys = list(roles[role].keys())
+                raw_data.append(roles[role])
                 
-                pass
+            final_data = []
+            for key in role_keys:
+                data = []
+                for raw in raw_data:
+                    data.append(raw.get(key,0))
             
-            
+                final_data.append({
+                    "label": key,
+                    "data": data,
+                    "borderColor": random_color(),
+                    "backgroundColor": random_color(),
+                    "fill": "true",
+                    })
 
+            final_final_data = {
+                "datasets": final_data,
+                "labels": labels,
+            }
 
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2}
-
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')
@@ -191,10 +228,43 @@ def generate_bar_chart(request):
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
 
-         
 
+            context_dict = {}
+            roles = {}
+            for i in data['Date'].dt.year:
+                context_dict[i] =  data[data['Date'].dt.year == i]
+                roles[i] = dict(Counter(context_dict[i]['Role']))
             
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 }
+            labels = []
+            role_keys = []
+            raw_data = []
+            for role in roles:
+                labels.append(role)
+                role_keys = list(roles[role].keys())
+                raw_data.append(roles[role])
+
+            final_data = []
+            for key in role_keys:
+                data = []
+                for raw in raw_data:
+                    print(raw)
+                    data.append(raw.get(key,0))
+                print("final res",data)
+            
+                final_data.append({
+                    "label": key,
+                    "data": data,
+                    "borderColor": random_color(),
+                    "backgroundColor": random_color(),
+                    "fill": "true",
+                    })
+          
+            final_final_data = {
+                "datasets": final_data,
+                "labels": labels,
+            }
+            
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels}
             messages.success(request, "File uploaded successfully")
             return render(request, 'home/sample.html', context)
         else:

@@ -180,7 +180,7 @@
                 <div class="col-md-12">
                     <div class="bg_main_cntnt">
                         <div  id="container2">
-                            <canvas id=""></canvas>
+                            <canvas id="year-to-date-line-chart"></canvas>
                         </div>
                   </div>
                 </div>
@@ -258,21 +258,26 @@ $('.image-upload-wrap').bind('dragover', function () {
 
 
 role_bar = document.getElementById('Role-bar-chart');
-        console.log("here");
-
+      
+  
         df = {{ keys| safe}}
+   
         df1 = {{ values| safe}}
+      
+       
         role_chart_config = {
         type: 'horizontalBar',
         data: {
-            datasets: [{
-                label: "Role-bar-chart",
-                
-                data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-
-            }],
+            datasets: [
+    {
+      label: 'Dataset 1',
+      label: 'Dataset e1',
+      data: df1,
+      borderColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+      backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+    },
+   
+  ],
             labels: df
         },
         options: {
@@ -284,6 +289,7 @@ role_bar = document.getElementById('Role-bar-chart');
 
     role_pie = document.getElementById('Role-pie-chart');
         df = {{ keys| safe}}
+       
         df1 = {{ values| safe}}
         role_pie_config = {
         type: 'pie',
@@ -326,6 +332,7 @@ role_bar = document.getElementById('Role-bar-chart');
 
     };
     var myPieChart = new Chart(specialty_bar, specialty_bar_config);
+    
 
 
     specialty_bar = document.getElementById('specialty-bar-chart');
@@ -374,8 +381,23 @@ role_bar = document.getElementById('Role-bar-chart');
     };
     var myPieChart = new Chart(site_bar, site_bar_config);
 
-    
 
+    site_bar = document.getElementById('year-to-date-line-chart');
+        df = {{ final_data| safe}}
+        df1 = {{ labels | safe}}
+
+        console.log(df)
+        site_bar_config = {
+        type: 'line',
+        data: df,
+        options: {
+            responsive: true
+        },
+
+    };
+    var myPieChart = new Chart(site_bar, site_bar_config);
+
+  
     </script>
     
 </body>
