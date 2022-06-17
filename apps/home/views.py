@@ -15,7 +15,7 @@ import pandas as pd
 import os
 import random
 from django.contrib import messages
-
+from datetime import date
 
 @login_required(login_url="/login/")
 def index(request):
@@ -28,7 +28,8 @@ def index(request):
 def read_data(file_path):
         pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
         data_frame = pd.DataFrame(pandas_data_frame)
-        return data_frame
+        return data_frame   
+
 
 def random_color():
     
@@ -101,9 +102,41 @@ def generate_bar_chart(request):
             obj = obj.last()
         
             file_path = obj.upload.path
-        
             data = read_data(file_path)
+            total_cases = len(data)
+            current_year = date.today().year
+            # abv = data['Date'].dt.month
+            # print(abv, "abvvvvvvvvv")
+            get_date = data[data['Date'].dt.year == current_year] 
+            aaaa = get_date['Date'].dt.to_period('M') == '2022-03'
+            print(aaaa, "sss")
+            if aaaa is not True:
+                abc = 0
+            else:
+                abc = len(aaaa)
+            print(abc, "hghghg")
+            # print(aaaa, "aaaaaaaaaaaa")
+            # df['StartDate'].dt.to_period('M')
+            m_d = data['Date'].dt.to_period('M')
+            # print(data['Date'].dt.to_period('M'), "month")
+            
+            y = current_year
+            s = '-07' 
 
+            limit = '2022-07'
+            # print(limit, "limit")
+            # print(data['Date'].dt.month, "data['Date'].dt.monthdata['Date'].dt.month")
+            abc = len(data[data['Date'].dt.to_period('M') >= limit] )
+            # abc = len(data[data['Date'] >= limit])
+            # print("abc", abc)
+            # data[data['Date'].dt.month >= 7]
+            # print(get_date, "get_dateget_date")
+            coded_case = []
+            for i in data['Coded Case']:
+                coded_case.append(i)
+        
+            dashboard23 = dict(Counter(coded_case))
+            # print(dashboard23, "coded_casecoded_casecoded_casecoded_case")
             # print(data)
             role = []
             for i in data['Role']:
@@ -136,16 +169,18 @@ def generate_bar_chart(request):
 
             context_dict = {}
             roles = {}
+            df = data['Date'].dt.year
+            # print(df, "dfffff")
             for i in data['Date'].dt.year:
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
-            print(roles)
+            # print(roles)
             labels = []
             role_keys = []
             raw_data = []
             for role in roles:
-               
+                # print(role, "roleeeeee")
                 labels.append(role)
                 role_keys = list(roles[role].keys())
                 raw_data.append(roles[role])
@@ -155,7 +190,7 @@ def generate_bar_chart(request):
                 data = []
                 for raw in raw_data:
                     data.append(raw.get(key,0))
-            
+                
                 final_data.append({
                     "label": key,
                     "data": data,
@@ -163,13 +198,15 @@ def generate_bar_chart(request):
                     "backgroundColor": random_color(),
                     "fill": "true",
                     })
-
+            # print(labels.sort(), "labelslabelslabels")
+            # label = labels.sort()
+            # print(label, "label")
             final_final_data = {
                 "datasets": final_data,
                 "labels": labels,
             }
 
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels}
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')

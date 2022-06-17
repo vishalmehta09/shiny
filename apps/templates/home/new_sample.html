@@ -273,6 +273,96 @@
         .lg_in_out .navbar-toggler{
         border: 1px solid #fff;
         }
+        .multipleSelection:focus-visible{
+        outline: none;
+        }
+         /*----Start latest css----*/
+         .drp_dwn_btm button{
+        margin-bottom: 20px;
+        padding: 9px 50px;  
+        background: linear-gradient(0deg, #27293d 0%, #1c1d2b 100%);
+        border: 1px solid #27293d;
+        }
+        .drp_dwn_btm button:focus{  
+        border-color: #ba54f5;  
+        box-shadow: 0px 0px 0px 0.25rem transparent !important;  
+        }
+        .bg_mbl_sectn{
+        background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+        margin-bottom: 10px;
+        }
+        .bg_mbl_sectn button{
+        background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+        }
+       .rygt_side_bar select {
+       float: right;
+       padding: 8px 10px;
+       background: linear-gradient(0deg, #27293d 0%, #1c1d2b 100%);
+       border: 2px solid #27293d;
+       color: #959595;
+       font-weight: 600; 
+       }
+       /*----Start Select Box----*/
+       
+       .multipleSelection {
+        width: 170px;
+        background-color: #fff;
+        border-radius: 4px;
+        position: absolute;
+        right: 50px;
+        z-index: 999;
+       }
+      .selectBox {
+        position: relative;
+        }
+        .selectBox select {
+        width: 100%;
+        font-weight: 400;
+        border-radius: 3px;
+        }
+        .selectBox select:focus-visible{
+        outline: none; 
+        }
+        .overSelect {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        }
+        #checkBoxes {
+        display: none;
+        }
+        #checkBoxes label {
+        display: flex;
+        padding: 0px 3px;
+        font-size: 13px;
+        align-items: center;
+        padding-bottom: 2px;
+        }
+        #checkBoxes label input{
+        margin-right: 2px;  
+        }
+        #checkBoxes label:hover {
+        background-color: #d9d9d9;
+        }
+    
+        .rygt_side_bar p{
+        color:#fff;
+        margin-bottom: 0px;
+        text-align: right; 
+        padding-top: 10px;
+        }
+        .filter-section{
+        width: 100%;
+        height: 100%;  
+        }
+       /*----End Select Box------*/
+        @media screen and (max-width: 1300px){
+        .col-md-8.drp_dwn_btm {
+        width: 50%;
+        } 
+        }
         @media only screen and (max-width: 1200px) {
         .django_bg_sidebar{
         width: 170px;
@@ -317,6 +407,9 @@
         background: #fff;
         padding: 10px 0px 10px 50px;    
         }
+        .drp_dwn_btm {
+        width: 50%;
+        }
         }
         @media only screen and (max-width: 768px) {
         .drag-text h3{
@@ -331,24 +424,36 @@
         .lg_in_out .navbar-nav{
         padding: 10px 0px 10px 10px;   
         }
+        .multipleSelection {
+        width: 180px !important;
         }
-        /*----Start latest css----*/
-        .drp_dwn_btm button{
-        margin-bottom: 20px;
-        padding: 9px 50px;  
-        background: linear-gradient(0deg, #27293d 0%, #1c1d2b 100%);
-        border: 1px solid #27293d;
+        .selectBox select{
+        font-size: 13px;  
         }
-        .drp_dwn_btm button:focus{  
-        border-color: #ba54f5;  
-        box-shadow: 0px 0px 0px 0.25rem transparent !important;  
+        .rygt_side_bar p{
+        text-align: left !important;  
         }
-        .bg_mbl_sectn{
-        background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
-        margin-bottom: 10px;
+        .multipleSelection{
+        left: unset;
+        right: unset !important;
         }
-        .bg_mbl_sectn button{
-        background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+        .filter_left{
+        width: 10%;  
+        }
+        .filter_right{
+        width: 90%;  
+        }
+        .filter-section{
+        margin-bottom: 20px;  
+        }
+        }
+        @media only screen and (max-width: 480px) {
+        .filter_left{
+        width: 20%;  
+        }
+        .filter_right{
+        width: 80%;  
+        }
         }
         /*-----End latest css------*/
     </style>
@@ -431,7 +536,7 @@
         <div class="col-md-10">
             <!--Start Drop Down menu-->
             <div class="row">
-                <div class="col-md-12 drp_dwn_btm">
+                <div class="col-md-8 drp_dwn_btm">
 
                     <div class="dropdown">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
@@ -445,6 +550,47 @@
                         </ul>
                       </div>
                       
+                    </div>
+                    <div class="col-md-4 rygt_side_bar">
+                      <form>
+                        <div class="row filter-section">
+                          <div class="col-md-6 filter_left">
+                           <p>Filter</p>
+                           </div>
+                           <div class="col-md-6 filter_right">
+                        <div class="multipleSelection">
+                          
+                            <div class="selectBox" 
+                                onclick="showCheckboxes()">
+                                <select>
+                                    <option>Select options</option>
+                                </select>
+                                <div class="overSelect"></div>
+                            </div>
+                  
+                            <div id="checkBoxes">
+                                <label for="first">
+                                    <input type="checkbox" id="first" />
+                                    checkBox1
+                                </label>
+                                  
+                                <label for="second">
+                                    <input type="checkbox" id="second" />
+                                    checkBox2
+                                </label>
+                                <label for="third">
+                                    <input type="checkbox" id="third" />
+                                    checkBox3
+                                </label>
+                                <label for="fourth">
+                                    <input type="checkbox" id="fourth" />
+                                    checkBox4
+                                </label>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                    </form>
                     </div>
                 </div>
               
@@ -490,13 +636,24 @@
   </div>
 </div>
 
+<script> 
+//checbox start
+//checbox start    
+ var show = true;
+  function showCheckboxes() {
+      var checkboxes = 
+          document.getElementById("checkBoxes");
 
-
-
-
-
-
-<script>        
+      if (show) {
+          checkboxes.style.display = "block";
+          show = false;
+      } else {
+          checkboxes.style.display = "none";
+          show = true;
+      }
+  }
+//checkbox end
+//checkbox end
 $(document).ready(function(){
   $(".abc").click(function()
   {

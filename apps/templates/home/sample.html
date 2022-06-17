@@ -9,182 +9,493 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/custom.css">
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
+    <style>
+      .main_body_section{
+      overflow-x: hidden;  
+      }
+      .r_shiny_table tr:nth-child(even) {
+      background-color: RGBA(39,41,61,0.25);
+      }
+      .container-fluid.r_shiny_table {
+      padding: 0px;
+      margin-top: 30px;
+      }
+      .r_shiny_table tr th , td{
+      color:#525f7f;
+      font-size: 14px;
+      }
+      .r_shiny_table tr th{
+      border-bottom: 1px solid #27293d;
+      border-left: 1px solid #27293d;
+      border-right: 1px solid #27293d;
+      background: #27293d;
+      font-size: 16px;
+      }
+      .r_shiny_table tr td{
+      border-bottom: 1px solid #27293d;
+      border-left: 1px solid #27293d;
+      border-right: 1px solid #27293d;
+      }
+      .r_shiny_table .table>:not(:first-child){
+      border-top: none;  
+      }
+      .r_shiny_table .table.table-bordered {
+      border: none;
+      }
+      .top_section_cases{
+      color: #fff; 
+      margin-bottom: 15px;
+      justify-content: center;
+      }
+      .top_section_cases .row {
+      align-items: center;
+      }
+      .top_section_cases .col-md-3 i{
+      font-size: 34px;
+      }
+      .design_txt p {
+      margin-bottom: 0px;
+      text-transform: capitalize;
+      font-size: 12px;
+      }
+      .design_txt h4 {
+      margin-top: 5px;
+      font-size: 24px;
+      margin-bottom: 5px;
+      }
+      .ui_date_time{
+      font-size: 10px !important;
+      }
+      .last_month_data {
+      font-size: 10px !important;
+      padding-top: 2px;
+      }
+      .design_icon{
+      background: #f8bd7a;
+      padding: 11px 10px;
+      border-radius: 5px;  
+      }
+      .design_icon5{
+      background: #46bfbd;
+      padding: 11px 10px;
+      border-radius: 5px;  
+      }
+      .design_icon4{
+      background: #f7464a;
+      padding: 11px 10px;
+      border-radius: 5px;  
+      }
+      .design_icon1{
+      background: #204db4;
+      padding: 11px 10px;
+      border-radius: 5px;  
+      }
+      .design_icon3{
+      background: #1b998b;
+      padding: 11px 10px;
+      border-radius: 5px;  
+      }
+      .bg_design_dashboard{
+      background-color:#27293d;
+      border-radius: 10px;
+      padding: 10px;  
+      display: flex;
+      align-items: center;
+      box-shadow: 0px 0px 15px #151515;
+      transition: all 1s;
+      }
+      .bg_design_dashboard:hover{
+      transition: all 1s;
+      transform: scale(1.1);
+      }
+      .top_section_cases .col-md-2 {
+      width: 18%;
+      margin: 10px;
+      }
+      .design_txt {
+      margin-left: 15px;
+      }
+      @media screen and (max-width: 1339px) {
+      .top_section_cases .col-md-2 {
+      width: 18%;
+      margin: 5px;
+      } 
+      .design_txt h4{
+      font-size: 18px;   
+      }  
+      .top_section_cases .col-md-3 i {
+      font-size: 24px;
+      }
+      }
+      @media screen and (max-width: 1200px) {
+     .design_txt {
+      margin-left: 8px;
+      }
+      .last_month_data {
+      font-size: 9px !important;
+      }
+      .ui_date_time {
+      font-size: 9px !important;
+      }
+      .bg_design_dashboard{
+      padding: 8px;  
+      }
+      .django_bg_sidebar{
+      width: 160px;  
+      }
+      .django_bg_sidebar ul li a{
+      padding-bottom: 20px;  
+      }
+      .django_bg_sidebar ul {
+      padding-left: 5px;
+      }
+      }
+      @media screen and (max-width: 992px) {
+      .top_section_cases .col-md-2 {
+      width: 48%;
+      margin: 7px;
+      }
+      .bg_design_dashboard .col-md-3{
+      text-align: center; 
+      }
+      .top_section_cases .col-md-3 i {
+      font-size: 28px;
+      }
+      .bg_design_dashboard:hover{
+      transform: scale(1.0); 
+      }
+      }
+      @media screen and (max-width: 768px) {
+      .main-chart-section {
+      margin-bottom: 0px !important;
+      margin-top: 0px !important;
+      }
+      .top_section_cases{
+      justify-content: space-evenly;  
+      }
+      }
+      @media screen and (max-width: 700px) {
+      .top_section_cases .col-md-2{
+      width: 100%;
+      margin: 0px;  
+      }
+      .top_section_cases{
+      margin: 5px 0px;
+      }
+      .top_section_cases .col-md-2{
+      margin-bottom: 10px;
+      }
+      }
+      @media only screen and (max-width: 992px) and (min-width: 991px)  {
+      .tablet_section .col-lg-10.col-md-12 {
+      width: 100%;
+      }
+      .lg_in_out #navbarSupportedContent{
+      background: transparent;  
+      }
+      
+      }
+    </style>
 </head>
 <body class="main_body_section"> 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<div class="container-fluid mobile-section-header">
-  <div class="row">
-    <div class="col-md-2 col-xs-2 side_bar_mbl">
-      <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
-        <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
-        <h3><a href="#">R-shiny</a> </h3>
-      <ul>
-          <li class="active ">
-              <a href="#">
-                <i class="fa fa-pie-chart" aria-hidden="true"></i>
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-user-o" aria-hidden="true"></i>
-                <p>User Profile</p>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                <p>Logout</p>
-              </a>
-            </li>
-      </ul>
-  </div>
-  <div class="w3-main" style="margin-left:200px">
-  <div class="w3-teal bg_mbl_sectn">
-    <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">☰</button>
-  </div>
-  </div>
-</div>
-
-<div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
-  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Upload CSV File
-    </button>
-</div>
-<div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
-  <nav class="navbar navbar-expand-lg lg_in_out">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                 <div class="nav_video_photo">
-                    <img src="/static/assets/img/anime3.png" alt="Profile Photo">
-                 </div>
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
-              </ul>
-            </li>
-        </ul></div>
-      </div>
-    </nav>
-</div>
-  </div>
-</div>
-<div class="container-fluid desktop-section-section">
-    <div class="row mt-3">
-        <div class="col-md-2 top_header">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Upload CSV File
-              </button>
-        </div>
-        <div class="col-md-10">
-            <nav class="navbar navbar-expand-lg lg_in_out">
-                <div class="container-fluid">
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                  {% if messages %}
-
-                  {% for message in messages %}
-                  
-                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
-                  
-                  {% endfor %}
-                  
-                  {% endif %}
-                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                           <div class="nav_video_photo">
-                              <img src="/static/assets/img/anime3.png" alt="Profile Photo">
-                           </div>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="#">Profile</a></li>
-                          <li class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
-                      </li>
-                  </div>
-                </div>
-              </nav>
-        </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <div class="container-fluid mobile-section-header">
+    <div class="row">
+      <div class="col-md-2 col-xs-2 side_bar_mbl">
+        <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
+          <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
+          <h3><a href="#">R-shiny</a> </h3>
+        <ul>
+            <li class="active ">
+                <a href="#">
+                  <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  <p>User Profile</p>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                  <p>Logout</p>
+                </a>
+              </li>
+        </ul>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row mt-1 mb-5">
-        <div class="col-md-2 desktop-section-section">
-            <div class="django_bg_sidebar">
-              <h3><a href="#">R-shiny</a> </h3>
-            <ul>
-                <li class="active ">
-                    <a href="#">
+    <div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal bg_mbl_sectn">
+      <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">☰</button>
+    </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
+    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Upload CSV File
+      </button>
+  </div>
+  <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
+    <nav class="navbar navbar-expand-lg lg_in_out">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   <div class="nav_video_photo">
+                      <img src="/static/assets/img/anime3.png" alt="Profile Photo">
+                   </div>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                </ul>
+              </li>
+          </ul></div>
+        </div>
+      </nav>
+  </div>
+    </div>
+  </div>
+  <div class="container-fluid desktop-section-section">
+      <div class="row mt-3">
+          <div class="col-md-2 top_header">
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Upload CSV File
+                </button>
+          </div>
+          <div class="col-md-10">
+              <nav class="navbar navbar-expand-lg lg_in_out">
+                  <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <i class="fa fa-bars"></i>
+                    </button>
+                    {% if messages %}
+  
+                    {% for message in messages %}
+                    
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                    
+                    {% endfor %}
+                    
+                    {% endif %}
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                             <div class="nav_video_photo">
+                                <img src="/static/assets/img/anime3.png" alt="Profile Photo">
+                             </div>
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                          </ul>
+                        </li>
+                    </div>
+                  </div>
+                </nav>
+          </div>
+      </div>
+  </div>
+  <div class="container-fluid">
+      <div class="row mt-1 mb-5 tablet_section">
+          <div class="col-md-2 desktop-section-section">
+              <div class="django_bg_sidebar">
+                <h3><a href="#">R-shiny</a> </h3>
+              <ul>
+                  <li class="active ">
+                      <a href="#">
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                        <p>Dashboard</p>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <p>User Profile</p>
+                      </a>
+                    </li>
+                    <li>
+                     
+                      <a href="{% url 'logout' %}">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <p>Logout</p>
+                      </a>
+                    </li>
+              </ul>
+          </div>
+          </div>
+  
+          <div class="col-lg-10 col-md-12">
+            <div class="row top_section_cases">
+              <div class="col-md-2">
+                <div class="row">
+                  <div class="bg_design_dashboard">
+                    <div class="col-md-3 design_icon1">
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
-                      <p>Dashboard</p>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-user-o" aria-hidden="true"></i>
-                      <p>User Profile</p>
-                    </a>
-                  </li>
-                  <li>
-                   
-                    <a href="{% url 'logout' %}">
-                      <i class="fa fa-sign-out" aria-hidden="true"></i>
-                      <p>Logout</p>
-                    </a>
-                  </li>
-            </ul>
-        </div>
-        </div>
-        <div class="col-lg-10 col-md-12">
-         
-            <div class="row mb-4 main-chart-section">
-                <div class="col-md-6">
-                    <div id="container3" class="bg_main_cntnt">
-                        <canvas id="Role-bar-chart"></canvas>
                     </div>
-                 </div>
-                 <div class="col-md-6">        
-                    <div id="container3" class="bg_main_cntnt">
-                        <canvas id="specialty-bar-chart"></canvas>
+                    <div class="col-md-9 design_txt">
+                      <p>Total Cases</p>
+                      <h4>{{total_cases}}</h4> 
                     </div>
-                 </div>
-            </div>
-            <div class="row main-chart-section">
-                <div class="col-md-6">
-                    <div id="container" class="bg_main_cntnt">
-                          <canvas id="Role-pie-chart"></canvas>
-                    </div>
-                 </div>
-                 <div class="col-md-6">
-                    <div class="bg_main_cntnt">
-                        <div id="container4" class="bg_main_cntnt">
-                            <canvas id="site-bar-chart"></canvas>
-                        </div>
-                    </div>
-                 </div>
-            </div>
-            <div class="row mt-4 main-chart-section">
-                <div class="col-md-12">
-                    <div class="bg_main_cntnt">
-                        <div  id="container2">
-                            <canvas id="year-to-date-line-chart"></canvas>
-                        </div>
                   </div>
                 </div>
+              </div>
+              <div class="col-md-2">
+                <div class="row">
+                  <div class="bg_design_dashboard">
+                    <div class="col-md-3 design_icon">
+                      <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-md-9 design_txt">
+                      <p>LOrem ipsum</p>
+                      <h4>345k</h4>  
+                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
+                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="row">
+                  <div class="bg_design_dashboard">
+                    <div class="col-md-3 design_icon3">
+                      <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-md-9 design_txt">
+                      <p>LOrem ipsum</p>
+                      <h4>345k</h4>  
+                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
+                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="row">
+                  <div class="bg_design_dashboard">
+                    <div class="col-md-3 design_icon4">
+                      <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-md-9 design_txt">
+                      <p>LOrem ipsum</p>
+                      <h4>345k</h4>  
+                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
+                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="row">
+                  <div class="bg_design_dashboard">
+                    <div class="col-md-3 design_icon5">
+                      <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-md-9 design_txt">
+                      <p>LOrem ipsum</p>
+                      <h4>345k</h4>  
+                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
+                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+              <div class="row mb-4 main-chart-section">
+                  <div class="col-md-6">
+                      <div id="container3" class="bg_main_cntnt">
+                          <canvas id="Role-bar-chart"></canvas>
+                      </div>
+                   </div>
+                   <div class="col-md-6">        
+                      <div id="container3" class="bg_main_cntnt">
+                          <canvas id="specialty-bar-chart"></canvas>
+                      </div>
+                   </div>
+              </div>
+              <div class="row main-chart-section">
+                  <div class="col-md-6">
+                      <div id="container" class="bg_main_cntnt">
+                            <canvas id="Role-pie-chart"></canvas>
+                      </div>
+                   </div>
+                   <div class="col-md-6">
+                      <div class="bg_main_cntnt">
+                          <div id="container4" class="bg_main_cntnt">
+                              <canvas id="site-bar-chart"></canvas>
+                          </div>
+                      </div>
+                   </div>
+              </div>
+              <div class="row mt-4 main-chart-section">
+                  <div class="col-md-12">
+                      <div class="bg_main_cntnt">
+                          <div  id="container2">
+                              <canvas id="year-to-date-line-chart"></canvas>
+                          </div>
+                    </div>
+                  </div>
+              </div>
+            <div class="container-fluid r_shiny_table">
+              <div class="row">
+                <div class="col-md-12">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Coded Case</th>
+                        <th>#</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for key, value in dashboard23.items %}
+                      <tr>
+                          <td>{{key}}</td>
+                          <td>{{value}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="row mt-4 main-chart-section">
+              <div class="col-md-12">
+                  <div class="bg_main_cntnt">
+                      <div  id="container28">
+
+                        <table class="table table-bordered month-data" id="month-data">
+                          <thead>
+                              <tr>
+                                  <th>Id</th>
+                                  <th>#</th>
+                                  </tr>
+                          </thead>
+                          <tbody>
+
+                            {% for key, value in dashboard23.items %}
+                            <tr>
+                                <td>{{key}}</td>
+                                <td>{{value}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                        
+                      </div>
+                </div>
+              </div>
+          </div> -->
         </div>
     </div>
   </div>
@@ -386,7 +697,8 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ final_data| safe}}
         df1 = {{ labels | safe}}
 
-        console.log(df)
+        console.log(df, "df")
+        console.log(df1, "df1df1")
         site_bar_config = {
         type: 'line',
         data: df,

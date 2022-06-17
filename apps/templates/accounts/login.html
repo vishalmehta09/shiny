@@ -1,78 +1,180 @@
-{% extends "layouts/base.html" %}
+<!--
+=========================================================
+* * Black Dashboard - v1.0.1
+=========================================================
 
-{% block title %} Login {% endblock %} 
+* Product Page: https://www.creative-tim.com/product/black-dashboard
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
 
-<!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
 
-{% block content %}
-<style>
-  .main-login-section{
-    align-items: center;
-    justify-content: center;
-  }
-  .main-login-section .card {
-    padding: 20px;
-}
-</style>
-        <div class="row main-login-section">
-          <div class="col-md-8">
-            <div class="card">
+* Coded by Creative Tim
 
-              <form role="form" method="post" action="">
-              
-                {% csrf_token %} 
+=========================================================
 
-                <div class="card-header">
-                  <h5 class="title">Login</h5>
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
 
-                  <h6 class="card-category">
-                      {% if msg %}
-                        <span class="text-danger">{{ msg }}</span>
-                      {% else %}
-                        Add your credentials
-                      {% endif %}  
-                  </h6>
-                </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
+  <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-black">
+  
+  <title>
+    Django Dashboard Black - | AppSeed
+  </title>
 
-                <div class="card-body">
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <!-- Nucleo Icons -->
+  <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="/static/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="/static/assets/demo/demo.css" rel="stylesheet" />
 
-                    <div class="row">
+  <!-- Specific Page CSS goes HERE  -->
+  <style>
+    .login_section{
+    position: relative; 
+    width: 100%;
+    float: left;
+    clear: both;
+    }
+    .main-login-contain{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 40%);
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+      border: 1px solid #1e1e2f;
+      -webkit-text-fill-color: #485370;
+      -webkit-box-shadow: 0 0 0px 1000px #27293d inset;
+      transition: background-color 5000s ease-in-out 0s;
+      border-color: #e14eca;
+    }
+    .main-login-contain .card{
+    padding: 30px 40px 40px 40px;
+    border: 2px dotted;  
+    }
+    .main-login-contain input{
+      border:1px solid #485370 !important; 
+    }
+    .main-login-contain h5{
+    font-size: 38px;  
+    margin-bottom: 0px;
+    text-align: center;
+    }
+    .main-login-contain h6{
+    font-size: 18px; 
+    text-align: center; 
+    }
+    .main-login-contain .card-header{
+    padding-left: 0px;
+    padding-top: 0px;
+    }
+    .main-login-contain .card-body{
+     padding: 0px; 
+    }
+    .main-login-contain .row{
+    margin-right: 0px;
+    margin-left: 0px; 
+    }
+    .main-login-contain .card-footer {
+    text-align: center;
+    padding: 0px;
+    }
+    .main-login-contain input{
+    border:#2b3553;
+    }
+    .main-login-contain .form-group label{
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 0px;
+    }
+    .main-login-contain .card-footer button{
+    width:100%;
+    margin-bottom: 15px; 
+    }
+    @media screen and (max-width: 768px) {
+    .main-login-contain .card {
+    padding: 10px 10px 10px 10px;
+    }
+    }
+    @media screen and (max-width: 575px) {
+    .main-login-contain .card {
+    padding: 10px 10px 10px 10px;
+    } 
+    .main-login-contain {
+    position: absolute;
+    top: 25%;
+    left: 0%;
+    transform: translate(0%, 10%);
+    }
+    .login_section{
+    position: unset;  
+    } 
+    }
+  </style>
+</head>
 
-                      <div class="col-md-3 px-md-1">
-                        <div class="form-group">
-                          <label>Username</label>
-                          {{ form.username }}
-                        </div>
-                      </div>
-
-                    </div>
-                    <div class="row">
-
-                      <div class="col-md-3 px-md-1">
-                        <div class="form-group">
-                          <label>Password</label>
-                          {{ form.password }}
-                        </div>
-                      </div>
-
-                    </div>
-                    
-                </div>
-                <div class="card-footer">
-                  <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
-                  &nbsp; &nbsp;
-                  Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
-                </div>
-
-              </form>
-
-            </div>
+<body>
+  <div class="container">
+  <div class="row justify-content-center align-items-center login_section">
+    <div class="col-lg-7 col-md-8 col-sm-10 main-login-contain">
+      <div class="card">
+        <form role="form" method="post" action="">       
+          {% csrf_token %} 
+          <div class="card-header">
+            <h5 class="title">Login</h5>
+            <h6 class="card-category">
+                {% if msg %}
+                  <span class="text-danger">{{ msg }}</span>
+                {% else %}
+                  Add your credentials
+                {% endif %}  
+            </h6>
           </div>
+          <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 px-md-1">
+                  <div class="form-group">
+                    <label>Username</label>
+                    {{ form.username }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 px-md-1">
+                  <div class="form-group">
+                    <label>Password</label>
+                    {{ form.password }}
+                  </div>
+                </div>
+              </div>        
+          </div>
+          <div class="card-footer">
+            <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
+            &nbsp; &nbsp;
+            Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
+          </div>
+        </form>
       </div>
-
-
-{% endblock content %}
-
-<!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+    </div>
+</div>
+</div>
+</body>
+</html>
