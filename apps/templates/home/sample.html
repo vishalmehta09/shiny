@@ -195,6 +195,9 @@
       }
       
       }
+      .bgcolor_chart {
+        background-color: #EBEBEB;
+    }
     </style>
 </head>
 <body class="main_body_section"> 
@@ -358,11 +361,9 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>LOrem ipsum</p>
-                      <h4>345k</h4>  
-                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
-                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
-                    </div>
+                      <p>Cases to-date this year</p>
+                      <h4>{{count_of_current_year}}</h4>  
+                      </div>
                   </div>
                 </div>
               </div>
@@ -373,11 +374,12 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>LOrem ipsum</p>
-                      <h4>345k</h4>  
-                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
-                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
-                    </div>
+                      <p>Cases to date this year
+                      
+                      </p>
+                      
+                      <h4>{{count_of_current}}</h4>  
+                     </div>
                   </div>
                 </div>
               </div>
@@ -388,11 +390,9 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>LOrem ipsum</p>
-                      <h4>345k</h4>  
-                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
-                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
-                    </div>
+                      <p>Cases last as month as primary </p>
+                      <h4>{{count_of_last_month}}</h4>  
+                      </div>
                   </div>
                 </div>
               </div>
@@ -414,25 +414,25 @@
             </div>
               <div class="row mb-4 main-chart-section">
                   <div class="col-md-6">
-                      <div id="container3" class="bg_main_cntnt">
+                      <div id="container3" class="bg_main_cntnt bgcolor_chart">
                           <canvas id="Role-bar-chart"></canvas>
                       </div>
                    </div>
                    <div class="col-md-6">        
-                      <div id="container3" class="bg_main_cntnt">
+                      <div id="container3" class="bg_main_cntnt bgcolor_chart">
                           <canvas id="specialty-bar-chart"></canvas>
                       </div>
                    </div>
               </div>
               <div class="row main-chart-section">
                   <div class="col-md-6">
-                      <div id="container" class="bg_main_cntnt">
+                      <div id="container" class="bg_main_cntnt bgcolor_chart">
                             <canvas id="Role-pie-chart"></canvas>
                       </div>
                    </div>
                    <div class="col-md-6">
                       <div class="bg_main_cntnt">
-                          <div id="container4" class="bg_main_cntnt">
+                          <div id="container4" class="bg_main_cntnt bgcolor_chart">
                               <canvas id="site-bar-chart"></canvas>
                           </div>
                       </div>
@@ -440,21 +440,21 @@
               </div>
               <div class="row mt-4 main-chart-section">
                   <div class="col-md-12">
-                      <div class="bg_main_cntnt">
+                      <div class="bg_main_cntnt bgcolor_chart">
                           <div  id="container2">
                               <canvas id="year-to-date-line-chart"></canvas>
                           </div>
                     </div>
                   </div>
               </div>
-            <div class="container-fluid r_shiny_table">
-              <div class="row">
-                <div class="col-md-12">
+            <div class="container-fluid r_shiny_table bgcolor_chart">
+              <div class="row ">
+                <div class="col-md-12 ">
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th>Coded Case</th>
-                        <th>#</th>
+                        <th style="background-color:#f6f2f2">Coded Case</th>
+                        <th style="background-color:#f6f2f2">#</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -584,8 +584,8 @@ role_bar = document.getElementById('Role-bar-chart');
       label: 'Dataset 1',
       label: 'Dataset e1',
       data: df1,
-      borderColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-      backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+      borderColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+      backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
     },
    
   ],
@@ -596,8 +596,9 @@ role_bar = document.getElementById('Role-bar-chart');
         },
 
     };
+    
     var myPieChart = new Chart(role_bar, role_chart_config);
-
+   
     role_pie = document.getElementById('Role-pie-chart');
         df = {{ keys| safe}}
        
@@ -608,8 +609,8 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets: [{
                 label: "Role-pie-chart",
                 data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
             labels: df
@@ -631,8 +632,8 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "specialty-bar-chart",
                 
                 data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
             labels: df
@@ -656,8 +657,8 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "specialty-bar-chart",
                 
                 data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
             labels: df
@@ -679,8 +680,8 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "site-bar-chart",
                 
                 data: df1,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
             labels: df

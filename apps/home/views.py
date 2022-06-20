@@ -16,6 +16,8 @@ import os
 import random
 from django.contrib import messages
 from datetime import date
+from datetime import timedelta
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -105,39 +107,37 @@ def generate_bar_chart(request):
             data = read_data(file_path)
             total_cases = len(data)
             current_year = date.today().year
-            # abv = data['Date'].dt.month
-            # print(abv, "abvvvvvvvvv")
             get_date = data[data['Date'].dt.year == current_year] 
-            aaaa = get_date['Date'].dt.to_period('M') == '2022-03'
-            print(aaaa, "sss")
-            if aaaa is not True:
-                abc = 0
-            else:
-                abc = len(aaaa)
-            print(abc, "hghghg")
-            # print(aaaa, "aaaaaaaaaaaa")
-            # df['StartDate'].dt.to_period('M')
-            m_d = data['Date'].dt.to_period('M')
-            # print(data['Date'].dt.to_period('M'), "month")
-            
-            y = current_year
-            s = '-07' 
+            print(get_date, "get_date")
+            date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+            count_of_current_year = 0
+            for u in list(date_gt):
+                if u == True:
+                    count_of_current_year+=1
+                else:
+                    pass
+            this_year_ps = get_date['Role'] == 'Primary Surgeon'
+            print(this_year_ps, "this_year_ps")
+            count_of_current = 0
+            for i in this_year_ps:
+                if i == True:
+                    count_of_current+=1
+                else:
+                    pass
+            print(count_of_current, "count_of_current")
 
-            limit = '2022-07'
-            # print(limit, "limit")
-            # print(data['Date'].dt.month, "data['Date'].dt.monthdata['Date'].dt.month")
-            abc = len(data[data['Date'].dt.to_period('M') >= limit] )
-            # abc = len(data[data['Date'] >= limit])
-            # print("abc", abc)
-            # data[data['Date'].dt.month >= 7]
-            # print(get_date, "get_dateget_date")
+            # today = date.today()
+            # first = today.replace(day=1)
+            # lastMonth = first - timedelta(days=1)
+            # print(lastMonth, "lastMonth")
+            # last_months = lastMonth.strftime("%y-%m")
+            # get_date_month = data[data['Date'].dt.to_period('M') == last_months] 
+            # print(data['Date'].dt.to_period('M'), "fghjsljsjs")
             coded_case = []
             for i in data['Coded Case']:
                 coded_case.append(i)
         
             dashboard23 = dict(Counter(coded_case))
-            # print(dashboard23, "coded_casecoded_casecoded_casecoded_case")
-            # print(data)
             role = []
             for i in data['Role']:
                 role.append(i)
@@ -190,23 +190,20 @@ def generate_bar_chart(request):
                 data = []
                 for raw in raw_data:
                     data.append(raw.get(key,0))
-                
+            
                 final_data.append({
                     "label": key,
                     "data": data,
                     "borderColor": random_color(),
                     "backgroundColor": random_color(),
-                    "fill": "true",
                     })
-            # print(labels.sort(), "labelslabelslabels")
-            # label = labels.sort()
-            # print(label, "label")
+            print(data, "tattat")
             final_final_data = {
                 "datasets": final_data,
                 "labels": labels,
             }
 
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases}
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')
@@ -293,7 +290,6 @@ def generate_bar_chart(request):
                     "data": data,
                     "borderColor": random_color(),
                     "backgroundColor": random_color(),
-                    "fill": "true",
                     })
           
             final_final_data = {
