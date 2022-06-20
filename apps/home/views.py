@@ -28,7 +28,8 @@ def index(request):
 
 
 def read_data(file_path):
-        pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
+        pandas_data = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
+        pandas_data_frame= pandas_data.sort_values(by='Date')
         data_frame = pd.DataFrame(pandas_data_frame)
         return data_frame   
 
@@ -108,7 +109,6 @@ def generate_bar_chart(request):
             total_cases = len(data)
             current_year = date.today().year
             get_date = data[data['Date'].dt.year == current_year] 
-            print(get_date, "get_date")
             date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
             count_of_current_year = 0
             for u in list(date_gt):
@@ -117,22 +117,38 @@ def generate_bar_chart(request):
                 else:
                     pass
             this_year_ps = get_date['Role'] == 'Primary Surgeon'
-            print(this_year_ps, "this_year_ps")
+            # print(this_year_ps, "this_year_ps")
             count_of_current = 0
             for i in this_year_ps:
                 if i == True:
                     count_of_current+=1
                 else:
                     pass
-            print(count_of_current, "count_of_current")
+            today = date.today()
+            first = today.replace(day=1)
+            lastMonth = first - timedelta(days=1)
+            last_months = lastMonth.strftime("%Y-%m")
+            this_year_month = data[data['Date'].dt.to_period('M') == last_months]
+            get_g = this_year_month['Role'] == 'Primary Surgeon'
+            count_of_last_month = 0
+            for i in get_g:
+                if i == True:
+                    count_of_last_month+=1
+                else:
+                    pass
 
-            # today = date.today()
-            # first = today.replace(day=1)
-            # lastMonth = first - timedelta(days=1)
-            # print(lastMonth, "lastMonth")
-            # last_months = lastMonth.strftime("%y-%m")
-            # get_date_month = data[data['Date'].dt.to_period('M') == last_months] 
-            # print(data['Date'].dt.to_period('M'), "fghjsljsjs")
+
+            today = date.today()
+            datem = today.strftime("%Y-%m")
+            print(datem,"datemdatem")
+            this_year_this_month = data[data['Date'].dt.to_period('M') == datem]
+            get_role = this_year_this_month['Role'] == 'Primary Surgeon'
+            count_of_this_month = 0
+            for i in get_role:
+                if i == True:
+                    count_of_this_month+=1
+                else:
+                    pass
             coded_case = []
             for i in data['Coded Case']:
                 coded_case.append(i)
@@ -145,9 +161,7 @@ def generate_bar_chart(request):
             dashboard2 = dict(Counter(role))
     
             keys = list(dashboard2.keys())
-            # print(keys)
             values = list(dashboard2.values())
-            # print(values)
 
             specialty_chart = []
             for i in data['Sub-Specialty']:
@@ -169,41 +183,35 @@ def generate_bar_chart(request):
 
             context_dict = {}
             roles = {}
-            df = data['Date'].dt.year
-            # print(df, "dfffff")
             for i in data['Date'].dt.year:
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
-            
-            # print(roles)
+         
             labels = []
-            role_keys = []
+            role_keys =[]
             raw_data = []
             for role in roles:
-                # print(role, "roleeeeee")
                 labels.append(role)
-                role_keys = list(roles[role].keys())
+                role_key = list(roles[role].keys())
+                role_keys.append(role_key)
                 raw_data.append(roles[role])
-                
             final_data = []
-            for key in role_keys:
+            for key in role_keys[1]:
                 data = []
                 for raw in raw_data:
                     data.append(raw.get(key,0))
-            
                 final_data.append({
                     "label": key,
                     "data": data,
                     "borderColor": random_color(),
                     "backgroundColor": random_color(),
                     })
-            print(data, "tattat")
             final_final_data = {
                 "datasets": final_data,
                 "labels": labels,
             }
 
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current}
+            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current, "count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')
@@ -274,11 +282,12 @@ def generate_bar_chart(request):
             raw_data = []
             for role in roles:
                 labels.append(role)
-                role_keys = list(roles[role].keys())
+                role_key = list(roles[role].keys())
+                role_keys.append(role_key)
                 raw_data.append(roles[role])
 
             final_data = []
-            for key in role_keys:
+            for key in role_keys[1]:
                 data = []
                 for raw in raw_data:
                     print(raw)
