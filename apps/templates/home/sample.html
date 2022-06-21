@@ -10,11 +10,39 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
     <style>
+       .select_box_sidebar {
+    color: #fff;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    background-position: calc(100% - 12px) center !important;
+    background: url("../static/assets/img/arrow_drop.svg") no-repeat #435460;
+    padding: 8px 32px 8px 16px;
+    border:none;
+    font-size: 13px;
+    position: relative;
+    padding: 8px 11px;
+    width: 90%;
+}
+/* To remove the arrow of select element in IE */
+.select_box_sidebar::-ms-expand {
+  display: none;
+} 
+    
+      .select_box_sidebar:focus{
+      box-shadow: 0px 0px 0px transparent;
+      }
+      .top_header .btn:hover {
+      color:#535353;
+      border:1px solid #a5a5a5;
+      box-shadow: 0px 0px 5px #d3d3d3;
+      }
       .main_body_section{
       overflow-x: hidden;  
       }
-      .r_shiny_table tr:nth-child(even) {
-      background-color: RGBA(39,41,61,0.25);
+      .r_shiny_table tr:nth-child(odd) {
+      background-color:#fff;
       }
       .container-fluid.r_shiny_table {
       padding: 0px;
@@ -23,18 +51,20 @@
       .r_shiny_table tr th , td{
       color:#525f7f;
       font-size: 14px;
+      border: 1px solid #dddddd;
+      background: #f0f3f6;
       }
-      .r_shiny_table tr th{
-      border-bottom: 1px solid #27293d;
-      border-left: 1px solid #27293d;
-      border-right: 1px solid #27293d;
+      .r_shirny_table tr th{
+      border-bottom: 1px solid #dddddd;
+      border-left: 1px solid #dddddd;
+      border-right:1px solid #dddddd;
       background: #27293d;
-      font-size: 16px;
+      font-size: 16px !important;
       }
       .r_shiny_table tr td{
-      border-bottom: 1px solid #27293d;
-      border-left: 1px solid #27293d;
-      border-right: 1px solid #27293d;
+      border-bottom: 1px solid #dddddd;
+      border-left: 1px solid #dddddd;
+      border-right: 1px solid #dddddd;
       }
       .r_shiny_table .table>:not(:first-child){
       border-top: none;  
@@ -57,11 +87,13 @@
       margin-bottom: 0px;
       text-transform: capitalize;
       font-size: 12px;
+      color:#333;
       }
       .design_txt h4 {
       margin-top: 5px;
       font-size: 24px;
       margin-bottom: 5px;
+      color:#333;
       }
       .ui_date_time{
       font-size: 10px !important;
@@ -74,35 +106,52 @@
       background: #f8bd7a;
       padding: 11px 10px;
       border-radius: 5px;  
+      display: flex;
+      justify-content: center;
+      align-items: center;
       }
       .design_icon5{
       background: #46bfbd;
       padding: 11px 10px;
-      border-radius: 5px;  
+      border-radius: 5px; 
+      display: flex;
+      justify-content: center;
+      align-items: center; 
       }
       .design_icon4{
       background: #f7464a;
       padding: 11px 10px;
       border-radius: 5px;  
+      display: flex;
+      justify-content: center;
+      align-items: center;
       }
       .design_icon1{
       background: #204db4;
       padding: 11px 10px;
-      border-radius: 5px;  
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;  
       }
       .design_icon3{
       background: #1b998b;
       padding: 11px 10px;
       border-radius: 5px;  
+      display: flex;
+      justify-content: center;
+      align-items: center;
       }
       .bg_design_dashboard{
-      background-color:#27293d;
+      background-color:#ffffff;
       border-radius: 10px;
       padding: 10px;  
       display: flex;
       align-items: center;
-      box-shadow: 0px 0px 15px #151515;
+      border: 1px solid #dddddd;
       transition: all 1s;
+      min-height: 110px;
+      justify-content: center;
       }
       .bg_design_dashboard:hover{
       transition: all 1s;
@@ -113,8 +162,9 @@
       margin: 10px;
       }
       .design_txt {
-      margin-left: 15px;
+      margin-left: 5px;
       }
+
       @media screen and (max-width: 1339px) {
       .top_section_cases .col-md-2 {
       width: 18%;
@@ -144,13 +194,21 @@
       width: 160px;  
       }
       .django_bg_sidebar ul li a{
-      padding-bottom: 20px;  
+      margin-bottom: 20px;  
       }
       .django_bg_sidebar ul {
-      padding-left: 5px;
+      margin-left: 5px;
       }
+      .top_section_cases .col-md-3 i{
+      font-size: 16px;  
+      }
+     
       }
       @media screen and (max-width: 992px) {
+      .bg_mbl_sectn button{
+      padding: 0px 10px; 
+      padding-bottom: 6px;
+      }
       .top_section_cases .col-md-2 {
       width: 48%;
       margin: 7px;
@@ -163,6 +221,20 @@
       }
       .bg_design_dashboard:hover{
       transform: scale(1.0); 
+      }
+      .select_box_sidebar{
+      font-size: 11px;  
+      }
+      .django_bg_sidebar ul li a{
+      font-size: 8px;  
+      margin-bottom: 22px;
+      }
+      .django_bg_sidebar ul{
+      margin-left: 0px;
+      padding-left: 0px;  
+      }
+      .django_bg_sidebar ul li a i{
+      font-size: 12px;  
       }
       }
       @media screen and (max-width: 768px) {
@@ -193,12 +265,17 @@
       .lg_in_out #navbarSupportedContent{
       background: transparent;  
       }
-      
       }
-      .bgcolor_chart {
-        background-color: #EBEBEB;
-    }
+      @media screen and (max-width: 992px) and (min-width: 768px) {
+      .bg_design_dashboard .col-md-3{
+      width: 50px;  
+      }
+      .top_section_cases .col-md-3 i {
+      font-size: 23px;
+      }
+      }
     </style>
+   
 </head>
 <body class="main_body_section"> 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
@@ -229,6 +306,12 @@
                 </a>
               </li>
         </ul>
+        <select class="form-select select_box_sidebar" aria-label="Default select example">
+          <option selected>Open select</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
     </div>
     <div class="w3-main" style="margin-left:200px">
     <div class="w3-teal bg_mbl_sectn">
@@ -336,6 +419,12 @@
                       </a>
                     </li>
               </ul>
+              <select class="form-select select_box_sidebar" aria-label="Default select example">
+                <option selected>Open select</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
           </div>
           </div>
   
@@ -415,34 +504,34 @@
               <div class="row mb-4 main-chart-section">
                   <div class="col-md-6">
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
-                          <canvas id="Role-bar-chart"></canvas>
+                          <canvas id="Role-bar-chart" height="180"></canvas>
                       </div>
                    </div>
                    <div class="col-md-6">        
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
-                          <canvas id="specialty-bar-chart"></canvas>
+                          <canvas id="specialty-bar-chart" height="180"></canvas>
                       </div>
                    </div>
               </div>
               <div class="row main-chart-section">
                   <div class="col-md-6">
                       <div id="container" class="bg_main_cntnt bgcolor_chart">
-                            <canvas id="Role-pie-chart"></canvas>
+                            <canvas id="Role-pie-chart" height="180" ></canvas>
                       </div>
                    </div>
                    <div class="col-md-6">
-                      <div class="bg_main_cntnt">
+                    
                           <div id="container4" class="bg_main_cntnt bgcolor_chart">
-                              <canvas id="site-bar-chart"></canvas>
+                              <canvas id="site-bar-chart" height="180"></canvas>
                           </div>
-                      </div>
+                  
                    </div>
               </div>
               <div class="row mt-4 main-chart-section">
                   <div class="col-md-12">
                       <div class="bg_main_cntnt bgcolor_chart">
                           <div  id="container2">
-                              <canvas id="year-to-date-line-chart"></canvas>
+                              <canvas id="year-to-date-line-chart" ></canvas>
                           </div>
                     </div>
                   </div>
@@ -534,6 +623,14 @@
     </div>
   </div>
  <script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+
 function readURL(input) {
   if (input.files && input.files[0]) {
 
@@ -573,28 +670,33 @@ role_bar = document.getElementById('Role-bar-chart');
   
         df = {{ keys| safe}}
    
-        df1 = {{ values| safe}}
-      
-       
+        names = {{ names| safe}}
+
+        data_list = {{ final_data_list | safe }}
+
+        console.log(names)
+        console.log(data_list)
+    
+
         role_chart_config = {
         type: 'horizontalBar',
         data: {
-            datasets: [
-    {
-      label: 'Dataset 1',
-      label: 'Dataset e1',
-      data: df1,
-      borderColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-      backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-    },
-   
-  ],
-            labels: df
+            labels : names,
+            datasets:data_list
         },
         options: {
-          responsive: true,
-        },
-
+        scales: {
+            xAxes: [{
+                ticks: {
+                    min: 0 // Edit the value according to what you need
+                },
+              stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
     };
     
     var myPieChart = new Chart(role_bar, role_chart_config);
@@ -607,13 +709,14 @@ role_bar = document.getElementById('Role-bar-chart');
         type: 'pie',
         data: {
             datasets: [{
+
                 label: "Role-pie-chart",
                 data: df1,
                 backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
                 hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
-            labels: df
+            labels: df,
         },
         options: {
             responsive: true
@@ -698,8 +801,7 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ final_data| safe}}
         df1 = {{ labels | safe}}
 
-        console.log(df, "df")
-        console.log(df1, "df1df1")
+    
         site_bar_config = {
         type: 'line',
         data: df,

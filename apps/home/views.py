@@ -1,4 +1,5 @@
 
+
 from traceback import print_tb
 from unittest import result
 from urllib.parse import uses_params
@@ -55,7 +56,7 @@ def generate_bar_chart(request):
             file_path = user_obj.upload.path
             data = read_data(file_path)
 
-            # print(data)
+
             role = []
             for i in data['Role']:
                 role.append(i)
@@ -105,10 +106,11 @@ def generate_bar_chart(request):
         
             file_path = obj.upload.path
             data = read_data(file_path)
+           
             total_cases = len(data)
             current_year = date.today().year
             get_date = data[data['Date'].dt.year == current_year] 
-            print(get_date, "get_date")
+
             date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
             count_of_current_year = 0
             for u in list(date_gt):
@@ -117,27 +119,21 @@ def generate_bar_chart(request):
                 else:
                     pass
             this_year_ps = get_date['Role'] == 'Primary Surgeon'
-            print(this_year_ps, "this_year_ps")
+    
             count_of_current = 0
             for i in this_year_ps:
                 if i == True:
                     count_of_current+=1
                 else:
                     pass
-            print(count_of_current, "count_of_current")
 
-            # today = date.today()
-            # first = today.replace(day=1)
-            # lastMonth = first - timedelta(days=1)
-            # print(lastMonth, "lastMonth")
-            # last_months = lastMonth.strftime("%y-%m")
-            # get_date_month = data[data['Date'].dt.to_period('M') == last_months] 
-            # print(data['Date'].dt.to_period('M'), "fghjsljsjs")
             coded_case = []
             for i in data['Coded Case']:
                 coded_case.append(i)
         
             dashboard23 = dict(Counter(coded_case))
+            
+            
             role = []
             for i in data['Role']:
                 role.append(i)
@@ -170,7 +166,7 @@ def generate_bar_chart(request):
             context_dict = {}
             roles = {}
             df = data['Date'].dt.year
-            # print(df, "dfffff")
+        
             for i in data['Date'].dt.year:
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
@@ -180,7 +176,7 @@ def generate_bar_chart(request):
             role_keys = []
             raw_data = []
             for role in roles:
-                # print(role, "roleeeeee")
+
                 labels.append(role)
                 role_keys = list(roles[role].keys())
                 raw_data.append(roles[role])
@@ -190,14 +186,14 @@ def generate_bar_chart(request):
                 data = []
                 for raw in raw_data:
                     data.append(raw.get(key,0))
-            
+           
                 final_data.append({
                     "label": key,
                     "data": data,
                     "borderColor": random_color(),
                     "backgroundColor": random_color(),
                     })
-            print(data, "tattat")
+        
             final_final_data = {
                 "datasets": final_data,
                 "labels": labels,
@@ -212,8 +208,10 @@ def generate_bar_chart(request):
     if request.method == 'POST':
     
         # Get the data from the form
+       
         upload_file = request.FILES['document']
-
+       
+        df = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
         file_extension = os.path.splitext(upload_file.name)[1]
 
         valid_extensions = [ ".csv", ".CSV", ".xlsx", ".XLSX", ".xls", ".XLS"]
@@ -226,12 +224,82 @@ def generate_bar_chart(request):
         #read the file and convert to data frame.
         data = read_data(upload_file)
         if set(['Role','Sub-Specialty', 'Location','Date']).issubset(data.columns):
-        # print(data)
+        
+            
             save_obj = Graphs(user=request.user, upload=upload_file)
             save_obj.save()
 
+            names = list(df.Name)
+
+            primary_surgeon = list(df['Primary Surgeon']) 
+            first_assist = list(df['First Assist'])
+            secondary_assist = list(df['Secondary Assist'])
+
+            user_data = []
+
+            for i in range(len(names)):
+                user_data.append({
+                    'Name': names[i],
+                    'Primary Surgeon': primary_surgeon[i], 
+                    'First Assist': first_assist[i], 
+                    'Secondary Assist': secondary_assist[i]
+                    })
+
+            datasets = [
+                {
+                "label": 'Primary Surgeon',
+                "backgroundColor": random_color(),
+                "data": []
+                },
+                {
+                "label": 'First Assist',
+                "backgroundColor": random_color(),
+                "data": []
+                },
+                {
+                "label": 'Secondary Assist',
+                "backgroundColor": random_color(),
+                "data": []
+                }
+            ]
+
+            p_list = []
+            f_list = []
+            s_list = []
+            for d in user_data:
+                p_list.append(d['Primary Surgeon'])
+                f_list.append(d['First Assist'])
+                s_list.append(d['Secondary Assist'])
+
+
+            for dataset in datasets:
+                if dataset['label'] == 'Primary Surgeon':
+                    dataset['data'] = p_list
+                elif dataset['label'] == 'First Assist':
+                    dataset['data'] = f_list
+                elif dataset['label'] == 'Secondary Assist':
+                    dataset['data'] = s_list
+            
+                
+            
+
+            # # print(user_data)
+            # final_data_list = []
+
+            # for key,value in user_data.items():
+            #     final_data_set ={
+            #             "label": key,
+            #             "backgroundColor": random_color(),
+            #             "data": list(value.values()),
+            #             }
+                
+            #     final_data_list.append(final_data_set)
+
+            #     # final_data_list.append(final_data)
+            # print(final_data_list)
 
             role = []
+
             for i in data['Role']:
                 role.append(i)
         
@@ -281,10 +349,10 @@ def generate_bar_chart(request):
             for key in role_keys:
                 data = []
                 for raw in raw_data:
-                    print(raw)
+        
                     data.append(raw.get(key,0))
-                print("final res",data)
-            
+               
+
                 final_data.append({
                     "label": key,
                     "data": data,
@@ -297,7 +365,7 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
             
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels}
+            context = {'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names}
             messages.success(request, "File uploaded successfully")
             return render(request, 'home/sample.html', context)
         else:

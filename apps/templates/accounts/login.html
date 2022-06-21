@@ -1,18 +1,3 @@
-<!--
-=========================================================
-* * Black Dashboard - v1.0.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,6 +24,9 @@
 
   <!-- Specific Page CSS goes HERE  -->
   <style>
+    .main_body_section{
+    background: #f0f3f6;  
+    }
     .login_section{
     position: relative; 
     width: 100%;
@@ -62,21 +50,38 @@
     select:-webkit-autofill:focus {
       border: 1px solid #1e1e2f;
       -webkit-text-fill-color: #485370;
-      -webkit-box-shadow: 0 0 0px 1000px #27293d inset;
+      -webkit-box-shadow:0 0 0px 1000px #efefef inset;
       transition: background-color 5000s ease-in-out 0s;
       border-color: #e14eca;
     }
     .main-login-contain .card{
     padding: 30px 40px 40px 40px;
-    border: 2px dotted;  
+    border: 1px solid #ddd;
+    background: #ffffff; 
+    box-shadow: 0 0px 5px 0px rgb(0 0 0 / 3%); 
+    }
+    .main-login-contain .card-footer .btn{
+    background: #1a374d;
+    }
+    .main-login-contain .card-footer .btn:hover{
+    background: #1a374d !important;
+    }
+    .main-login-contain .card-footer a{
+    color: #1a374d !important;
+    font-weight: 500; 
     }
     .main-login-contain input{
-      border:1px solid #485370 !important; 
+    border: 1px solid #d6d6d6 !important;
+    color: #333 !important; 
+    }
+    .main-login-contain .card-footer .btn:focus{
+     background: #1a374d !important;
     }
     .main-login-contain h5{
     font-size: 38px;  
     margin-bottom: 0px;
     text-align: center;
+    color: #333;
     }
     .main-login-contain h6{
     font-size: 18px; 
@@ -104,6 +109,7 @@
     font-size: 14px;
     font-weight: 300;
     margin-bottom: 0px;
+    color: #333;
     }
     .main-login-contain .card-footer button{
     width:100%;
@@ -131,7 +137,7 @@
   </style>
 </head>
 
-<body>
+<body class="main_body_section">
   <div class="container">
   <div class="row justify-content-center align-items-center login_section">
     <div class="col-lg-7 col-md-8 col-sm-10 main-login-contain">
@@ -168,8 +174,8 @@
           </div>
           <div class="card-footer">
             <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
-            &nbsp; &nbsp;
-            Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
+            <!--&nbsp; &nbsp;
+            Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>-->
           </div>
         </form>
       </div>
