@@ -280,23 +280,7 @@ def generate_bar_chart(request):
                 elif dataset['label'] == 'Secondary Assist':
                     dataset['data'] = s_list
             
-                
-            
 
-            # # print(user_data)
-            # final_data_list = []
-
-            # for key,value in user_data.items():
-            #     final_data_set ={
-            #             "label": key,
-            #             "backgroundColor": random_color(),
-            #             "data": list(value.values()),
-            #             }
-                
-            #     final_data_list.append(final_data_set)
-
-            #     # final_data_list.append(final_data)
-            # print(final_data_list)
 
             role = []
 
