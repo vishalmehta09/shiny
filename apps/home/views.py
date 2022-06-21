@@ -29,7 +29,8 @@ def index(request):
 
 
 def read_data(file_path):
-        pandas_data_frame = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
+        pandas_data = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
+        pandas_data_frame= pandas_data.sort_values(by='Date')
         data_frame = pd.DataFrame(pandas_data_frame)
         return data_frame   
 
@@ -91,8 +92,6 @@ def generate_bar_chart(request):
             return render(request, 'home/sample.html', {'keys': keys, 'values': values})
         except:
             pass
-            
-            # return render(request, 'home/sample.html')
         
         
         return render(request, 'home/new_sample.html', {'users': user,})
@@ -106,6 +105,7 @@ def generate_bar_chart(request):
         
             file_path = obj.upload.path
             data = read_data(file_path)
+            df = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
            
             total_cases = len(data)
             current_year = date.today().year
@@ -126,6 +126,31 @@ def generate_bar_chart(request):
                     count_of_current+=1
                 else:
                     pass
+            today = date.today()
+            first = today.replace(day=1)
+            lastMonth = first - timedelta(days=1)
+            last_months = lastMonth.strftime("%Y-%m")
+            this_year_month = data[data['Date'].dt.to_period('M') == last_months]
+            get_g = this_year_month['Role'] == 'Primary Surgeon'
+            count_of_last_month = 0
+            for i in get_g:
+                if i == True:
+                    count_of_last_month+=1
+                else:
+                    pass
+
+
+            today = date.today()
+            datem = today.strftime("%Y-%m")
+            print(datem,"datemdatem")
+            this_year_this_month = data[data['Date'].dt.to_period('M') == datem]
+            get_role = this_year_this_month['Role'] == 'Primary Surgeon'
+            count_of_this_month = 0
+            for i in get_role:
+                if i == True:
+                    count_of_this_month+=1
+                else:
+                    pass
 
             coded_case = []
             for i in data['Coded Case']:
@@ -134,16 +159,65 @@ def generate_bar_chart(request):
             dashboard23 = dict(Counter(coded_case))
             
             
+            names = list(df.Name)
+
+            primary_surgeon = list(df['Primary Surgeon']) 
+            first_assist = list(df['First Assist'])
+            secondary_assist = list(df['Secondary Assist'])
+
+            user_data = []
+
+            for i in range(len(names)):
+                user_data.append({
+                    'Name': names[i],
+                    'Primary Surgeon': primary_surgeon[i], 
+                    'First Assist': first_assist[i], 
+                    'Secondary Assist': secondary_assist[i]
+                    })
+
+            datasets = [
+                {
+                "label": 'Primary Surgeon',
+                "backgroundColor": random_color(),
+                "data": []
+                },
+                {
+                "label": 'First Assist',
+                "backgroundColor": random_color(),
+                "data": []
+                },
+                {
+                "label": 'Secondary Assist',
+                "backgroundColor": random_color(),
+                "data": []
+                }
+            ]
+
+            p_list = []
+            f_list = []
+            s_list = []
+            for d in user_data:
+                p_list.append(d['Primary Surgeon'])
+                f_list.append(d['First Assist'])
+                s_list.append(d['Secondary Assist'])
+
+
+            for dataset in datasets:
+                if dataset['label'] == 'Primary Surgeon':
+                    dataset['data'] = p_list
+                elif dataset['label'] == 'First Assist':
+                    dataset['data'] = f_list
+                elif dataset['label'] == 'Secondary Assist':
+                    dataset['data'] = s_list
+
             role = []
             for i in data['Role']:
                 role.append(i)
-        
-            dashboard2 = dict(Counter(role))
-    
-            keys = list(dashboard2.keys())
-            # print(keys)
-            values = list(dashboard2.values())
-            # print(values)
+            
+            dashboard1 = dict(Counter(role))
+            keys = list(dashboard1.keys())
+            values = list(dashboard1.values())
+
 
             specialty_chart = []
             for i in data['Sub-Specialty']:
@@ -178,11 +252,11 @@ def generate_bar_chart(request):
             for role in roles:
 
                 labels.append(role)
-                role_keys = list(roles[role].keys())
-                raw_data.append(roles[role])
-                
+                role_key = list(roles[role].keys())
+                role_keys.append(role_key)
+                raw_data.append(roles[role])   
             final_data = []
-            for key in role_keys:
+            for key in role_keys[1]:
                 data = []
                 for raw in raw_data:
                     data.append(raw.get(key,0))
@@ -199,7 +273,7 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
 
-            context = { 'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current}
+            context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"final_data_list":datasets,"names":names, "count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')
@@ -207,8 +281,6 @@ def generate_bar_chart(request):
 
     if request.method == 'POST':
     
-        # Get the data from the form
-       
         upload_file = request.FILES['document']
        
         df = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
@@ -280,17 +352,14 @@ def generate_bar_chart(request):
                 elif dataset['label'] == 'Secondary Assist':
                     dataset['data'] = s_list
             
-
-
             role = []
-
             for i in data['Role']:
                 role.append(i)
-        
-            dashboard2 = dict(Counter(role))
-    
-            keys = list(dashboard2.keys())
-            values = list(dashboard2.values())
+            
+            dashboard1 = dict(Counter(role))
+            keys = list(dashboard1.keys())
+            values = list(dashboard1.values())
+
 
 
             specialty_chart = []
@@ -326,11 +395,12 @@ def generate_bar_chart(request):
             raw_data = []
             for role in roles:
                 labels.append(role)
-                role_keys = list(roles[role].keys())
+                role_key = list(roles[role].keys())
+                role_keys.append(role_key)
                 raw_data.append(roles[role])
 
             final_data = []
-            for key in role_keys:
+            for key in role_keys[1]:
                 data = []
                 for raw in raw_data:
         
@@ -349,7 +419,7 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
             
-            context = {'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names}
+            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names}
             messages.success(request, "File uploaded successfully")
             return render(request, 'home/sample.html', context)
         else:

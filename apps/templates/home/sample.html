@@ -45,7 +45,6 @@
       background-color:#fff;
       }
       .container-fluid.r_shiny_table {
-      padding: 0px;
       margin-top: 30px;
       }
       .r_shiny_table tr th , td{
@@ -178,6 +177,9 @@
       }
       }
       @media screen and (max-width: 1200px) {
+      .bg_design_dashboard{
+      min-height: 130px;
+      }
      .design_txt {
       margin-left: 8px;
       }
@@ -205,6 +207,9 @@
      
       }
       @media screen and (max-width: 992px) {
+      .bg_design_dashboard{
+      min-height: 100px;
+      }
       .bg_mbl_sectn button{
       padding: 0px 10px; 
       padding-bottom: 6px;
@@ -256,6 +261,9 @@
       }
       .top_section_cases .col-md-2{
       margin-bottom: 10px;
+      }
+      .bg_design_dashboard{
+      justify-content: left;  
       }
       }
       @media only screen and (max-width: 992px) and (min-width: 991px)  {
@@ -463,7 +471,7 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>Cases to date this year as primary
+                      <p>Cases to date this year
                       
                       </p>
                       
@@ -492,14 +500,19 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>Cases this month as primary</p>
-                      <h4>{{count_of_this_month}}</h4>  
-                      </div>
+                      <p>LOrem ipsum</p>
+                      <h4>345k</h4>  
+                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
+                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-              <div class="row mb-4 main-chart-section">
+           <div class="container-fluid">
+             <div class="row">
+               <div class="col-md-12">
+                <div class="row mb-4 main-chart-section">
                   <div class="col-md-6">
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
                           <canvas id="Role-bar-chart" height="180"></canvas>
@@ -522,19 +535,22 @@
                           <div id="container4" class="bg_main_cntnt bgcolor_chart">
                               <canvas id="site-bar-chart" height="180"></canvas>
                           </div>
-                  
+                      </div>
                    </div>
               </div>
+
               <div class="row mt-4 main-chart-section">
                   <div class="col-md-12">
                       <div class="bg_main_cntnt bgcolor_chart">
                           <div  id="container2">
-                              <canvas id="year-to-date-line-chart" ></canvas>
+                              <canvas id="year-to-date-line-chart" height="100" ></canvas>
                           </div>
                     </div>
                   </div>
               </div>
-            <div class="container-fluid r_shiny_table bgcolor_chart">
+               </div>
+             </div>
+             <div class="container-fluid r_shiny_table bgcolor_chart">
               <div class="row ">
                 <div class="col-md-12 ">
                   <table class="table table-bordered">
@@ -556,6 +572,8 @@
                 </div>
               </div>
             </div>
+           </div>
+   
             <!-- <div class="row mt-4 main-chart-section">
               <div class="col-md-12">
                   <div class="bg_main_cntnt">
@@ -583,6 +601,7 @@
                 </div>
               </div>
           </div> -->
+          
         </div>
     </div>
   </div>
@@ -700,9 +719,8 @@ role_bar = document.getElementById('Role-bar-chart');
     var myPieChart = new Chart(role_bar, role_chart_config);
    
     role_pie = document.getElementById('Role-pie-chart');
-        df = {{ keys| safe}}
-       
-        df1 = {{ values| safe}}
+        df = {{ keys | safe}}
+        df1 = {{ values | safe}}
         role_pie_config = {
         type: 'pie',
         data: {
@@ -725,19 +743,21 @@ role_bar = document.getElementById('Role-bar-chart');
 
     specialty_bar = document.getElementById('specialty-bar-chart');
         df = {{ keys1 | safe}}
-        df1 = {{ values1| safe}}
+        df1 = {{ values1 | safe}}
         specialty_bar_config = {
+
         type: 'horizontalBar',
         data: {
+
             datasets: [{
                 label: "specialty-bar-chart",
-                
                 data: df1,
                 backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
                 hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
-            labels: df
+            labels: df,
+            
         },
         options: {
             responsive: true
@@ -746,31 +766,7 @@ role_bar = document.getElementById('Role-bar-chart');
     };
     var myPieChart = new Chart(specialty_bar, specialty_bar_config);
     
-
-
-    specialty_bar = document.getElementById('specialty-bar-chart');
-        df = {{ keys1 | safe}}
-        df1 = {{ values1| safe}}
-        specialty_bar_config = {
-        type: 'horizontalBar',
-        data: {
-            datasets: [{
-                label: "specialty-bar-chart",
-                
-                data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-
-            }],
-            labels: df
-        },
-        options: {
-            responsive: true
-        },
-
-    };
-    var myPieChart = new Chart(specialty_bar, specialty_bar_config);
-
+            
     site_bar = document.getElementById('site-bar-chart');
         df = {{ keys2 | safe}}
         df1 = {{ values2| safe}}
