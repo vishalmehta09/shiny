@@ -163,7 +163,14 @@
       .design_txt {
       margin-left: 5px;
       }
-
+      .django_bg_sidebar input{
+      border: none;
+      border-radius: 3px;
+      padding: 4px 15px;
+      font-size: 12px;
+      margin-top: 7px;
+      background: #dedede;
+      }
       @media screen and (max-width: 1339px) {
       .top_section_cases .col-md-2 {
       width: 18%;
@@ -282,6 +289,33 @@
       font-size: 23px;
       }
       }
+      .arrow {
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 2px;
+    }
+
+    .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
+    .drop{
+        padding: 10px 10px;
+        margin-left: -1px;
+        border: 1px solid ;
+        align-items: center;
+    }
+    label.color_change {
+          color: white;
+          font-size: 12px;
+          padding-top: 7px;
+      }
+      .django_bg_sidebar [type=checkbox]{
+      width: 11px;
+      position: relative;
+      top: 2px;
+      }
     </style>
    
 </head>
@@ -316,10 +350,13 @@
         </ul>
         <select class="form-select select_box_sidebar" aria-label="Default select example">
           <option selected>Open select</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option value="Staff">Staff</option>
+          <option value="Sub-Specialty">Sub-Specialty</option>
+          <option value="Location">Location</option>
+          <option value="Role">Role</option>
         </select>
+
+        
     </div>
     <div class="w3-main" style="margin-left:200px">
     <div class="w3-teal bg_mbl_sectn">
@@ -426,13 +463,94 @@
                         <p>Logout</p>
                       </a>
                     </li>
+                   
+
               </ul>
-              <select class="form-select select_box_sidebar" aria-label="Default select example">
+              <select class="form-select select_box_sidebar country" aria-label="Default select example">
+               <!-- main screen -->
                 <option selected>Open select</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <option value="Staff">Staff</option>
+            <option value="Sub-Specialty">Sub-Specialty</option>
+            <option value="Location">Location</option>
+            <option value="Role">Role</option>
               </select>
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="get_location get_scroll">
+              {% for i in get_location%}
+              <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <div class="btn_select_sbmt">
+                <input type="submit" value="Submit">
+                </div>
+            </div></form>
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="sub_specialty get_scroll">
+              {% for i in get_sub_specialty%}
+              <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit"></div></form>
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="get_role_data get_scroll">
+              {% for i in get_role_data %}
+              <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit">
+            </div></form>
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="get_staff get_scroll">
+              {% for i in get_staff %}
+              <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit">
+            </div>
+           
+          </form><br><br>
+            
+              <script>
+                
+                $('select').on('change', function() {
+                   var get_value = this.value;
+                   console.log(get_value, "get_value")
+                   if (get_value == 'Role'){
+                    $('.get_role_data').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    
+                  }
+                  if (get_value == 'Location'){
+                    $('.get_location').show();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    $('.get_role_data').hide();
+                  }
+                  if (get_value == 'Staff'){
+                    $('.get_staff').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_role_data').hide();
+                  }
+                  if (get_value == 'Sub-Specialty'){
+                    $('.sub_specialty').show();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+                  }
+                  });
+                  
+                $('.get_location').hide();
+                $('.sub_specialty').hide();
+                $('.get_role_data').hide();
+                $('.get_staff').hide();
+              </script>
           </div>
           </div>
   
@@ -500,11 +618,9 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>LOrem ipsum</p>
-                      <h4>345k</h4>  
-                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
-                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
-                    </div>
+                      <p>Cases this month as primary</p>
+                      <h4>{{count_of_this_month}}</h4>  
+                       </div>
                   </div>
                 </div>
               </div>
@@ -551,13 +667,14 @@
                </div>
              </div>
              <div class="container-fluid r_shiny_table bgcolor_chart">
+
               <div class="row ">
                 <div class="col-md-12 ">
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th style="background-color:#f6f2f2">Coded Case</th>
-                        <th style="background-color:#f6f2f2">#</th>
+                        <th style="background-color:#f6f2f2">Coded Case &nbsp;<i class="arrow down"></i></th>
+                        <th style="background-color:#f6f2f2"># &nbsp;<i class="arrow down"></i></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -806,7 +923,28 @@ role_bar = document.getElementById('Role-bar-chart');
     };
     var myPieChart = new Chart(site_bar, site_bar_config);
 
-  
+    $(document).on('click', 'th', function () {
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+            }
+            table.children('tbody').empty().html(rows);
+        });
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index),
+                    valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ?
+                    valA - valB : valA.localeCompare(valB);
+            };
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text();
+        }
     </script>
     
 </body>
