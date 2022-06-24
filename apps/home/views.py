@@ -33,7 +33,17 @@ def read_data(file_path):
         pandas_data_frame= pandas_data.sort_values(by='Date')
         data_frame = pd.DataFrame(pandas_data_frame)
         return data_frame   
+def color_line_chart(key):
 
+    if key == "Primary Surgeon":
+        color = '#398AB9'
+
+    elif key == "First Assist":
+        color = '#D8D2CB'
+    elif key == "Secondary Assist":
+    
+        color = '#1A374D'
+    return color
 
 def random_color():
     
@@ -98,7 +108,6 @@ def generate_bar_chart(request):
     
   
     if request.method == 'GET':
-        
         obj = Graphs.objects.filter(user=request.user)
         if obj.exists():
             obj = obj.last()
@@ -106,15 +115,24 @@ def generate_bar_chart(request):
             file_path = obj.upload.path
             data = read_data(file_path)
 
-            # context_di = {}
-            # staff = {}
-            # for i in data['Staff']:
-            #     context_di[i] =  data[data['Staff'] == i]
-            #     staff[i] = dict(Counter(context_di[i]['Role']))
-
-            # print(context_di,'context_di')
-            # print(staff,"staff")
-
+            context_di = {}
+            staff = {}
+            for i in data['Staff']:
+                # print(i, "ii")
+                context_di[i] =  data[data['Staff'] == i]
+                # print(context_di[i],"context_di[i]")
+                # print(context_di[i]['Role'], "context_di[i]['Role']")
+                # print(Counter(context_di[i]['Role']), "context_di[i]['Role']")
+                staff[i] = dict(Counter(context_di[i]['Role']))
+            get_roles = data['Role']
+            get_roles_data = list(get_roles.unique())
+            get_starr = list(staff.values())
+            # for h in get_roles_data:
+            #     if h not in get_starr:
+            #         get_starr[h] = 0
+                    
+            # print(get_starr, "get_starrget_starr")
+            # print(get_roles_data, "get_starr")
             a = data['Staff']
             get_staff = list(a.unique())
 
@@ -126,8 +144,8 @@ def generate_bar_chart(request):
 
             d = data['Role']
             get_role_data = list(d.unique())
-            df = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
-            
+            df1 = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
+            df = df1.sort_values('Total')
             total_cases = len(data)
             current_year = date.today().year
             get_date = data[data['Date'].dt.year == current_year] 
@@ -163,7 +181,7 @@ def generate_bar_chart(request):
 
             today = date.today()
             datem = today.strftime("%Y-%m")
-            print(datem,"datemdatem")
+            # print(datem,"datemdatem")
             this_year_this_month = data[data['Date'].dt.to_period('M') == datem]
             get_role = this_year_this_month['Role'] == 'Primary Surgeon'
             count_of_this_month = 0
@@ -199,17 +217,17 @@ def generate_bar_chart(request):
             datasets = [
                 {
                 "label": 'Primary Surgeon',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#398AB9",
                 "data": []
                 },
                 {
                 "label": 'First Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#D8D2CB",
                 "data": []
                 },
                 {
                 "label": 'Secondary Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#1A374D",
                 "data": []
                 }
             ]
@@ -244,7 +262,9 @@ def generate_bar_chart(request):
             for i in data['Sub-Specialty']:
                 specialty_chart.append(i)
             
-            dashboard3 = dict(Counter(specialty_chart))
+            dashboard13 = dict(Counter(specialty_chart))
+            dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1], )))
+
 
             keys1 = list(dashboard3.keys())
             values1 = list(dashboard3.values())
@@ -253,8 +273,8 @@ def generate_bar_chart(request):
             for i in data['Location']:
                 site.append(i)
             
-            dashboard6 = dict(Counter(site))
-
+            dashboard16 = dict(Counter(site))
+            dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],)))
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
 
@@ -264,7 +284,7 @@ def generate_bar_chart(request):
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
-            print(roles, "roles")
+            # print(roles, "roles")
             labels = []
             role_keys = []
             raw_data = []
@@ -283,8 +303,8 @@ def generate_bar_chart(request):
                 final_data.append({
                     "label": key,
                     "data": data,
-                    "borderColor": random_color(),
-                    "backgroundColor": random_color(),
+                    "borderColor": color_line_chart(key),
+                    "backgroundColor": color_line_chart(key),
                     })
         
             final_final_data = {
@@ -297,46 +317,29 @@ def generate_bar_chart(request):
         else:
             return render(request, 'home/sample.html')
         
-    # if request.method == 'POST' and request.POST.getlist("Staff"):
-    #     print("Staff")
-    #     print(request.POST.getlist("Staff"), "get_seff rqst")
-    #     get_data= request.POST.getlist("Staff")
-
-
-
-    # if request.method == 'POST' and request.POST.getlist("Role"):
-    #     print("Role")
-    #     print(request.POST.getlist("Role"), "get_seff rqst")
-    # if request.method == 'POST' and request.POST.getlist("Sub-Specialty"):
-    #     print("Specialty")
-    #     print(request.POST.getlist("Sub-Specialty"), "get_seff rqst")
-    # if request.method == 'POST' and request.POST.getlist("Location"):
-    #     print("Location")
-    #     print(request.POST.getlist("Location"), "get_seff rqst")
     if request.method == 'POST':
-        # print(request.POST.values, "request.FILES['document']")
-        if not request.POST.get('document'):
+        if not request.FILES.get('document'):
             obj = Graphs.objects.filter(user=request.user)
             if obj.exists():
                 obj = obj.last()
             
                 upload_file = obj.upload.path
                 
-                
             
         else:
             upload_file = request.FILES['document']
 
-                
-        df = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
-        file_extension = os.path.splitext(upload_file)[1]
+        print(upload_file)        
+        df1 = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
+        df = df1.sort_values('Total')
+        # file_extension = os.path.splitext(upload_file)[1]
 
-        valid_extensions = [ ".csv", ".CSV", ".xlsx", ".XLSX", ".xls", ".XLS"]
+        # valid_extensions = [ ".csv", ".CSV", ".xlsx", ".XLSX", ".xls", ".XLS"]
 
-        if not file_extension.lower() in valid_extensions:
-            msg = "Invalid file, select a valid CSV file"
-            messages.error(request, msg)
-            return render(request,'home/sample.html')
+        # if not file_extension.lower() in valid_extensions:
+        #     msg = "Invalid file, select a valid CSV file"
+        #     messages.error(request, msg)
+        #     return render(request,'home/sample.html')
 
         #read the file and convert to data frame.
         data = read_data(upload_file)
@@ -441,17 +444,17 @@ def generate_bar_chart(request):
             datasets = [
                 {
                 "label": 'Primary Surgeon',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#398AB9",
                 "data": []
                 },
                 {
                 "label": 'First Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#D8D2CB",
                 "data": []
                 },
                 {
                 "label": 'Secondary Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": "#1A374D",
                 "data": []
                 }
             ]
@@ -487,15 +490,17 @@ def generate_bar_chart(request):
                 for i in get_g_role['Sub-Specialty']:
                     specialty_chart.append(i)
                 
-                dashboard3 = dict(Counter(specialty_chart))
-
+                dashboard13 = dict(Counter(specialty_chart))
+                dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1], )))
                 keys1 = list(dashboard3.keys())
                 values1 = list(dashboard3.values())
 
                 for i in get_g_role['Location']:
                     site.append(i)
                 
-                dashboard6 = dict(Counter(site))
+                dashboard16 = dict(Counter(site))
+                dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],)))
+
 
                 keys2 = list(dashboard6.keys())
                 values2 = list(dashboard6.values())
@@ -528,8 +533,8 @@ def generate_bar_chart(request):
                     final_data.append({
                         "label": key,
                         "data": data,
-                        "borderColor": random_color(),
-                        "backgroundColor": random_color(),
+                        "borderColor": color_line_chart(key),
+                        "backgroundColor": color_line_chart(key),
                         })
             
                 final_final_data = {
@@ -659,8 +664,8 @@ def generate_bar_chart(request):
                     final_data.append({
                         "label": key,
                         "data": data,
-                        "borderColor": random_color(),
-                        "backgroundColor": random_color(),
+                        "borderColor": color_line_chart(key),
+                        "backgroundColor": color_line_chart(key),
                         })
             
                 final_final_data = {
@@ -788,8 +793,8 @@ def generate_bar_chart(request):
                     final_data.append({
                         "label": key,
                         "data": data,
-                        "borderColor": random_color(),
-                        "backgroundColor": random_color(),
+                        "borderColor": color_line_chart(key),
+                        "backgroundColor": color_line_chart(key),
                         })
             
                 final_final_data = {
@@ -888,8 +893,8 @@ def generate_bar_chart(request):
                 final_data.append({
                     "label": key,
                     "data": data,
-                    "borderColor": random_color(),
-                    "backgroundColor": random_color(),
+                    "borderColor":color_line_chart(key),
+                    "backgroundColor": color_line_chart(key),
                     })
           
             final_final_data = {
@@ -902,7 +907,7 @@ def generate_bar_chart(request):
             
             
             context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
-            if request.POST.get('document'):
+            if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
                 return render(request, 'home/sample.html', context)
             else:
