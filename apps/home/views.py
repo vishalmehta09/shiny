@@ -1,16 +1,11 @@
 
-
-from traceback import print_tb
-from unittest import result
 from urllib.parse import uses_params
-from django.contrib.auth.models import User
+from apps.authentication.models import *
 from typing import Counter
-from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.template import loader
-from numpy import empty
 from .models import Graphs
 import pandas as pd
 import os
@@ -36,9 +31,28 @@ def read_data(file_path):
 
 
 def random_color():
-    
     color = '#%06x' % random.randint(0, 0xFFFFFF)
     return color
+
+def color_line_chart(key):
+    if key == "Primary Surgeon":
+        color = '#398AB9'
+    elif key == "First Assist":
+        color = '#D8D2CB'
+    elif key == "Secondary Assist":
+        color = '#1A374D'
+
+    return color
+
+def filter_data(request,df):
+    
+    get_name = request.GET.get('value')
+    role = []
+    for i in df[get_name].unique():
+        role.append(i)
+    
+    return role
+
 
 
 @login_required(login_url="/login/")
@@ -47,7 +61,7 @@ def generate_bar_chart(request):
     if  request.user.is_superuser:
 
         
-        user = User.objects.all().exclude(is_superuser=True)
+        user = NewUser.objects.all().exclude(is_superuser=True)
         id = request.GET.get('id')
         is_admin = request.GET.get('is_admin',None)
         try:
@@ -56,6 +70,65 @@ def generate_bar_chart(request):
                 messages.error(request, 'No data found for this user')
             file_path = user_obj.upload.path
             data = read_data(file_path)
+            df1 = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
+            df = df1.sort_values('Total')
+
+            names = list(df.Name)
+
+            primary_surgeon = list(df['Primary Surgeon'])
+           
+            first_assist = list(df['First Assist'])
+    
+            secondary_assist = list(df['Secondary Assist'])
+
+    
+            user_data = []
+
+            for i in range(len(names)):
+                user_data.append({
+                    'Name': names[i],
+                    'Primary Surgeon': primary_surgeon[i], 
+                    'First Assist': first_assist[i], 
+                    'Secondary Assist': secondary_assist[i],
+
+                    })
+
+         
+            datasets = [
+                {
+                "label": 'Primary Surgeon',
+                "backgroundColor": '#398AB9',
+                "data": []
+                },
+                {
+                "label": 'First Assist',
+                "backgroundColor": '#D8D2CB',
+                "data": []
+                },
+                {
+                "label": 'Secondary Assist',
+                "backgroundColor": '#1A374D',
+                "data": []
+                }
+            ]
+
+            p_list = []
+            f_list = []
+            s_list = []
+            for d in user_data:
+                p_list.append(d['Primary Surgeon'])
+                f_list.append(d['First Assist'])
+                s_list.append(d['Secondary Assist'])
+
+
+            for dataset in datasets:
+                if dataset['label'] == 'Primary Surgeon':
+                    dataset['data'] = p_list
+                elif dataset['label'] == 'First Assist':
+                    dataset['data'] = f_list
+                elif dataset['label'] == 'Secondary Assist':
+                    dataset['data'] = s_list
+
 
 
             role = []
@@ -88,7 +161,7 @@ def generate_bar_chart(request):
             values2 = list(dashboard6.values())
 
             if is_admin:
-                return JsonResponse({'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2})
+                return JsonResponse({'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2,"final_data_list":datasets,"names":names,})
             return render(request, 'home/sample.html', {'keys': keys, 'values': values})
         except:
             pass
@@ -99,14 +172,22 @@ def generate_bar_chart(request):
   
     if request.method == 'GET':
 
+        
         obj = Graphs.objects.filter(user=request.user)
         if obj.exists():
             obj = obj.last()
         
             file_path = obj.upload.path
             data = read_data(file_path)
-            df = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
+      
+            df1 = pd.read_excel(file_path, sheet_name='Calculations', header=1, parse_dates=True)
+            df = df1.sort_values('Total')
+
            
+            if request.GET.get('value') is not None:
+                get_val = filter_data(request,data)
+                print(get_val)
+ 
             total_cases = len(data)
             current_year = date.today().year
             get_date = data[data['Date'].dt.year == current_year] 
@@ -142,7 +223,7 @@ def generate_bar_chart(request):
 
             today = date.today()
             datem = today.strftime("%Y-%m")
-            print(datem,"datemdatem")
+        
             this_year_this_month = data[data['Date'].dt.to_period('M') == datem]
             get_role = this_year_this_month['Role'] == 'Primary Surgeon'
             count_of_this_month = 0
@@ -154,17 +235,21 @@ def generate_bar_chart(request):
 
             coded_case = []
             for i in data['Coded Case']:
+
                 coded_case.append(i)
-        
-            dashboard23 = dict(Counter(coded_case))
+
             
-            
+            dashboard23 = (dict(Counter(coded_case)))
+          
             names = list(df.Name)
 
-            primary_surgeon = list(df['Primary Surgeon']) 
+            primary_surgeon = list(df['Primary Surgeon'])
+           
             first_assist = list(df['First Assist'])
+    
             secondary_assist = list(df['Secondary Assist'])
 
+    
             user_data = []
 
             for i in range(len(names)):
@@ -172,23 +257,25 @@ def generate_bar_chart(request):
                     'Name': names[i],
                     'Primary Surgeon': primary_surgeon[i], 
                     'First Assist': first_assist[i], 
-                    'Secondary Assist': secondary_assist[i]
+                    'Secondary Assist': secondary_assist[i],
+
                     })
 
+         
             datasets = [
                 {
                 "label": 'Primary Surgeon',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#398AB9',
                 "data": []
                 },
                 {
                 "label": 'First Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#D8D2CB',
                 "data": []
                 },
                 {
                 "label": 'Secondary Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#1A374D',
                 "data": []
                 }
             ]
@@ -223,16 +310,19 @@ def generate_bar_chart(request):
             for i in data['Sub-Specialty']:
                 specialty_chart.append(i)
             
-            dashboard3 = dict(Counter(specialty_chart))
+            dashboard13 = dict(Counter(specialty_chart))
+            dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1], )))
+           
 
-            keys1 = list(dashboard3.keys())
-            values1 = list(dashboard3.values())
+            keys1 = list((dashboard3.keys()))
+            values1 = list((dashboard3.values()))
             
             site = []
             for i in data['Location']:
                 site.append(i)
             
-            dashboard6 = dict(Counter(site))
+            dashboard16 = dict(Counter(site))
+            dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],)))
 
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
@@ -245,7 +335,7 @@ def generate_bar_chart(request):
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
-            # print(roles)
+    
             labels = []
             role_keys = []
             raw_data = []
@@ -264,8 +354,8 @@ def generate_bar_chart(request):
                 final_data.append({
                     "label": key,
                     "data": data,
-                    "borderColor": random_color(),
-                    "backgroundColor": random_color(),
+                    "borderColor": color_line_chart(key),
+                    "backgroundColor": color_line_chart(key),
                     })
         
             final_final_data = {
@@ -273,7 +363,20 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
 
-            context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"final_data_list":datasets,"names":names, "count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+            context = { 
+            'keys':keys , 'values':values,
+            'keys1': keys1, 'values1': values1 ,
+             'keys2': keys2, 'values2': values2, 
+             'final_data': final_final_data, 
+             'labels': labels, 'dashboard23':dashboard23, 
+             "total_cases":total_cases,
+              "count_of_current_year":count_of_current_year,
+               "count_of_current":count_of_current,
+               "final_data_list":datasets,"names":names,
+                "count_of_last_month":count_of_last_month, 
+                'count_of_this_month':count_of_this_month,
+                }
+
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html')
@@ -282,55 +385,87 @@ def generate_bar_chart(request):
     if request.method == 'POST':
     
         upload_file = request.FILES['document']
-       
-        df = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
+
         file_extension = os.path.splitext(upload_file.name)[1]
 
         valid_extensions = [ ".csv", ".CSV", ".xlsx", ".XLSX", ".xls", ".XLS"]
-
         if not file_extension.lower() in valid_extensions:
             msg = "Invalid file, select a valid CSV file"
-            messages.error(request, msg)
-            return render(request,'home/sample.html')
 
-        #read the file and convert to data frame.
+            messages.error(request, msg)
+
+            return redirect('generate_bar_chart')
+       
+        df1 = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
+        df = df1.sort_values('Total')
+
         data = read_data(upload_file)
+        # print(data)
+        # r_le = []
+        # val_e = []
+        # for j in data["Role"]:
+        #     r_le.append(j)
+        # for i in data["Staff"]:
+        #     if i in r_le[""]:
+        #         val_e.append(i)
+                
+                    
+        # print(val_e)
+
         if set(['Role','Sub-Specialty', 'Location','Date']).issubset(data.columns):
         
             
             save_obj = Graphs(user=request.user, upload=upload_file)
             save_obj.save()
-
+    
+            
             names = list(df.Name)
-
-            primary_surgeon = list(df['Primary Surgeon']) 
+            primary_surgeon = list(df['Primary Surgeon'])
             first_assist = list(df['First Assist'])
             secondary_assist = list(df['Secondary Assist'])
 
             user_data = []
 
+
             for i in range(len(names)):
                 user_data.append({
-                    'Name': names[i],
+                   
                     'Primary Surgeon': primary_surgeon[i], 
                     'First Assist': first_assist[i], 
                     'Secondary Assist': secondary_assist[i]
                     })
+            # print(user_data)
+            # context_di = {}
+
+            # staff = {}
+
+            # for i in data['Staff']:
+
+            #     context_di[i] = data[data['Staff'] == i]
+
+            #     staff[i] = dict(Counter(context_di.get(i,0)['Role']))
+
+
+
+            # get_starr = list(staff.values())
+            # print(get_starr)
+
+            # user_data = [{'Secondary Assist': 8, 'First Assist': 2, 'Primary Surgeon': 3}, {'First Assist': 3}, {'Secondary Assist': 10, 'First Assist': 6, 'Primary Surgeon': 1}, {'Secondary Assist': 2, 'First Assist': 3}, {'Secondary Assist': 1}, {'Secondary Assist': 36, 'First Assist': 14, 'Primary Surgeon': 3}, {'First Assist': 3, 'Secondary Assist': 2, 'Primary Surgeon': 1}, {'Secondary Assist': 4, 'Primary Surgeon': 1, 'First Assist': 3}, {'Secondary Assist': 13, 'Primary Surgeon': 28, 'First Assist': 29}, {'Secondary Assist': 18, 'Primary Surgeon': 7, 'First Assist': 5}, {'First Assist': 6, 'Primary Surgeon': 4}, {'First Assist': 1, 'Secondary Assist': 1}, {'First Assist': 1, 'Secondary Assist': 2}, {'First Assist': 3, 'Primary Surgeon': 1}, {'Secondary Assist': 3, 'Primary Surgeon': 11, 'First Assist': 3}, {'First Assist': 7, 'Primary Surgeon': 2}, {'Primary Surgeon': 5, 'Secondary Assist': 11, 'First Assist': 3}, {'Secondary Assist': 28, 'First Assist': 3, 'Primary Surgeon': 1}, {'First Assist': 3, 'Primary Surgeon': 1}, {'Primary Surgeon': 3}, {'First Assist': 3, 'Secondary Assist': 2}]
 
             datasets = [
                 {
                 "label": 'Primary Surgeon',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#398AB9',
                 "data": []
                 },
                 {
                 "label": 'First Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#D8D2CB',
                 "data": []
                 },
                 {
                 "label": 'Secondary Assist',
-                "backgroundColor": random_color(),
+                "backgroundColor": '#1A374D',
                 "data": []
                 }
             ]
@@ -339,9 +474,12 @@ def generate_bar_chart(request):
             f_list = []
             s_list = []
             for d in user_data:
-                p_list.append(d['Primary Surgeon'])
-                f_list.append(d['First Assist'])
+                print(d)
                 s_list.append(d['Secondary Assist'])
+                f_list.append(d['First Assist'])
+                p_list.append(d['Primary Surgeon'])
+               
+               
 
 
             for dataset in datasets:
@@ -351,6 +489,14 @@ def generate_bar_chart(request):
                     dataset['data'] = f_list
                 elif dataset['label'] == 'Secondary Assist':
                     dataset['data'] = s_list
+            
+            coded_case = []
+            for i in data['Coded Case']:
+                coded_case.append(i)
+
+   
+            dashboard23 = (dict(Counter(coded_case)))
+
             
             role = []
             for i in data['Role']:
@@ -367,10 +513,11 @@ def generate_bar_chart(request):
             for i in data['Sub-Specialty']:
                 specialty_chart.append(i)
             
-            dashboard3 = dict(Counter(specialty_chart))
+            dashboard13 = dict(Counter(specialty_chart))
+            dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1]), ))
             
 
-            keys1 = list(dashboard3.keys())
+            keys1 = list(dashboard3.keys()) 
             values1 = list(dashboard3.values())
 
 
@@ -378,7 +525,8 @@ def generate_bar_chart(request):
             for i in data['Location']:
                 site.append(i)
             
-            dashboard6 = dict(Counter(site))
+            dashboard16 = dict(Counter(site))
+            dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1])))
 
             keys2 = list(dashboard6.keys())
             values2 = list(dashboard6.values())
@@ -410,16 +558,18 @@ def generate_bar_chart(request):
                 final_data.append({
                     "label": key,
                     "data": data,
-                    "borderColor": random_color(),
-                    "backgroundColor": random_color(),
+                    "borderColor": color_line_chart(key),
+                    "backgroundColor": color_line_chart(key),
                     })
           
             final_final_data = {
                 "datasets": final_data,
                 "labels": labels,
             }
+
             
-            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names}
+            
+            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names,"dashboard23":dashboard23}
             messages.success(request, "File uploaded successfully")
             return render(request, 'home/sample.html', context)
         else:

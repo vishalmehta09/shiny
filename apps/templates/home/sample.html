@@ -315,10 +315,11 @@
               </li>
         </ul>
         <select class="form-select select_box_sidebar" aria-label="Default select example">
-          <option selected>Open select</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option selected>Add Filter</option>
+          <option value="1">Staff</option>
+          <option value="2">Sub-Specialty </option>
+          <option value="3">Location </option>
+          <option value="4">Role </option>
         </select>
     </div>
     <div class="w3-main" style="margin-left:200px">
@@ -376,11 +377,13 @@
   
                     {% for message in messages %}
                     
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                    <div id ="message_container" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
                     
                     {% endfor %}
                     
                     {% endif %}
+
+                    
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
@@ -427,12 +430,44 @@
                       </a>
                     </li>
               </ul>
-              <select class="form-select select_box_sidebar" aria-label="Default select example">
-                <option selected>Open select</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <script>
+                var message_ele = document.getElementById("message_container");
+
+                setTimeout(function(){ 
+                  message_ele.style.display = "none"; 
+                }, 5000);
+              </script>
+              
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+          
+              <select id="chooseme" class="form-select select_box_sidebar country" aria-label="Default select example" >
+                <option value="0" selected>Add Filter</option>
+                <option class="dropdown-submenu" value="Staff">Staff</option>
+                <option  value="Sub-Specialty">Sub-Specialty </option>
+                <option  value="Location">Location </option>
+                <option  value="Role">Role</option>
+                <li class="dropdown-submenu">
+                  Accessories
+                </li>
               </select>
+
+              <h1>{{get_val}}</h1>
+
+         
+              <script>
+                $(document).ready(function(){
+    $("select.country").change(function(){
+        var value = $(this).children("option:selected").val();
+        $.ajax({
+          type: "get",
+          data:{
+            'value':value,
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+          }
+        })
+    });
+});
+                </script>
           </div>
           </div>
   
@@ -574,34 +609,7 @@
             </div>
            </div>
    
-            <!-- <div class="row mt-4 main-chart-section">
-              <div class="col-md-12">
-                  <div class="bg_main_cntnt">
-                      <div  id="container28">
-
-                        <table class="table table-bordered month-data" id="month-data">
-                          <thead>
-                              <tr>
-                                  <th>Id</th>
-                                  <th>#</th>
-                                  </tr>
-                          </thead>
-                          <tbody>
-
-                            {% for key, value in dashboard23.items %}
-                            <tr>
-                                <td>{{key}}</td>
-                                <td>{{value}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                        
-                      </div>
-                </div>
-              </div>
-          </div> -->
-          
+           
         </div>
     </div>
   </div>
@@ -684,15 +692,13 @@ $('.image-upload-wrap').bind('dragover', function () {
 
 role_bar = document.getElementById('Role-bar-chart');
       
-  
-        df = {{ keys| safe}}
+
    
         names = {{ names| safe}}
 
         data_list = {{ final_data_list | safe }}
 
-        console.log(names)
-        console.log(data_list)
+  
     
 
         role_chart_config = {
@@ -702,6 +708,9 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets:data_list
         },
         options: {
+          legend: {
+        display: false
+    },
         scales: {
             xAxes: [{
                 ticks: {
@@ -728,13 +737,16 @@ role_bar = document.getElementById('Role-bar-chart');
 
                 label: "Role-pie-chart",
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                backgroundColor: ["#D8D2CB", "#1A374D", "#398AB9",],
+                // hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
 
             }],
             labels: df,
         },
-        options: {
+        options: {   
+          legend: {
+        display: false
+    },
             responsive: true
         },
 
@@ -752,15 +764,19 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets: [{
                 label: "specialty-bar-chart",
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080", "808080","808080"],
+                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080", "#808080","808080"],
 
             }],
             labels: df,
             
         },
         options: {
-            responsive: true
+          legend: {
+        display: false
+    },
+            responsive: true,
+     
         },
 
     };
@@ -784,6 +800,9 @@ role_bar = document.getElementById('Role-bar-chart');
             labels: df
         },
         options: {
+          legend: {
+        display: false
+    },
             responsive: true
         },
 
@@ -791,7 +810,7 @@ role_bar = document.getElementById('Role-bar-chart');
     var myPieChart = new Chart(site_bar, site_bar_config);
 
 
-    site_bar = document.getElementById('year-to-date-line-chart');
+    line_bar_chart = document.getElementById('year-to-date-line-chart');
         df = {{ final_data| safe}}
         df1 = {{ labels | safe}}
 
@@ -799,12 +818,16 @@ role_bar = document.getElementById('Role-bar-chart');
         site_bar_config = {
         type: 'line',
         data: df,
+
         options: {
+          legend: {
+        display: false
+    },
             responsive: true
         },
 
     };
-    var myPieChart = new Chart(site_bar, site_bar_config);
+    var myPieChart = new Chart(line_bar_chart, site_bar_config);
 
   
     </script>

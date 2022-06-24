@@ -5,15 +5,31 @@ Copyright (c) 2019 - present AppSeed.us
 
 from distutils.command.upload import upload
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 
 
 class Graphs(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     upload = models.FileField(upload_to='csv_files')
 
     def __str__(self):
         return self.user.username
+
+class Institution(models.Model):
+
+    institute = models.CharField(max_length = 200)
+
+    def __str__(self):
+        return self.institute
+
+
+class NormalUser(models.Model):
+
+    normal_user = models.CharField(max_length = 200, verbose_name="user")
+
+    def __str__(self):
+        return self.normal_user
+
 
