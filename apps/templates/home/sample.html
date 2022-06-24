@@ -406,6 +406,18 @@
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
+                    {% if request.user.is_superuser %}
+                    <form method="GET">
+                    <select class="form-select" aria-label="Default select example" name="user_id">
+                      <option selected>User List</option>
+                      {% for u in users %}
+                      <option value="{{u.id}}" name="checks">{{ u.username }}</option>
+                      {% endfor %}
+                      <input type="hidden" value="is_admin">
+                    </select>
+                    <input type="submit">
+                  </form>
+                    {%endif%}
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
                     </button>
@@ -466,7 +478,7 @@
                    
 
               </ul>
-              <select class="form-select select_box_sidebar country" aria-label="Default select example">
+              <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
                <!-- main screen -->
                 <option selected>Open select</option>
             <option value="Staff">Staff</option>
@@ -518,7 +530,7 @@
                 
                 $('select').on('change', function() {
                    var get_value = this.value;
-                   console.log(get_value, "get_value")
+                  //  console.log(get_value, "get_value")
                    if (get_value == 'Role'){
                     $('.get_role_data').show();
                     $('.get_location').hide();
@@ -808,8 +820,8 @@ role_bar = document.getElementById('Role-bar-chart');
 
         data_list = {{ final_data_list | safe }}
 
-        console.log(names)
-        console.log(data_list)
+        // console.log(names)
+        // console.log(data_list)
     
 
         role_chart_config = {
@@ -947,7 +959,26 @@ role_bar = document.getElementById('Role-bar-chart');
         function getCellValue(row, index) {
             return $(row).children('td').eq(index).text();
         }
-    </script>
+
+
+    //get dropdown value ajax
+    function get_user(user_id){
+      $.ajax({
+          url: '{% url "generate_bar_chart" %}',
+          type: 'GET',
+          data: {
+              'id': user_id,
+              'is_admin': true
+          },
+          success: function(data) {   
+            console.log("id")                 
+              // generate_bar_chart(data);
+              
+          }
+      });
+    }
+
+</script>
     
 </body>
 </html>

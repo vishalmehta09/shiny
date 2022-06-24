@@ -54,63 +54,96 @@ def random_color():
 @login_required(login_url="/login/")
 def generate_bar_chart(request):
 
-    if  request.user.is_superuser:
+    # if  request.user.is_superuser:
+    #     user = User.objects.all().exclude(is_superuser=True)
+    #     return render(request, 'home/sample.html',{'user':user})
 
         
-        user = User.objects.all().exclude(is_superuser=True)
-        id = request.GET.get('id')
-        is_admin = request.GET.get('is_admin',None)
-        try:
-            user_obj = Graphs.objects.filter(user_id=id).last()
-            if user_obj is None:
-                messages.error(request, 'No data found for this user')
-            file_path = user_obj.upload.path
-            data = read_data(file_path)
-
-
-            role = []
-            for i in data['Role']:
-                role.append(i)
+        # user = User.objects.all().exclude(is_superuser=True)
         
-            dashboard2 = dict(Counter(role))
+        # id = request.GET.get('id')
+        # print(id, "id")
+        # is_admin = request.GET.get('is_admin',None)
+        # try:
+        #     user_obj = Graphs.objects.filter(user_id=id).last()
+        #     if user_obj is None:
+        #         messages.error(request, 'No data found for this user')
+        #     file_path = user_obj.upload.path
+        #     data = read_data(file_path)
+
+        #     a = data['Staff']
+        #     get_staff = list(a.unique())
+        #     print(get_staff,"get_staff")
+        #     b = data['Sub-Specialty']
+        #     get_sub_specialty = list(b.unique())
+
+        #     c = data['Location']
+        #     get_location = list(c.unique())
+
+        #     d = data['Role']
+        #     get_role_data = list(d.unique())
+        #     role = []
+        #     for i in data['Role']:
+        #         role.append(i)
+        
+        #     dashboard2 = dict(Counter(role))
     
-            keys = list(dashboard2.keys())
-            values = list(dashboard2.values())
+        #     keys = list(dashboard2.keys())
+        #     values = list(dashboard2.values())
             
 
-            specialty_chart = []
-            for i in data['Sub-Specialty']:
-                specialty_chart.append(i)
+        #     specialty_chart = []
+        #     for i in data['Sub-Specialty']:
+        #         specialty_chart.append(i)
             
-            dashboard3 = dict(Counter(specialty_chart))
+        #     dashboard3 = dict(Counter(specialty_chart))
 
-            keys1 = list(dashboard3.keys())
-            values1 = list(dashboard3.values())
+        #     keys1 = list(dashboard3.keys())
+        #     values1 = list(dashboard3.values())
 
 
-            site = []
-            for i in data['Location']:
-                site.append(i)
+        #     site = []
+        #     for i in data['Location']:
+        #         site.append(i)
             
-            dashboard6 = dict(Counter(site))
+        #     dashboard6 = dict(Counter(site))
 
-            keys2 = list(dashboard6.keys())
-            values2 = list(dashboard6.values())
+        #     keys2 = list(dashboard6.keys())
+        #     values2 = list(dashboard6.values())
 
-            if is_admin:
-                return JsonResponse({'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2})
-            return render(request, 'home/sample.html', {'keys': keys, 'values': values})
-        except:
-            pass
+        #     if is_admin:
+        #         return JsonResponse({'keys': keys, 'values': values, 'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2})
+        #     return render(request, 'home/sample.html', {'keys': keys, 'values': values, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location})
+        # except:
+        #     pass
         
         
-        return render(request, 'home/new_sample.html', {'users': user,})
+        
     
   
     if request.method == 'GET':
-        obj = Graphs.objects.filter(user=request.user)
+        print(request.GET.values)
+        
+        
+        if not request.user.is_superuser:
+            obj = Graphs.objects.filter(user=request.user)
+        elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
+            obj = Graphs.objects.filter(user=int(request.GET.get('user_id')))
+            print(obj)
+        else:
+            obj = Graphs.objects.filter(user=int(7))
+           
+            # if request.GET.get('id') and request.GET.get('is_admin'):
+            #     print("AJAX BRO")
+            #     obj = Graphs.objects.filter(user=request.GET.get('id'))
+            # else:
+            #     print("YEAH ELSE ")
+            #     obj = Graphs.objects.filter(user=request.GET.get('id'))
+
+        
         if obj.exists():
             obj = obj.last()
+
         
             file_path = obj.upload.path
             data = read_data(file_path)
@@ -312,10 +345,11 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
 
-            context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location}
+            context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location,
+            "users":User.objects.all().exclude(is_superuser=True)}
             return render(request, 'home/sample.html', context)
         else:
-            return render(request, 'home/sample.html')
+            return render(request, 'home/sample.html',{'users':User.objects.all().exclude(is_superuser=True)})
         
     if request.method == 'POST':
         if not request.FILES.get('document'):
