@@ -36,13 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.home' ,
-    'chartjs'
+    'chartjs',
+    "apps.authentication",
     # 'graphs' # Enable the inner home (home)
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,6 +58,7 @@ LOGOUT_REDIRECT_URL = "home"  # Route defined in home/urls.py
 TEMPLATE_DIR = os.path.join(CORE_DIR, "apps/templates")  # ROOT dir for templates
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
+AUTH_USER_MODEL = 'authentication.NewUser'
 
 TEMPLATES = [
     {

@@ -102,7 +102,7 @@
       padding-top: 2px;
       }
       .design_icon{
-      background: #f8bd7a;
+      background: #398AB9;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -118,7 +118,7 @@
       align-items: center; 
       }
       .design_icon4{
-      background: #f7464a;
+      background: #D8D2CB;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -126,7 +126,7 @@
       align-items: center;
       }
       .design_icon1{
-      background: #204db4;
+      background: #1A374D;
       padding: 11px 10px;
       border-radius: 5px;
       display: flex;
@@ -134,7 +134,7 @@
       align-items: center;  
       }
       .design_icon3{
-      background: #1b998b;
+      background: #36393B;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -163,7 +163,14 @@
       .design_txt {
       margin-left: 5px;
       }
-
+      .django_bg_sidebar input{
+      border: none;
+      border-radius: 3px;
+      padding: 4px 15px;
+      font-size: 12px;
+      margin-top: 7px;
+      background: #dedede;
+      }
       @media screen and (max-width: 1339px) {
       .top_section_cases .col-md-2 {
       width: 18%;
@@ -282,6 +289,33 @@
       font-size: 23px;
       }
       }
+      .arrow {
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 2px;
+    }
+
+    .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
+    .drop{
+        padding: 10px 10px;
+        margin-left: -1px;
+        border: 1px solid ;
+        align-items: center;
+    }
+    label.color_change {
+          color: white;
+          font-size: 12px;
+          padding-top: 7px;
+      }
+      .django_bg_sidebar [type=checkbox]{
+      width: 11px;
+      position: relative;
+      top: 2px;
+      }
     </style>
    
 </head>
@@ -315,12 +349,14 @@
               </li>
         </ul>
         <select class="form-select select_box_sidebar" aria-label="Default select example">
-          <option selected>Add Filter</option>
-          <option value="1">Staff</option>
-          <option value="2">Sub-Specialty </option>
-          <option value="3">Location </option>
-          <option value="4">Role </option>
+          <option selected>Open select</option>
+          <option value="Staff">Staff</option>
+          <option value="Sub-Specialty">Sub-Specialty</option>
+          <option value="Location">Location</option>
+          <option value="Role">Role</option>
         </select>
+
+        
     </div>
     <div class="w3-main" style="margin-left:200px">
     <div class="w3-teal bg_mbl_sectn">
@@ -331,7 +367,7 @@
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Upload CSV File
+      Upload Excel File
       </button>
   </div>
   <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
@@ -364,7 +400,7 @@
       <div class="row mt-3">
           <div class="col-md-2 top_header">
               <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Upload CSV File
+                Upload Excel File
                 </button>
           </div>
           <div class="col-md-10">
@@ -408,7 +444,7 @@
       <div class="row mt-1 mb-5 tablet_section">
           <div class="col-md-2 desktop-section-section">
               <div class="django_bg_sidebar">
-                <h3><a href="#">R-shiny</a> </h3>
+                <h3><a href="#">OR_Logbook</a> </h3>
               <ul>
                   <li class="active ">
                       <a href="#">
@@ -429,45 +465,94 @@
                         <p>Logout</p>
                       </a>
                     </li>
+                   
+
               </ul>
-              <script>
-                var message_ele = document.getElementById("message_container");
-
-                setTimeout(function(){ 
-                  message_ele.style.display = "none"; 
-                }, 5000);
-              </script>
-              
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-          
-              <select id="chooseme" class="form-select select_box_sidebar country" aria-label="Default select example" >
-                <option value="0" selected>Add Filter</option>
-                <option class="dropdown-submenu" value="Staff">Staff</option>
-                <option  value="Sub-Specialty">Sub-Specialty </option>
-                <option  value="Location">Location </option>
-                <option  value="Role">Role</option>
-                <li class="dropdown-submenu">
-                  Accessories
-                </li>
+              <select class="form-select select_box_sidebar country" aria-label="Default select example">
+               <!-- main screen -->
+                <option selected>Open select</option>
+            <option value="Staff">Staff</option>
+            <option value="Sub-Specialty">Sub-Specialty</option>
+            <option value="Location">Location</option>
+            <option value="Role">Role</option>
               </select>
-
-              <h1>{{get_val}}</h1>
-
-         
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="get_location get_scroll">
+              {% for i in get_location%}
+              <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <div class="btn_select_sbmt">
+                <input type="submit" value="Submit">
+                </div>
+            </div></form>
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="sub_specialty get_scroll">
+              {% for i in get_sub_specialty%}
+              <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit"></div></form>
+              <form method="post" action="">
+                {% csrf_token %}
+              <div class="get_role_data get_scroll">
+              {% for i in get_role_data %}
+              <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit">
+            </div></form>
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="get_staff get_scroll">
+              {% for i in get_staff %}
+              <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
+              <label for="vehicle1" class="color_change"> {{i}}</label><br>
+              {%endfor%}
+              <input type="submit" value="Submit">
+            </div>
+           
+          </form><br><br>
+            
               <script>
-                $(document).ready(function(){
-    $("select.country").change(function(){
-        var value = $(this).children("option:selected").val();
-        $.ajax({
-          type: "get",
-          data:{
-            'value':value,
-            'csrfmiddlewaretoken': '{{csrf_token}}'
-          }
-        })
-    });
-});
-                </script>
+                
+                $('select').on('change', function() {
+                   var get_value = this.value;
+                   console.log(get_value, "get_value")
+                   if (get_value == 'Role'){
+                    $('.get_role_data').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    
+                  }
+                  if (get_value == 'Location'){
+                    $('.get_location').show();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    $('.get_role_data').hide();
+                  }
+                  if (get_value == 'Staff'){
+                    $('.get_staff').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_role_data').hide();
+                  }
+                  if (get_value == 'Sub-Specialty'){
+                    $('.sub_specialty').show();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+                  }
+                  });
+                  
+                $('.get_location').hide();
+                $('.sub_specialty').hide();
+                $('.get_role_data').hide();
+                $('.get_staff').hide();
+              </script>
           </div>
           </div>
   
@@ -535,11 +620,9 @@
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>LOrem ipsum</p>
-                      <h4>345k</h4>  
-                      <p class="ui_date_time">Feb 1 - april Worldwide</p>
-                      <p class="last_month_data"><span>18.2%</span>Since last month</p>
-                    </div>
+                      <p>Cases this month as primary</p>
+                      <h4>{{count_of_this_month}}</h4>  
+                       </div>
                   </div>
                 </div>
               </div>
@@ -586,13 +669,14 @@
                </div>
              </div>
              <div class="container-fluid r_shiny_table bgcolor_chart">
+
               <div class="row ">
                 <div class="col-md-12 ">
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th style="background-color:#f6f2f2">Coded Case</th>
-                        <th style="background-color:#f6f2f2">#</th>
+                        <th style="background-color:#f6f2f2">Coded Case &nbsp;<i class="arrow down"></i></th>
+                        <th style="background-color:#f6f2f2"># &nbsp;<i class="arrow down"></i></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -708,17 +792,32 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets:data_list
         },
         options: {
+          title: {
+      display: true,
+      text: 'Procedures by Surgeon'
+          },
           legend: {
-        display: false
+        display: true,
+        position: 'bottom',
     },
         scales: {
             xAxes: [{
+        //       scaleLabel: {
+        //   display: true,
+        //   labelString: 'inches'
+        // },
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            },
                 ticks: {
                     min: 0 // Edit the value according to what you need
                 },
               stacked: true
             }],
             yAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            },
                 stacked: true
             }]
         }
@@ -744,8 +843,14 @@ role_bar = document.getElementById('Role-bar-chart');
             labels: df,
         },
         options: {   
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+         
           legend: {
-        display: false
+        display: false,
+        position: 'bottom'
     },
             responsive: true
         },
@@ -764,14 +869,29 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets: [{
                 label: "specialty-bar-chart",
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080", "808080","808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080", "#808080","808080"],
+                backgroundColor: "#1A374D",
 
             }],
             labels: df,
             
         },
         options: {
+          title: {
+      display: true,
+      text: 'Procedures by Sub-Specialty '
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]
+    },
           legend: {
         display: false
     },
@@ -793,13 +913,27 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "site-bar-chart",
                 
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
+                backgroundColor: "#1A374D",
 
             }],
             labels: df
         },
         options: {
+          title: {
+      display: true,
+      text:'Procedures by Site'
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]},
           legend: {
         display: false
     },
@@ -820,6 +954,22 @@ role_bar = document.getElementById('Role-bar-chart');
         data: df,
 
         options: {
+          title: {
+      display: true,
+      text:'Role over Time'
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]
+    },
           legend: {
         display: false
     },
@@ -829,7 +979,28 @@ role_bar = document.getElementById('Role-bar-chart');
     };
     var myPieChart = new Chart(line_bar_chart, site_bar_config);
 
-  
+    $(document).on('click', 'th', function () {
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+            }
+            table.children('tbody').empty().html(rows);
+        });
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index),
+                    valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ?
+                    valA - valB : valA.localeCompare(valB);
+            };
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text();
+        }
     </script>
     
 </body>
