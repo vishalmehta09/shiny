@@ -4,7 +4,6 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
-from django.contrib.auth.hashers import make_password
 
 from apps.home.models import * 
 from django.core.exceptions import ValidationError
@@ -66,8 +65,6 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
             raise ValidationError("password are incorrect")
 
     
-       
-
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

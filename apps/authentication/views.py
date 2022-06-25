@@ -31,7 +31,7 @@ def login_view(request):
                 login(request, user)
                 return redirect("generate_bar_chart")
             else:
-                msg = 'Invalid credentials'
+                msg = 'Invalid credentials provided'
             
     
 
