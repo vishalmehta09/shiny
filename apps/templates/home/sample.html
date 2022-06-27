@@ -416,7 +416,8 @@
                     <select class="form-select" aria-label="Default select example" name="user_id" id="selected_value">
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks">{{ u.username }}</option>
+                      <option value="{{u.id}}" name="checks" {% if u.value == id %}selected{%
+                        endif %}>{{ u.username }}</option>
                       {% endfor %}
                      
                       <input type="hidden" value="is_admin">
