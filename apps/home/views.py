@@ -1,6 +1,5 @@
 
-from cmath import e
-from urllib.parse import uses_params
+
 from apps.authentication.models import *
 from typing import Counter
 from django.contrib.auth.decorators import login_required
@@ -9,12 +8,10 @@ from django.shortcuts import redirect, render
 from django.template import loader
 from .models import Graphs
 import pandas as pd
-import os
 import random
 from django.contrib import messages
 from datetime import date
 from datetime import timedelta
-import itertools
 
 @login_required(login_url="/login/")
 def index(request):
@@ -201,6 +198,7 @@ def generate_bar_chart(request):
                 }
             
                 only_final_data.append(final_data)
+            print(only_final_data)
 
             p_list = []
             f_list = []
