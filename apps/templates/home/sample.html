@@ -354,6 +354,7 @@
           <option value="Sub-Specialty">Sub-Specialty</option>
           <option value="Location">Location</option>
           <option value="Role">Role</option>
+          <option value="PGY">PGY</option>
         </select>
 
         
@@ -366,9 +367,11 @@
   </div>
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
+    {% if not request.user.is_superuser %}
     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Upload CSV File
       </button>
+      {%endif%}
   </div>
   <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
     <nav class="navbar navbar-expand-lg lg_in_out">
@@ -399,22 +402,27 @@
   <div class="container-fluid desktop-section-section">
       <div class="row mt-3">
           <div class="col-md-2 top_header">
+            {% if not request.user.is_superuser %}
               <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   Upload CSV File
                 </button>
+                {%endif%}
           </div>
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
                     {% if request.user.is_superuser %}
                     <form method="GET">
-                    <select class="form-select" aria-label="Default select example" name="user_id">
+                    <select class="form-select" aria-label="Default select example" name="user_id" id="selected_value">
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks">{{ u.username }}</option>
+                      <option value="{{u.id}}" name="checks" {% if u.value == id %}selected{%
+                        endif %}>{{ u.username }}</option>
                       {% endfor %}
+                     
                       <input type="hidden" value="is_admin">
                     </select>
+                    
                     <input type="submit">
                   </form>
                     {%endif%}
@@ -478,13 +486,14 @@
                    
 
               </ul>
-              <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
+              <select class="form-select select_box_sidebar fg country"  aria-label="Default select example">
                <!-- main screen -->
-                <option selected>Open select</option>
+                <option >Open select</option>
             <option value="Staff">Staff</option>
             <option value="Sub-Specialty">Sub-Specialty</option>
             <option value="Location">Location</option>
             <option value="Role">Role</option>
+            <option value="PGY">PGY</option>
               </select>
               <form method="post" action="">
                 {% csrf_token %}
@@ -524,7 +533,19 @@
               <input type="submit" value="Submit">
             </div>
            
-          </form><br><br>
+          </form>
+          <form method="post" action="">
+            {% csrf_token %}
+            <div class="get_pgy get_scroll">
+            {% for i in get_pgy %}
+            <input type="checkbox" id="myCheckBoxID" name="PGY" value='{{i}}'>
+            <label for="vehicle1" class="color_change"> {{i}}</label><br>
+            {%endfor%}
+            <input type="submit" value="Submit">
+          </div>
+         
+        </form>
+          <br><br>
             
               <script>
                 
@@ -536,6 +557,7 @@
                     $('.get_location').hide();
                     $('.sub_specialty').hide();
                     $('.get_staff').hide();
+                    $('.get_pgy').hide();
                     
                   }
                   if (get_value == 'Location'){
@@ -543,15 +565,25 @@
                     $('.sub_specialty').hide();
                     $('.get_staff').hide();
                     $('.get_role_data').hide();
+                    $('.get_pgy').hide();
                   }
                   if (get_value == 'Staff'){
                     $('.get_staff').show();
                     $('.get_location').hide();
                     $('.sub_specialty').hide();
                     $('.get_role_data').hide();
+                    $('.get_pgy').hide();
                   }
                   if (get_value == 'Sub-Specialty'){
                     $('.sub_specialty').show();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+                    $('.get_pgy').hide();
+                  }
+                  if (get_value == 'PGY'){
+                    $('.get_pgy').show();
+                    $('.sub_specialty').hide();
                     $('.get_role_data').hide();
                     $('.get_staff').hide();
                     $('.get_location').hide();
@@ -562,6 +594,7 @@
                 $('.sub_specialty').hide();
                 $('.get_role_data').hide();
                 $('.get_staff').hide();
+                $('.get_pgy').hide();
               </script>
           </div>
           </div>
