@@ -1,5 +1,6 @@
 
 
+from tkinter import E
 from traceback import print_tb
 from unittest import result
 from urllib.parse import uses_params
@@ -122,16 +123,14 @@ def generate_bar_chart(request):
     
   
     if request.method == 'GET':
-        print(request.GET.values)
         
         
         if not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
         elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
             obj = Graphs.objects.filter(user=int(request.GET.get('user_id')))
-            print(obj)
         else:
-            obj = Graphs.objects.filter(user=int(7))
+            obj = Graphs.objects.filter(user=int(4565465465456))
            
             # if request.GET.get('id') and request.GET.get('is_admin'):
             #     print("AJAX BRO")
@@ -168,6 +167,9 @@ def generate_bar_chart(request):
             # print(get_roles_data, "get_starr")
             a = data['Staff']
             get_staff = list(a.unique())
+
+            e = data['PGY']
+            get_pgy = list(e.unique())
 
             b = data['Sub-Specialty']
             get_sub_specialty = list(b.unique())
@@ -346,14 +348,21 @@ def generate_bar_chart(request):
             }
 
             context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location,
-            "users":User.objects.all().exclude(is_superuser=True)}
+            "users":User.objects.all().exclude(is_superuser=True),"get_pgy":get_pgy}
             return render(request, 'home/sample.html', context)
         else:
             return render(request, 'home/sample.html',{'users':User.objects.all().exclude(is_superuser=True)})
         
-    if request.method == 'POST':
-        if not request.FILES.get('document'):
+    if request.method == 'POST' :
+        # print(request.GET.get('user_id'),"bbb")
+        if not request.FILES.get('document') and not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
+            if obj.exists():
+                obj = obj.last()
+            
+                upload_file = obj.upload.path
+        elif not request.FILES.get('document') and request.user.is_superuser:
+            obj = Graphs.objects.filter(user=request.GET.get('user_id'))
             if obj.exists():
                 obj = obj.last()
             
@@ -363,7 +372,7 @@ def generate_bar_chart(request):
         else:
             upload_file = request.FILES['document']
 
-        print(upload_file)        
+        # print(upload_file)        
         df1 = pd.read_excel(upload_file, sheet_name='Calculations', header=1, parse_dates=True)
         df = df1.sort_values('Total')
         # file_extension = os.path.splitext(upload_file)[1]
@@ -413,7 +422,6 @@ def generate_bar_chart(request):
 
         today = date.today()
         datem = today.strftime("%Y-%m")
-        print(datem,"datemdatem")
         this_year_this_month = data[data['Date'].dt.to_period('M') == datem]
         get_role = this_year_this_month['Role'] == 'Primary Surgeon'
         count_of_this_month = 0
@@ -428,6 +436,9 @@ def generate_bar_chart(request):
         a = data['Staff']
         get_staff = list(a.unique())
 
+        e = data['PGY']
+        get_pgy = list(e.unique())
+
         b = data['Sub-Specialty']
         get_sub_specialty = list(b.unique())
 
@@ -436,6 +447,8 @@ def generate_bar_chart(request):
 
         d = data['Role']
         get_role_data = list(d.unique())
+        get_s =  [int(i) for i in data['PGY']]
+        print(get_s, "data['PGY']")
         if request.POST.getlist("Staff"):
             get_data_staff = request.POST.getlist("Staff")
             get_g_staff = data[data["Staff"].isin(get_data_staff)]
@@ -447,8 +460,18 @@ def generate_bar_chart(request):
             get_g_location = data[data["Location"].isin(get_data_location)]
         if request.POST.getlist("Sub-Specialty"):
             get_data_specialty = request.POST.getlist("Sub-Specialty")
+            print(get_data_specialty, "get_data_specialty")
             get_g_specialty = data[data["Sub-Specialty"].isin(get_data_specialty)]
             print(get_g_specialty,"get_g")
+        if request.POST.getlist("PGY"):
+            get_data_p = request.POST.getlist("PGY")
+            get_data_pgy = [i.replace(".0", "") for i in get_data_p]
+            print(get_data_pgy, "get_data_pgy")
+            for i in range(0, len(get_data_pgy)):
+                get_data_pgy[i] = int(get_data_pgy[i])
+            get_g_pgy = data[data["PGY"].isin(get_data_pgy)]
+            print(get_g_pgy, "1st check get_g_pgy")
+        
         if set(['Role','Sub-Specialty', 'Location','Date']).issubset(data.columns):
     
             save_obj = Graphs(user=request.user, upload=upload_file)
@@ -512,6 +535,124 @@ def generate_bar_chart(request):
             role = []
             specialty_chart = []
             site =[]
+            if request.POST.getlist("PGY"):
+                print("yes true")
+                print(get_g_pgy,"get_g_pgyget_g_pgy")
+                for i in get_g_pgy['Role']:
+                    role.append(i)
+                
+                dashboard1 = dict(Counter(role))
+                keys = list(dashboard1.keys())
+                values = list(dashboard1.values())
+                print(role, "rolerolerole")
+
+                for i in get_g_pgy['Sub-Specialty']:
+                    specialty_chart.append(i)
+                
+                dashboard13 = dict(Counter(specialty_chart))
+                dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1], )))
+                keys1 = list(dashboard3.keys())
+                values1 = list(dashboard3.values())
+
+                for i in get_g_pgy['Location']:
+                    site.append(i)
+                
+                dashboard16 = dict(Counter(site))
+                dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],)))
+
+
+                keys2 = list(dashboard6.keys())
+                values2 = list(dashboard6.values())
+
+                context_dict = {}
+                roles = {}
+                for i in get_g_pgy['Date'].dt.year:
+                    context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.year == i]
+                    roles[i] = dict(Counter(context_dict[i]['Role']))
+                print(roles, "roles_get_role")
+                labels = []
+                role_keys = []
+                raw_data = []
+                for role in roles:
+                    labels.append(role)
+                    role_key = list(roles[role].keys())
+                    role_keys.append(role_key)
+                    raw_data.append(roles[role])
+                print(role_keys, "role_keys")
+                final_data = []
+                for key in role_keys[1]:
+                    data = []
+                    for raw in raw_data:
+            
+                        data.append(raw.get(key,0))
+                
+
+                    final_data.append({
+                        "label": key,
+                        "data": data,
+                        "borderColor": color_line_chart(key),
+                        "backgroundColor": color_line_chart(key),
+                        })
+            
+                final_final_data = {
+                    "datasets": final_data,
+                    "labels": labels,
+                }
+
+                coded_case = []
+                for i in get_g_pgy['Coded Case']:
+                    coded_case.append(i)
+            
+                dashboard23 = dict(Counter(coded_case))
+
+                total_cases = len(get_g_pgy)
+                current_year = date.today().year
+                get_date = get_g_pgy[get_g_pgy['Date'].dt.year == current_year] 
+
+                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                count_of_current_year = 0
+                for u in list(date_gt):
+                    if u == True:
+                        count_of_current_year+=1
+                    else:
+                        pass
+                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+
+                count_of_current = 0
+                for i in this_year_ps:
+                    if i == True:
+                        count_of_current+=1
+                    else:
+                        pass
+                today = date.today()
+                first = today.replace(day=1)
+                lastMonth = first - timedelta(days=1)
+                last_months = lastMonth.strftime("%Y-%m")
+                this_year_month = get_g_pgy[get_g_pgy['Date'].dt.to_period('M') == last_months]
+                get_g = this_year_month['Role'] == 'Primary Surgeon'
+                count_of_last_month = 0
+                for i in get_g:
+                    if i == True:
+                        count_of_last_month+=1
+                    else:
+                        pass
+
+
+                today = date.today()
+                datem = today.strftime("%Y-%m")
+                print(datem,"datemdatem")
+                this_year_this_month = get_g_pgy[get_g_pgy['Date'].dt.to_period('M') == datem]
+                get_role = this_year_this_month['Role'] == 'Primary Surgeon'
+                count_of_this_month = 0
+                for i in get_role:
+                    if i == True:
+                        count_of_this_month+=1
+                    else:
+                        pass
+
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                return render(request, 'home/sample.html', context)
+
             if request.POST.getlist("Role"):
                 print("if")
                 for i in get_g_role['Role']:
@@ -627,7 +768,7 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -758,7 +899,7 @@ def generate_bar_chart(request):
 
 
                 dashboard23 = dict(Counter(coded_case))
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
                 return render(request, 'home/sample.html', context)
                 
 
@@ -886,7 +1027,7 @@ def generate_bar_chart(request):
                         count_of_this_month+=1
                     else:
                         pass
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_pgy":get_pgy, "get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -940,7 +1081,7 @@ def generate_bar_chart(request):
 
             
             
-            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":names, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy,  "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
             if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
                 return render(request, 'home/sample.html', context)
