@@ -48,7 +48,7 @@ def generate_bar_chart(request):
       
     if request.method == 'GET':
 
-
+  
         if not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
         elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
@@ -73,11 +73,8 @@ def generate_bar_chart(request):
 
 
                 staff[i] = dict(Counter(context_di[i]['Role']))
+
     
-            # print(staff,"normal")
-
-
-
             a = data['Staff']
             get_staff = list(a.unique())
 
@@ -144,27 +141,7 @@ def generate_bar_chart(request):
             
             dashboard23 = (dict(Counter(coded_case)))
           
-            # names = list(df.Name)
-
-            # primary_surgeon = list(df['Primary Surgeon'])
-           
-            # first_assist = list(df['First Assist'])
-    
-            # secondary_assist = list(df['Secondary Assist'])
-
-    
-            # user_data = []
-
-            # for i in range(len(names)):
-            #     user_data.append({
-            #         'Name': names[i],
-            #         'Primary Surgeon': primary_surgeon[i], 
-            #         'First Assist': first_assist[i], 
-            #         'Secondary Assist': secondary_assist[i],
-
-            #         })
-
-            # print(user_data)
+         
             datasets = [
                 {
                 "label": 'Primary Surgeon',
@@ -182,10 +159,7 @@ def generate_bar_chart(request):
                 "data": []
                 }
             ]
-            name_set = []
-            for i in range(len(staff)):
-                name_set.append(list(staff.keys())[i])
-         
+
 
             only_final_data = []
 
@@ -198,12 +172,24 @@ def generate_bar_chart(request):
                 }
             
                 only_final_data.append(final_data)
-            print(only_final_data)
+
+            lists = []
+            
+            for i in only_final_data:
+                total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                i['Total'] = total
+                lists.append(i)
+            
+            # print(lists)
+            shorted_data = sorted(lists, key=lambda x: x['Total'], reverse=True)
+            name_set = []
+            for i in shorted_data:
+                name_set.append(i['name'])
 
             p_list = []
             f_list = []
             s_list = []
-            for d in only_final_data:
+            for d in shorted_data:
                 p_list.append(d['Primary Surgeon']) 
                 f_list.append(d['First Assist']) 
                 s_list.append(d['Secondary Assist']) 
@@ -381,7 +367,7 @@ def generate_bar_chart(request):
         if request.POST.getlist("Sub-Specialty"):
             get_data_specialty = request.POST.getlist("Sub-Specialty")
             get_g_specialty = data[data["Sub-Specialty"].isin(get_data_specialty)]
-            print(get_g_specialty,"get_g")
+           
 
 
         context_di = {}
@@ -399,33 +385,15 @@ def generate_bar_chart(request):
     
             save_obj = Graphs(user=request.user, upload=upload_file)
             save_obj.save()
-            if not request.POST.getlist("Staff"):
-                name_set = []
-                for i in range(len(staff)):
-                    name_set.append(list(staff.keys())[i])
-                # names = list(df.Name)
-                # print(names,"names")
-      
-            else:
+            # if not request.POST.getlist("Staff"):
+            #     name_set = []
+            #     for i in range(len(staff)):
+            #         name_set.append(list(staff.keys())[i])
+            #     # names = list(df.Name)
+            #     # print(names,"names")  
+            # else:
                 
-                names = get_data_staff
-               
-            # context_di = {}
-
-            # staff = {}
-
-            # for i in data['Staff']:
-
-            #     context_di[i] = data[data['Staff'] == i]
-
-            #     staff[i] = dict(Counter(context_di[i]['Role']))
-
-
-
-          
-            name_set = []
-            for i in range(len(staff)):
-                name_set.append(list(staff.keys())[i])
+            #     names = get_data_staff
 
             only_final_data = []
 
@@ -457,11 +425,24 @@ def generate_bar_chart(request):
                 }
             ]
 
+            lists = []
+            #update the data
+            for i in only_final_data:
+                total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                i['Total'] = total
+                lists.append(i)
+               
+            # print(lists)
+            name_set = []
+            shorted_data = sorted(lists, key=lambda x: x['Total'], reverse=True)
+            for i in range(len(shorted_data)):
+                name_set.append(shorted_data[i]['name'])
+
+
             p_list = []
             f_list = []
             s_list = []
-            for d in only_final_data:
-                print(d)
+            for d in shorted_data:
                 s_list.append(d['Secondary Assist'])
                 f_list.append(d['First Assist'])
                 p_list.append(d['Primary Surgeon'])
