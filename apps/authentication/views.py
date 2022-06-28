@@ -1,15 +1,12 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 
 from apps.authentication.models import NewUser
 from .forms import *
+
 from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+
 
 
 
@@ -39,3 +36,24 @@ def login_view(request):
 
 
 
+def change_password(request): 
+    if request.method == "POST": 
+        current_user = request.user.username
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+        user = NewUser.objects.get(username= current_user)
+        if user:
+            if password == confirm_password:
+                user.password = make_password(password)
+                user.save()
+                messages.success(request, "successfully saved")
+                return redirect('change_password')
+            else:
+                messages.error(request, "password and confirm password not matched")
+                return redirect('change_password')
+
+        else:
+            messages.error(request, "Invalid user")
+            return redirect('change_password')
+    else:
+        return render(request, 'accounts/change_password.html')

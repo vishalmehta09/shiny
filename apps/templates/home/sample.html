@@ -10,7 +10,42 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
     <style>
-       .select_box_sidebar {
+     .user_cntain {
+    display: flex;
+    width: 30% !IMPORTANT;
+    }
+    .user_cntain form {
+    width: 100%;
+  }
+  .navbar.navbar-expand-lg.lg_in_out{
+    padding-top: 0px;
+  }
+  .usr_list select:focus{
+    box-shadow:0px 0px 0px transparent;
+    border-color: #afafaf;
+  }
+  .usr_btn {
+    width: 30%;
+    float: right;
+}
+.usr_list {
+    width: 70%;
+    float: left;
+}
+.usr_list select {
+    width: 97%;
+    background: #efefef;
+    border: 1px solid #afafaf;
+    border-radius: 7px;
+}
+.usr_btn input {
+    background: #1a374d;
+    border: none;
+    color: #fff;
+    padding: 7px 20px;
+    border-radius: 5px;
+}
+  .select_box_sidebar {
     color: #fff;
     appearance:none;
     -webkit-appearance:none;
@@ -320,6 +355,7 @@
    
 </head>
 <body class="main_body_section"> 
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <div class="container-fluid mobile-section-header">
@@ -327,7 +363,7 @@
       <div class="col-md-2 col-xs-2 side_bar_mbl">
         <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
           <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
-          <h3><a href="#">OR_Logbook</a> </h3>
+          <h3><a href="#">OR Logbook</a> </h3>
         <ul>
             <li class="active ">
                 <a href="#">
@@ -335,12 +371,14 @@
                   <p>Dashboard</p>
                 </a>
               </li>
+              {%if not request.user.is_superuser%}
               <li>
-                <a href="#">
+                <a href="{% url 'change_password' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
               </li>
+              {%endif%}
               <li>
                 <a href="#">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -349,11 +387,12 @@
               </li>
         </ul>
         <select class="form-select select_box_sidebar" aria-label="Default select example">
-          <option selected>Open select</option>
+          <option selected>Select Filter</option>
           <option value="Staff">Staff</option>
           <option value="Sub-Specialty">Sub-Specialty</option>
           <option value="Location">Location</option>
           <option value="Role">Role</option>
+          <option value="PGY">PGY</option>
         </select>
 
         
@@ -366,9 +405,15 @@
   </div>
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
-    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Upload Excel File
-      </button>
+    {% if not request.user.is_superuser %}
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+Upload Excel File
+
+</button>
+
+{%endif%}
   </div>
   <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
     <nav class="navbar navbar-expand-lg lg_in_out">
@@ -399,24 +444,36 @@
   <div class="container-fluid desktop-section-section">
       <div class="row mt-3">
           <div class="col-md-2 top_header">
-              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Upload Excel File
-                </button>
+            {% if not request.user.is_superuser %}
+
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            
+            Upload Excel File
+            
+            </button>
+            
+            {%endif%}
           </div>
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
                     {% if request.user.is_superuser %}
+                    <div class="user_cntain">
                     <form method="GET">
+                      <div class="usr_list">
                     <select class="form-select" aria-label="Default select example" name="user_id">
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks">{{ u.username }}</option>
+                      <option value="{{u.id}}" name="checks" >{{ u.username }}</option>
                       {% endfor %}
                       <input type="hidden" value="is_admin">
                     </select>
+                    </div>
+                    <div class="usr_btn">
                     <input type="submit">
+                    </div>
                   </form>
+                  </div>
                     {%endif%}
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
@@ -454,21 +511,25 @@
       <div class="row mt-1 mb-5 tablet_section">
           <div class="col-md-2 desktop-section-section">
               <div class="django_bg_sidebar">
-                <h3><a href="#">OR_Logbook</a> </h3>
+                <h3><a href="#">OR Logbook</a> </h3>
               <ul>
                   <li class="active ">
                       <a href="#">
                         <i class="fa fa-pie-chart" aria-hidden="true"></i>
                         <p>Dashboard</p>
                       </a>
+                     
                     </li>
+                     {%if not request.user.is_superuser%}
                     <li>
-                      <a href="#">
+                      <a href="{% url 'change_password' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         <p>User Profile</p>
                       </a>
                     </li>
+                    {% endif %}
                     <li>
+                 
                      
                       <a href="{% url 'logout' %}">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -480,11 +541,12 @@
               </ul>
               <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
                <!-- main screen -->
-                <option selected>Open select</option>
+                <option selected>Select Filter</option>
             <option value="Staff">Staff</option>
             <option value="Sub-Specialty">Sub-Specialty</option>
             <option value="Location">Location</option>
             <option value="Role">Role</option>
+            <option value="PGY">PGY</option>
               </select>
               <form method="post" action="">
                 {% csrf_token %}
@@ -524,7 +586,26 @@
               <input type="submit" value="Submit">
             </div>
            
-          </form><br><br>
+          </form>
+          <form method="post" action="">
+
+            {% csrf_token %}
+            
+            <div class="get_pgy get_scroll">
+            
+            {% for i in get_pgy %}
+            
+            <input type="checkbox" id="myCheckBoxID" name="PGY" value='{{i}}'>
+            
+            <label for="vehicle1" class="color_change"> {{i}}</label><br>
+            
+            {%endfor%}
+            
+            <input type="submit" value="Submit">
+            
+            </div>
+            
+            </form><br><br>
             
               <script>
                 $("#myElem").show();
@@ -532,12 +613,13 @@
                 
                 $('select').on('change', function() {
                    var get_value = this.value;
-                  //  console.log(get_value, "get_value")
+       
                    if (get_value == 'Role'){
                     $('.get_role_data').show();
                     $('.get_location').hide();
                     $('.sub_specialty').hide();
                     $('.get_staff').hide();
+                    $('.get_pgy').hide();
                     
                   }
                   if (get_value == 'Location'){
@@ -545,25 +627,38 @@
                     $('.sub_specialty').hide();
                     $('.get_staff').hide();
                     $('.get_role_data').hide();
+                    $('.get_pgy').hide();
+                    
                   }
                   if (get_value == 'Staff'){
                     $('.get_staff').show();
                     $('.get_location').hide();
                     $('.sub_specialty').hide();
                     $('.get_role_data').hide();
+                    $('.get_pgy').hide();
                   }
                   if (get_value == 'Sub-Specialty'){
                     $('.sub_specialty').show();
                     $('.get_role_data').hide();
                     $('.get_staff').hide();
                     $('.get_location').hide();
-                  }
+                    $('.get_pgy').hide();
+                  }if (get_value == 'PGY'){
+
+                    $('.get_pgy').show();
+                    $('.sub_specialty').hide();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+
+}
                   });
                   
                 $('.get_location').hide();
                 $('.sub_specialty').hide();
                 $('.get_role_data').hide();
                 $('.get_staff').hide();
+                $('.get_pgy').hide();
               </script>
           </div>
           </div>
@@ -651,6 +746,7 @@
                    <div class="col-md-6">        
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
                           <canvas id="specialty-bar-chart" height="180"></canvas>
+                       
                       </div>
                    </div>
               </div>
@@ -705,35 +801,7 @@
             </div>
            </div>
    
-            <!-- <div class="row mt-4 main-chart-section">
-              <div class="col-md-12">
-                  <div class="bg_main_cntnt">
-                      <div  id="container28">
-                        <table class="table table-bordered month-data" id="month-data">
-                          <thead>
-                              <tr>
-                                  <th>Id</th>
-                                  <th>#</th>
-                                  </tr>
-                          </thead>
-                          <tbody>
-                            {% for key, value in dashboard23.items %}
-                            <tr>
-                                <td>{{key}}</td>
-                                <td>{{value}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                        
-                      </div>
-                </div>
-              </div>
-          </div> -->
-          
-        </div>
-    </div>
-  </div>
+       
          <!-- Modal -->
 <div class="modal fade main_popup_mdl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -768,7 +836,9 @@
       </div>
     </div>
   </div>
+  
  <script>
+   
 function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
 }
@@ -818,9 +888,7 @@ role_bar = document.getElementById('Role-bar-chart');
 
         data_list = {{ final_data_list | safe }}
 
-        console.log(names)
-        // console.log(data_list)
-    
+
 
         role_chart_config = {
         type: 'horizontalBar',
@@ -836,15 +904,11 @@ role_bar = document.getElementById('Role-bar-chart');
           legend: {
         display: true,
         position: 'bottom',
-    },
+    }, 
         scales: {
-            xAxes: [{
-        //       scaleLabel: {
-        //   display: true,
-        //   labelString: 'inches'
-        // },
-              gridLines: {
-                color: "rgba(0, 0, 0, 0)",
+            xAxes: [{    
+          gridLines: {
+                drawOnChartArea: false,
             },
                 ticks: {
                     min: 0 // Edit the value according to what you need
@@ -853,12 +917,15 @@ role_bar = document.getElementById('Role-bar-chart');
             }],
             yAxes: [{
               gridLines: {
-                color: "rgba(0, 0, 0, 0)",
+                drawOnChartArea: false,
             },
                 stacked: true
             }]
-        }
-    }
+        },
+        // tooltips: {enabled: false},
+        // hover: {mode: null},
+    },
+   
     };
     
     var myPieChart = new Chart(role_bar, role_chart_config);
@@ -874,14 +941,10 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "Role-pie-chart",
                 data: df1,
                 backgroundColor: ["#D8D2CB", "#1A374D", "#398AB9",],
-
-
-                // hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-
             }],
             labels: df,
         },
-        options: {   
+        options: {  
           title: {
       display: true,
       text:'Procedures by Role'
@@ -891,6 +954,7 @@ role_bar = document.getElementById('Role-bar-chart');
         display: false,
         position: 'bottom'
     },
+    
             responsive: true
         },
 
@@ -900,6 +964,7 @@ role_bar = document.getElementById('Role-bar-chart');
 
     specialty_bar = document.getElementById('specialty-bar-chart');
         df = {{ keys1 | safe}}
+        
         df1 = {{ values1 | safe}}
         specialty_bar_config = {
 
@@ -907,39 +972,40 @@ role_bar = document.getElementById('Role-bar-chart');
         data: {
 
             datasets: [{
-                label: "specialty-bar-chart",
+
                 data: df1,
                 backgroundColor: "#1A374D",
             }],
             labels: df,
             
         },
-        options: {
-          title: {
-      display: true,
-      text: 'Procedures by Sub-Specialty '
-          },
-          scales: {
+    
+      options: {
+
+    scales: {
         xAxes: [{
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
+                drawOnChartArea: false
             }
         }],
         yAxes: [{
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
-            }   
+                drawOnChartArea: false
+            }
         }]
     },
-          legend: {
-        display: false
-    },
+   title: {
+      display: true,
+      text: 'Procedures by Sub-Specialty '
+          },
             responsive: true,
-     
-        },
+            legend: {
+        display: false,
+            },
+        }, 
+      };
 
 
-    };
     var myPieChart = new Chart(specialty_bar, specialty_bar_config);
     
             
@@ -949,34 +1015,40 @@ role_bar = document.getElementById('Role-bar-chart');
         site_bar_config = {
         type: 'horizontalBar',
         data: {
-            datasets: [{
-                label: "site-bar-chart",
-                
+            datasets: [{ 
                 data: df1,
                 backgroundColor: "#1A374D",
             }],
             labels: df
         },
         options: {
+          
           title: {
       display: true,
       text:'Procedures by Site'
           },
           scales: {
         xAxes: [{
+          ticks: {
+                beginAtZero: true
+            },
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
+                drawOnChartArea: false
             }
         }],
         yAxes: [{
+          ticks: {
+                beginAtZero: true
+            },
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
-            }   
-        }]},
-          legend: {
-        display: false
+                drawOnChartArea: false
+            }
+        }]
     },
-            responsive: true
+            responsive: true,
+            legend: {
+        display: false,
+            },
         },
 
     };
@@ -985,7 +1057,9 @@ role_bar = document.getElementById('Role-bar-chart');
 
     site_bar = document.getElementById('year-to-date-line-chart');
         df = {{ final_data| safe}}
+        console.log(df,"here")
         df1 = {{ labels | safe}}
+        // console.log(df1,"here")
 
     
         site_bar_config = {
@@ -999,20 +1073,21 @@ role_bar = document.getElementById('Role-bar-chart');
           scales: {
         xAxes: [{
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
+                drawOnChartArea: false
             }
         }],
         yAxes: [{
             gridLines: {
-                color: "rgba(0, 0, 0, 0)",
-            }   
+                drawOnChartArea: false
+            }
         }]
     },
           legend: {
-        display: false
+        display: false,
     },
             responsive: true
-        },
+        }, 
+    
 
     };
     var myPieChart = new Chart(site_bar, site_bar_config);
@@ -1051,9 +1126,7 @@ role_bar = document.getElementById('Role-bar-chart');
               'is_admin': true
           },
           success: function(data) {   
-            console.log("id")                 
-              // generate_bar_chart(data);
-              
+                         
           }
       });
     }

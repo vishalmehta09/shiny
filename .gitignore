@@ -31,3 +31,7 @@ apps/static/assets/.temp
 
 
 "**/migrations/*"
+
+apps/__pycache__
+apps/migrations/__pycache__
+apps/migrations/
