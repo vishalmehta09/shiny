@@ -10,7 +10,41 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
     <style>
-       .select_box_sidebar {
+    .main_mdl_clr .btn.btn-primary{
+    background:#1A374D;
+    border:none;
+    }
+    .institute_section .form-group {
+    margin-bottom: 15px;
+    }
+    .institute_section label{
+      width:100%;
+      font-size: 14px;
+      color: #333;
+    }
+    .institute_section input{
+      width:100%;
+      font-size: 13px;
+      border:1px solid #c6c6c6;
+      border-radius: 5px;
+      padding:7px 10px;
+    }
+    .institute_section input::placeholder{
+      font-size: 13px;
+    }
+    .sprvision_btn{
+    background: #fff;
+    font-size: 13px; 
+    }
+    .pop_mdl_section{
+    width: 100%; 
+    float:left;
+    margin-bottom: 10px;
+    }
+    .sprvision_btn:focus {
+    box-shadow: 0px 0px 0px transparent;
+    }
+    .select_box_sidebar {
     color: #fff;
     appearance:none;
     -webkit-appearance:none;
@@ -102,7 +136,7 @@
       padding-top: 2px;
       }
       .design_icon{
-      background: #f8bd7a;
+      background: #398AB9;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -118,7 +152,7 @@
       align-items: center; 
       }
       .design_icon4{
-      background: #f7464a;
+      background: #D8D2CB;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -126,7 +160,7 @@
       align-items: center;
       }
       .design_icon1{
-      background: #204db4;
+      background: #1A374D;
       padding: 11px 10px;
       border-radius: 5px;
       display: flex;
@@ -134,7 +168,7 @@
       align-items: center;  
       }
       .design_icon3{
-      background: #1b998b;
+      background: #36393B;
       padding: 11px 10px;
       border-radius: 5px;  
       display: flex;
@@ -327,20 +361,22 @@
       <div class="col-md-2 col-xs-2 side_bar_mbl">
         <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
           <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
-          <h3><a href="#">R-shiny</a> </h3>
+          <h3><a href="{% url 'generate_bar_chart' %}">OR_Logbook</a> </h3>
         <ul>
             <li class="active ">
-                <a href="#">
+                <a href="{% url 'generate_bar_chart' %}">
                   <i class="fa fa-pie-chart" aria-hidden="true"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
+              {%if not request.user.is_superuser%}
               <li>
-                <a href="#">
+                <a href="{% url 'change_password' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
               </li>
+              {%endif%}
               <li>
                 <a href="#">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -369,7 +405,7 @@
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser %}
     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Upload CSV File
+      Upload Excel File
       </button>
       {%endif%}
   </div>
@@ -404,7 +440,7 @@
           <div class="col-md-2 top_header">
             {% if not request.user.is_superuser %}
               <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Upload CSV File
+                Upload Excel File
                 </button>
                 {%endif%}
           </div>
@@ -416,8 +452,7 @@
                     <select class="form-select" aria-label="Default select example" name="user_id" id="selected_value">
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks" 
-                      {% if u.id == value %} selected {%else%}{%endif %}>{{ u.username }}</option>
+                      <option value="{{u.id}}" name="checks" {% if u.id == 4 %}selected="selected"{% endif %}>{{ u.username }}</option>
                       {% endfor %}
                      
                       <input type="hidden" value="is_admin">
@@ -433,7 +468,7 @@
   
                     {% for message in messages %}
                     
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                    <div id="myElem" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
                     
                     {% endfor %}
                     
@@ -462,20 +497,22 @@
       <div class="row mt-1 mb-5 tablet_section">
           <div class="col-md-2 desktop-section-section">
               <div class="django_bg_sidebar">
-                <h3><a href="#">R-shiny</a> </h3>
+                <h3><a href="{% url 'generate_bar_chart' %}">OR_Logbook</a> </h3>
               <ul>
                   <li class="active ">
-                      <a href="#">
+                      <a href="{% url 'generate_bar_chart' %}">
                         <i class="fa fa-pie-chart" aria-hidden="true"></i>
                         <p>Dashboard</p>
                       </a>
                     </li>
+                    {%if not request.user.is_superuser%}
                     <li>
-                      <a href="#">
+                      <a href="{% url 'change_password' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         <p>User Profile</p>
                       </a>
                     </li>
+                    {%endif%}
                     <li>
                      
                       <a href="{% url 'logout' %}">
@@ -486,9 +523,24 @@
                    
 
               </ul>
+              <div class="pop_mdl_section">
+                <button type="button" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  Add Supervisor
+                </button>
+                </div>
+                <div class="pop_mdl_section">
+                  <button type="button" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                    Add Institute
+                  </button>
+                  </div>
+                <div class="pop_mdl_section">
+                <button type="button" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                  Add User
+                </button>
+                </div>
               <select class="form-select select_box_sidebar fg country"  aria-label="Default select example">
                <!-- main screen -->
-                <option >Open select</option>
+                <option>Open select</option>
             <option value="Staff">Staff</option>
             <option value="Sub-Specialty">Sub-Specialty</option>
             <option value="Location">Location</option>
@@ -548,6 +600,8 @@
           <br><br>
             
               <script>
+                $("#myElem").show();
+                setTimeout(function() { $("#myElem").hide(); }, 5000);
                 
                 $('select').on('change', function() {
                    var get_value = this.value;
@@ -676,7 +730,7 @@
                 <div class="row mb-4 main-chart-section">
                   <div class="col-md-6">
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
-                          <canvas id="Role-bar-chart" height="180"></canvas>
+                          <canvas id="Role-bar-chart" height="200"></canvas>
                       </div>
                    </div>
                    <div class="col-md-6">        
@@ -740,7 +794,6 @@
               <div class="col-md-12">
                   <div class="bg_main_cntnt">
                       <div  id="container28">
-
                         <table class="table table-bordered month-data" id="month-data">
                           <thead>
                               <tr>
@@ -749,7 +802,6 @@
                                   </tr>
                           </thead>
                           <tbody>
-
                             {% for key, value in dashboard23.items %}
                             <tr>
                                 <td>{{key}}</td>
@@ -767,6 +819,83 @@
         </div>
     </div>
   </div>
+
+
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="" placeholder="user name">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="" placeholder="password ">
+          </div>
+        
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Institute Name</label>
+            <input type="text" name="institute" value="" placeholder="institute name">
+          </div>
+        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade main_mdl_clr" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title 12</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
          <!-- Modal -->
 <div class="modal fade main_popup_mdl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -802,6 +931,9 @@
     </div>
   </div>
  <script>
+
+
+
 function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
 }
@@ -846,10 +978,8 @@ $('.image-upload-wrap').bind('dragover', function () {
 
 role_bar = document.getElementById('Role-bar-chart');
       
-  
-        df = {{ keys| safe}}
-   
-        names = {{ names| safe}}
+
+        names = {{ names | safe}}
 
         data_list = {{ final_data_list | safe }}
 
@@ -864,14 +994,32 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets:data_list
         },
         options: {
+          title: {
+      display: true,
+      text: 'Procedures by Surgeon'
+          },
+          legend: {
+        display: true,
+        position: 'bottom',
+    },
         scales: {
             xAxes: [{
+        //       scaleLabel: {
+        //   display: true,
+        //   labelString: 'inches'
+        // },
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            },
                 ticks: {
                     min: 0 // Edit the value according to what you need
                 },
               stacked: true
             }],
             yAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            },
                 stacked: true
             }]
         }
@@ -898,9 +1046,19 @@ role_bar = document.getElementById('Role-bar-chart');
             }],
             labels: df,
         },
-        options: {
+        options: {   
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+         
+          legend: {
+        display: false,
+        position: 'bottom'
+    },
             responsive: true
         },
+
 
     };
     var myPieChart = new Chart(role_pie, role_pie_config);
@@ -916,16 +1074,35 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets: [{
                 label: "specialty-bar-chart",
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-
+                backgroundColor: "#1A374D",
             }],
             labels: df,
             
         },
         options: {
-            responsive: true
+          title: {
+      display: true,
+      text: 'Procedures by Sub-Specialty '
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]
+    },
+          legend: {
+        display: false
+    },
+            responsive: true,
+     
         },
+
 
     };
     var myPieChart = new Chart(specialty_bar, specialty_bar_config);
@@ -941,13 +1118,29 @@ role_bar = document.getElementById('Role-bar-chart');
                 label: "site-bar-chart",
                 
                 data: df1,
-                backgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-                hoverBackgroundColor: ["#808080", "#808080", "#808080", "#808080", "#808080"],
-
+                backgroundColor: "#1A374D",
             }],
             labels: df
         },
         options: {
+          title: {
+      display: true,
+      text:'Procedures by Site'
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]},
+          legend: {
+        display: false
+    },
             responsive: true
         },
 
@@ -964,6 +1157,25 @@ role_bar = document.getElementById('Role-bar-chart');
         type: 'line',
         data: df,
         options: {
+          title: {
+      display: true,
+      text:'Role over Time'
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }   
+        }]
+    },
+          legend: {
+        display: false
+    },
             responsive: true
         },
 
