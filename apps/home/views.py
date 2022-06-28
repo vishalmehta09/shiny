@@ -1,6 +1,3 @@
-
-
-from turtle import back
 from apps.authentication.models import *
 from typing import Counter
 from django.contrib.auth.decorators import login_required
@@ -45,7 +42,7 @@ def generate_bar_chart(request):
       
     if request.method == 'GET':
 
-     
+        
         if not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
         elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
@@ -406,15 +403,7 @@ def generate_bar_chart(request):
     
             save_obj = Graphs(user=request.user, upload=upload_file)
             save_obj.save()
-            # if not request.POST.getlist("Staff"):
-            #     name_set = []
-            #     for i in range(len(staff)):
-            #         name_set.append(list(staff.keys())[i])
-            #     # names = list(df.Name)
-            #     # print(names,"names")  
-            # else:
-                
-            #     names = get_data_staff
+           
 
             only_final_data = []
 
@@ -612,7 +601,7 @@ def generate_bar_chart(request):
                 f_list = []
                 s_list = []
                 for d in shorted_data:
-                    # print(d)
+
                     s_list.append(d['Secondary Assist'])
                     f_list.append(d['First Assist'])
                     p_list.append(d['Primary Surgeon'])
@@ -767,7 +756,7 @@ def generate_bar_chart(request):
                 f_list = []
                 s_list = []
                 for d in shorted_data:
-                    # print(d)
+                
                     s_list.append(d['Secondary Assist'])
                     f_list.append(d['First Assist'])
                     p_list.append(d['Primary Surgeon'])
@@ -921,7 +910,7 @@ def generate_bar_chart(request):
                     context_dib[i] =  get_g_specialty[get_g_specialty['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
-                print(get_g_specialty['Staff'], "staffs")
+              
              
                 only_final_data = []
 
@@ -973,7 +962,7 @@ def generate_bar_chart(request):
                 f_list = []
                 s_list = []
                 for d in shorted_data:
-                    # print(d)
+        
                     s_list.append(d['Secondary Assist'])
                     f_list.append(d['First Assist'])
                     p_list.append(d['Primary Surgeon'])
@@ -1033,7 +1022,6 @@ def generate_bar_chart(request):
                     "datasets": final_data,
                 }
 
-                print(final_data)
                 coded_case = []
                 for i in get_g_specialty['Coded Case']:
                     coded_case.append(i)
@@ -1183,7 +1171,7 @@ def generate_bar_chart(request):
                 f_list = []
                 s_list = []
                 for d in shorted_data:
-                    # print(d)
+    
                     s_list.append(d['Secondary Assist'])
                     f_list.append(d['First Assist'])
                     p_list.append(d['Primary Surgeon'])
@@ -1364,7 +1352,7 @@ def generate_bar_chart(request):
                 f_list = []
                 s_list = []
                 for d in shorted_data:
-                    # print(d)
+         
                     s_list.append(d['Secondary Assist'])
                     f_list.append(d['First Assist'])
                     p_list.append(d['Primary Surgeon'])
@@ -1415,7 +1403,7 @@ def generate_bar_chart(request):
                 for i in get_g_staff['Date'].dt.year:
                     context_dict[i] =  get_g_staff[get_g_staff['Date'].dt.year == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
-                # print(roles, "roles_get_role")
+               
                 labels = []
                 role_keys = []
                 raw_data = []
@@ -1424,7 +1412,7 @@ def generate_bar_chart(request):
                     role_key = list(roles[role].keys())
                     role_keys.append(role_key)
                     raw_data.append(roles[role])
-                # print(role_keys, "role_keys")
+               
                 final_data = []
                 for key in role_keys[1]:
                     data = []
@@ -1488,7 +1476,7 @@ def generate_bar_chart(request):
 
                 today = date.today()
                 datem = today.strftime("%Y-%m")
-                # print(datem,"datemdatem")
+
                 this_year_this_month = get_g_staff[get_g_staff['Date'].dt.to_period('M') == datem]
                 get_role = this_year_this_month['Role'] == 'Primary Surgeon'
                 count_of_this_month = 0
