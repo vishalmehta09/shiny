@@ -1,3 +1,4 @@
+from turtle import up
 from apps.authentication.models import *
 from typing import Counter
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,8 @@ import random
 from django.contrib import messages
 from datetime import date
 from datetime import timedelta
-
+import os
+from django.http import FileResponse
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
@@ -21,6 +23,8 @@ def index(request):
 
 def read_data(file_path):
         pandas_data = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
+        #validate file
+        
         pandas_data_frame= pandas_data.sort_values(by='Date')
         data_frame = pd.DataFrame(pandas_data_frame)
         return data_frame   
@@ -302,6 +306,14 @@ def generate_bar_chart(request):
                 upload_file = obj.upload.path     
         else:
             upload_file = request.FILES['document']
+            file_extension = os.path.splitext(upload_file.name)[1]
+
+            valid_extensions = [".xlsx", ".XLSX", ".xls", ".XLS"]
+
+            if not file_extension.lower() in valid_extensions:
+                msg = "Invalid file, select a valid CSV file"
+                messages.error(request, msg)
+            return render(request,'home/sample.html')
             
 
         data = read_data(upload_file)
@@ -1539,6 +1551,12 @@ def generate_bar_chart(request):
             return render(request, 'home/sample.html')
     else:
         return render(request, 'home/sample.html')
+
+
+def profile_pic(request):
+    img = open('apps/home/anime3.png', 'rb')
+    response = FileResponse(img)
+    return response
 
     
     
