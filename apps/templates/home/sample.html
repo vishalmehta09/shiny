@@ -1173,7 +1173,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
   </div>
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
-    {% if not request.user.is_superuser %}
+    {% if not request.user.is_superuser or not request.user.is_supervisor %}
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
 Upload Excel File
@@ -1198,7 +1198,7 @@ Upload Excel File
                    </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Profile</a></li>
+          
                   <li class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                 </ul>
@@ -1267,7 +1267,7 @@ Upload Excel File
                              </div>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                          
                             <li class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                           </ul>
