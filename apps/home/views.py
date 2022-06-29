@@ -296,13 +296,15 @@ def generate_bar_chart(request):
                 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":name_set,
                  "get_staff":get_staff,"get_role_data":get_role_data,
                   "get_sub_specialty":get_sub_specialty, "get_location":get_location, 
-                  "users":NewUser.objects.all().exclude(is_superuser=True,is_supervisor=True),"get_pgy":get_pgy,
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False),"get_pgy":get_pgy,
                   'institute':institute, 'supervisor':supervisor}
+          
 
             return render(request, 'home/sample.html', context)
         else:
 
-            return render(request, 'home/sample.html',{'users':NewUser.objects.all().exclude(is_superuser=True,is_supervisor=True), 'institute':institute, 'supervisor':supervisor})
+
+            return render(request, 'home/sample.html',{'users':NewUser.objects.filter(is_superuser=False,is_supervisor=False), 'institute':institute, 'supervisor':supervisor})
     
     if request.method == 'POST':
         print("trigger")
