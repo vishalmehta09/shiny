@@ -50,7 +50,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)# Permissions
     institute = models.ForeignKey(Institution ,on_delete=models.CASCADE,null=True,blank=True)
-    normal_user = models.ForeignKey(NormalUser ,on_delete=models.CASCADE,verbose_name="admin",null=True,blank=True)
+    supervisor = models.ForeignKey(Supervisor ,on_delete=models.CASCADE,verbose_name="supervisor",null=True,blank=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

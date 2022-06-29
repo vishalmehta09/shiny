@@ -10,5 +10,5 @@ from .models import *
 
 admin.site.register(Graphs)
 admin.site.register(Institution)
-admin.site.register(NormalUser)
+admin.site.register(Supervisor)
 

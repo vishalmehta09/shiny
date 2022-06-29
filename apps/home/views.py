@@ -64,6 +64,9 @@ def color_line_chart(key):
 def generate_bar_chart(request):
       
     if request.method == 'GET':
+        institute = Institution.objects.all()
+        supervisor = Supervisor.objects.all()
+        print(institute, "institute")
         if not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
         elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
@@ -75,7 +78,8 @@ def generate_bar_chart(request):
         if obj.exists():
             obj = obj.last()
 
-        
+            institute = Institution.objects.all()
+            supervisor = Supervisor.objects.all()
             file_path = obj.upload.path
             data = read_data(file_path)
 
@@ -275,12 +279,15 @@ def generate_bar_chart(request):
             }
 
             context = { 'keys':keys , 'values':values,'keys1': keys1, 'values1': values1 , 'keys2': keys2, 'values2': values2, 'final_data': final_final_data, 'labels': labels, 'dashboard23':dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location,
-            "users":NewUser.objects.all().exclude(is_superuser=True),"get_pgy":get_pgy}
+            "users":NewUser.objects.all().exclude(is_superuser=True),"get_pgy":get_pgy, "institute":institute, "supervisor":supervisor}
             return render(request, 'home/sample.html', context)
         else:
-            return render(request, 'home/sample.html',{'users':NewUser.objects.all().exclude(is_superuser=True)})
+            return render(request, 'home/sample.html',{'users':NewUser.objects.all().exclude(is_superuser=True),"institute":institute, "supervisor":supervisor})
         
     if request.method == 'POST' :
+        institute = Institution.objects.all()
+        supervisor = Supervisor.objects.all()
+        print(institute, "institute")
         # print(request.GET.get('user_id'),"bbb")
         if not request.FILES.get('document') and not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
@@ -289,7 +296,7 @@ def generate_bar_chart(request):
 
                 upload_file = obj.upload.path
 
-        elif not request.FILES.get('document') and request.POST.get("username"):
+        elif not request.FILES.get('document') and request.POST.get("username") and not request.POST.get("email"):
 
             username=request.POST.get("username")
             password = request.POST.get("password")
@@ -297,34 +304,66 @@ def generate_bar_chart(request):
             user.password=make_password(password)
             user.is_supervisor=True
             user.save()
-            messages.success(request, "User created successfully")
+            supervisor = Supervisor.objects.create(username=username)
+            messages.success(request, "Supervisor created successfully")
             return redirect("/")
         
-        elif not request.FILES.get('document') and request.POST.get("institute"):
+        elif not request.FILES.get('document') and request.POST.get("institute") and not request.POST.get("email"):
+
             institute=request.POST.get("institute")
             user = Institution.objects.create(institute=institute)
             messages.success(request, "Institute created successfully")
+            return redirect("/")
+
+        elif not request.FILES.get('document') and request.POST.get("email"):
+            print("true case")
+            print(request.POST.values,"valuess")
+            email=request.POST.get("email")
+            username=request.POST.get("username")
+            first_name=request.POST.get("first_name")
+            last_name=request.POST.get("last_name")
+            institute=request.POST.get("institute")
+            supervisor=request.POST.get("supervisor")
+            password=request.POST.get("password")
+            try:
+                obj_institute = Institution.objects.get(institute=institute)
+            except:
+                messages.error(request, "Institute doesn't exists")
+                return redirect('/')
+            try:
+                obj_supervisor = Supervisor.objects.get(username=supervisor)
+            except:
+                messages.error(request, "Supervisor doesn't exists")
+                return redirect('/')
+            if NewUser.objects.filter(username=username).exists():
+                messages.error(request, "Username already exists")
+                return redirect('/')
+            else:
+                username=username
+            if NewUser.objects.filter(email=email).exists():
+                messages.error(request, "Email already exists")
+            else:
+                email=email
+            users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
+            users.is_active=True
+            users.password=make_password(password)
+            users.save()
+            messages.success(request, "User created successfully")
             return redirect("/")
             
         elif not request.FILES.get('document') and request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.GET.get('user_id'))
             if obj.exists():
                 obj = obj.last()
-            
                 upload_file = obj.upload.path
-                
-            
         else:
             upload_file = request.FILES['document']
 
-
         #read the file and convert to data frame.
         data = read_data(upload_file)
-
         total_cases = len(data)
         current_year = date.today().year
-        get_date = data[data['Date'].dt.year == current_year] 
-
+        get_date = data[data['Date'].dt.year == current_year]
         date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
         count_of_current_year = 0
         for u in list(date_gt):
@@ -1458,7 +1497,7 @@ def generate_bar_chart(request):
                 "labels": labels,
             }
             
-            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy,  "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "names":name_set,"count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy,  "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "names":name_set,"count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor}
             if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
                 return render(request, 'home/sample.html', context)

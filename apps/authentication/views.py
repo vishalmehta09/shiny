@@ -13,20 +13,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
 
-def add_supervisor(request):
-    if request.method == "POST":
-        username=request.POST.get("username")
-        password = request.POST.get("password")
-        user = NewUser.objects.create(username=username)
-        user.password=make_password(password)
-        user.is_supervisor=True
-        user.save()
-        messages.success(request, "User created successfully")
-        return redirect("/")
-    else:
-        return render(request,"home/sample.html")
-
-
 def login_view(request):
 
     print(NewUser.objects.all().values())
