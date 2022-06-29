@@ -25,11 +25,11 @@ class Institution(models.Model):
         return self.institute
 
 
-class NormalUser(models.Model):
+class Supervisor(models.Model):
 
-    normal_user = models.CharField(max_length = 200, verbose_name="user")
+    username = models.CharField(max_length = 200, verbose_name="username")
 
     def __str__(self):
-        return self.normal_user
+        return self.username
 
 

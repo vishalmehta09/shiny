@@ -13,7 +13,7 @@ from django.contrib import messages
 
 def login_view(request):
 
-    print(NewUser.objects.all().values())
+
     form = CustomUserLoginForm(request.POST )
     msg = None
 

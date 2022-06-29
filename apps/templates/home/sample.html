@@ -249,7 +249,80 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
 
       /* end */
-
+      .institute_section input:focus-visible{
+    outline: none;
+    }
+    .institute_section select{
+    font-size: 13px;
+    color:#333;
+    }
+    .institute_section select:focus{
+    box-shadow: 0px 0px 0px transparent;
+    border:1px solid #c6c6c6;
+    }
+    .add_user{
+    padding-left: 17px;
+    color:#fff;
+    font-size: 11px;
+    font-family: "Poppins", sans-serif;
+    text-transform:uppercase;
+    cursor: pointer;
+    }
+    .add_user i{
+    color: #fff;
+    font-size: 20px;
+    padding-right: 24px;
+    position: relative;
+    top: 4px;
+    }
+    .main_mdl_clr .btn.btn-primary{
+    background:#1A374D;
+    border:none;
+    }
+    .institute_section .form-group {
+    margin-bottom: 15px;
+    }
+    .institute_section label{
+      width:100%;
+      font-size: 14px;
+      color: #333;
+    }
+    .institute_section input{
+      width:100%;
+      font-size: 13px;
+      border:1px solid #c6c6c6;
+      border-radius: 5px;
+      padding:7px 10px;
+    }
+    .institute_section input::placeholder{
+      font-size: 13px;
+    }
+    .sprvision_btn{
+    font-size: 13px; 
+    }
+    .pop_mdl_section{
+    width: 100%; 
+    float:left;
+    margin-bottom: 10px;
+    }
+    .pop_mdl_section ul li a{
+    color: #fff;
+    margin-bottom: 0px !important;;
+    padding-left: 35px !important;
+    padding: 1px;
+    font-size: 11px;
+    }
+    .pop_mdl_section ul{
+    padding-left: 20px;
+    margin-bottom: 8px;
+    margin-top: 4px;
+    }
+    .pop_mdl_section ul li a:hover{
+    color:#fff;
+    }
+    .sprvision_btn:focus {
+    box-shadow: 0px 0px 0px transparent;
+    }
 
       /* style.css */
 
@@ -261,6 +334,21 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
      } 
    .top_header {
     text-align: center;
+    }
+    .add_user{
+    padding-left: 17px;
+    color:#fff;
+    font-size: 11px;
+    font-family: "Poppins", sans-serif;
+    text-transform:uppercase;
+    cursor: pointer;
+    }
+    .add_user i{
+    color: #fff;
+    font-size: 20px;
+    padding-right: 24px;
+    position: relative;
+    top: 4px;
     }
      .top_header button{
         background-color: #e3e1de !important;
@@ -1084,7 +1172,6 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser %}
-
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
 Upload Excel File
@@ -1123,7 +1210,7 @@ Upload Excel File
   <div class="container-fluid desktop-section-section">
       <div class="row mt-3">
           <div class="col-md-2 top_header">
-            {% if not request.user.is_superuser %}
+            {% if not request.user.is_superuser  %}
 
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             
@@ -1136,8 +1223,10 @@ Upload Excel File
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
-                    {% if request.user.is_superuser %}
+                  
+                    
                     <div class="user_cntain">
+                      {% if request.user.is_superuser or request.user.is_supervisor %}
                     <form method="GET">
                       <div class="usr_list">
                     <select class="form-select" aria-label="Default select example" name="user_id">
@@ -1152,8 +1241,9 @@ Upload Excel File
                     <input type="submit">
                     </div>
                   </form>
+                   {%endif%}
                   </div>
-                    {%endif%}
+                   
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
                     </button>
@@ -1215,9 +1305,28 @@ Upload Excel File
                         <p>Logout</p>
                       </a>
                     </li>
-                   
-
               </ul>
+
+              {%if request.user.is_superuser%}
+              <div class="add_user" id="clickme">
+                <i class="fa fa-angle-right"></i>
+                Add User
+              </div>
+              <div class="pop_mdl_section" id="book">
+                <ul>
+                  <li><a href="javascript:void(0)" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Add Supervisor
+                  </a></li>
+                  <li><a href="javascript:void(0)" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                    Add Institute
+                  </a></li>
+                  <li><a href="javascript:void(0)" class="btn sprvision_btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                    Add User
+                  </a></li>
+                </ul>            
+                </div>     
+                {%endif%}
+
               <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
                <!-- main screen -->
                 <option selected>Select Filter</option>
@@ -1288,6 +1397,14 @@ Upload Excel File
             </form><br><br>
             
               <script>
+                $(document).ready(function(){
+                $("#book").hide();
+                $("#clickme").click(function() {  
+                  $("#book").toggle();
+                });
+              });
+
+              
                 $("#myElem").show();
                 setTimeout(function() { $("#myElem").hide(); }, 5000);
                 
@@ -1481,7 +1598,130 @@ Upload Excel File
             </div>
            </div>
    
-       
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="" placeholder="user name">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="" placeholder="password ">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+          </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Institute Name</label>
+            <input type="text" name="institute" value="" placeholder="institute name">
+          </div>
+        
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade main_mdl_clr" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form action="" method="POST">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="" placeholder="email" required>
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="" placeholder="user name" required>
+          </div>
+          <div class="form-group">
+            <label>First name</label>
+            <input type="text" name="first_name" value="" placeholder="first name" required>
+          </div>
+          <div class="form-group">
+            <label>Last name</label>
+            <input type="text" name="last_name" value="" placeholder="user name" required>
+          </div>
+          <div class="form-group">
+            <label>Supervisor</label>
+          <select class="form-select" aria-label="Default select example" name="supervisor" id="selected_value" required>
+            <option value="" selected>Select supervisor </option>
+            {% for u in supervisor %}
+            <option value="{{u.username}}">{{ u.username }}</option>
+            {% endfor %}
+           
+            <input type="hidden" value="is_admin">
+          </select>
+          </div>
+          <div class="form-group">
+            <label>Institute</label>
+          <select class="form-select" aria-label="Default select example" name="institute" id="selected_value" required>
+            <option value="" selected>Select institute </option>
+            {% for u in institute %}
+            <option value="{{u.institute}}">{{ u.institute }}</option>
+            {% endfor %}
+           
+            <input type="hidden" value="is_admin">
+          </select>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="" placeholder="password" required >
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+          </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
          <!-- Modal -->
 <div class="modal fade main_popup_mdl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
