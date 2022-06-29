@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="/static/assets/css/custom.css">
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
-    <title> Django Dashboard Black -  Dashboard  | AppSeed</title>
+    <title>OR LOGBOOK</title>
     <style>
       /* add custom.css */
 
@@ -1227,12 +1227,13 @@ Upload Excel File
                     
                     <div class="user_cntain">
                       {% if request.user.is_superuser or request.user.is_supervisor %}
+            
                     <form method="GET">
                       <div class="usr_list">
                     <select class="form-select" aria-label="Default select example" name="user_id">
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks" >{{ u.username }}</option>
+                      <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option>
                       {% endfor %}
                       <input type="hidden" value="is_admin">
                     </select>

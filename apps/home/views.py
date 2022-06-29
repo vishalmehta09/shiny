@@ -23,17 +23,13 @@ def index(request):
     return HttpResponse(html_template.render(context, request))
 
 
-def read_data(request,file_path):
-        
-        wb = load_workbook(file_path, read_only=True) 
-        if 'RAW' in wb.sheetnames:
-            print('sheet1 exists')
+def read_data(file_path):
+    
             pandas_data = pd.read_excel(file_path, sheet_name='RAW', header=2, parse_dates=True)
             pandas_data_frame= pandas_data.sort_values(by='Date')
             data_frame = pd.DataFrame(pandas_data_frame)
             return data_frame   
-        else:
-            return None
+    
         
        
 
@@ -51,6 +47,8 @@ def color_line_chart(key):
 
 @login_required(login_url="/login/")
 def generate_bar_chart(request):
+    print(request.POST.values,"POST")
+    print(request.GET.values,"GET")
       
     if request.method == 'GET':
 
@@ -73,7 +71,7 @@ def generate_bar_chart(request):
             supervisor = Supervisor.objects.all()
         
             file_path = obj.upload.path
-            data = read_data(request,file_path)
+            data = read_data(file_path)
 
 
             context_di = {}
@@ -404,21 +402,32 @@ def generate_bar_chart(request):
                 upload_file = obj.upload.path     
         else:
             upload_file = request.FILES['document']
+            try:
+                wb = load_workbook(upload_file, read_only=True) 
+                if 'RAW' not in wb.sheetnames:  
+                    messages.error(request, "Please upload a valid file")
+                    return render(request,'home/sample.html')
+            except:
+                pass
             file_extension = os.path.splitext(upload_file.name)[1]
-
             valid_extensions = [".xlsx", ".XLSX", ".xls", ".XLS"]
 
             if not file_extension.lower() in valid_extensions:
                 msg = "Invalid file, select a valid xlsx file"
                 messages.error(request, msg)
                 return render(request,'home/sample.html')
+             
+            
             
 
-        data = read_data(request,upload_file)
-        # if data == None:
+        data = read_data(upload_file)
+        # print(data)
+        # if data == "NOT poss":
         #     msg = "Invalid file, RAW worksheet is not found"
         #     messages.error(request, msg)
         #     return render(request,'home/sample.html')
+ 
+        
 
         total_cases = len(data)
         current_year = date.today().year
