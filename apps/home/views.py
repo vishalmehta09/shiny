@@ -301,8 +301,8 @@ def generate_bar_chart(request):
             username=request.POST.get("username")
             password = request.POST.get("password")
             confirm_password = request.POST.get("confirm_password")
-            user = NewUser.objects.create(username=username)
             if password == confirm_password:
+                user = NewUser.objects.create(username=username)
                 user.password=make_password(password)
                 user.is_supervisor=True
                 user.save()
@@ -350,8 +350,8 @@ def generate_bar_chart(request):
                 messages.error(request, "Email already exists")
             else:
                 email=email
-            users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
             if password == confirm_password:
+                users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
                 users.password=make_password(password)
                 users.is_active=True
                 users.save()
