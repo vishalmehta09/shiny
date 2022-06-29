@@ -1239,12 +1239,13 @@ Upload Excel File
             </div></form>
               <form method="post" action="">
                 {% csrf_token %}
-              <div class="sub_specialty get_scroll">
+             <!----<div class="sub_specialty get_scroll">
               {% for i in get_sub_specialty%}
               <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
-              <input type="submit" value="Submit"></div></form>
+              <input type="submit" value="Submit"></div>-->
+            </form>
               <form method="post" action="">
                 {% csrf_token %}
               <div class="get_role_data get_scroll">
