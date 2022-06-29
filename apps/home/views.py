@@ -1554,6 +1554,7 @@ def generate_bar_chart(request):
 
 
 def profile_pic(request):
+    
     img = open('apps/home/anime3.png', 'rb')
     response = FileResponse(img)
     return response

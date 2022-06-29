@@ -11,7 +11,7 @@ urlpatterns = [
     path('home', views.index, name='home'),
     path('', views.generate_bar_chart, name='generate_bar_chart'),
 
-    path('profile_pic', views.profile_pic, name='profile_pic'),
+    path('profile_pic', views.profile_pic, name='profile_image'),
 
 ]
 
