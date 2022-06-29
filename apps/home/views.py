@@ -300,13 +300,18 @@ def generate_bar_chart(request):
 
             username=request.POST.get("username")
             password = request.POST.get("password")
+            confirm_password = request.POST.get("confirm_password")
             user = NewUser.objects.create(username=username)
-            user.password=make_password(password)
-            user.is_supervisor=True
-            user.save()
-            supervisor = Supervisor.objects.create(username=username)
-            messages.success(request, "Supervisor created successfully")
-            return redirect("/")
+            if password == confirm_password:
+                user.password=make_password(password)
+                user.is_supervisor=True
+                user.save()
+                supervisor = Supervisor.objects.create(username=username)
+                messages.success(request, "Supervisor created successfully")
+                return redirect("/")
+            else:
+                messages.error(request, "Password doesn't matched")
+                return redirect("/")
         
         elif not request.FILES.get('document') and request.POST.get("institute") and not request.POST.get("email"):
 
@@ -325,6 +330,7 @@ def generate_bar_chart(request):
             institute=request.POST.get("institute")
             supervisor=request.POST.get("supervisor")
             password=request.POST.get("password")
+            confirm_password = request.POST.get("confirm_password")
             try:
                 obj_institute = Institution.objects.get(institute=institute)
             except:
@@ -345,11 +351,15 @@ def generate_bar_chart(request):
             else:
                 email=email
             users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
-            users.is_active=True
-            users.password=make_password(password)
-            users.save()
-            messages.success(request, "User created successfully")
-            return redirect("/")
+            if password == confirm_password:
+                users.password=make_password(password)
+                users.is_active=True
+                users.save()
+                messages.success(request, "User created successfully")
+                return redirect("/")
+            else:
+                messages.error(request, "Password doesn't matched")
+                return redirect("/")
             
         elif not request.FILES.get('document') and request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.GET.get('user_id'))

@@ -1567,6 +1567,10 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
             <label>Password</label>
             <input type="password" name="password" value="" placeholder="password ">
           </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+          </div>
         
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -1634,7 +1638,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
           <div class="form-group">
             <label>Supervisor</label>
           <select class="form-select" aria-label="Default select example" name="supervisor" id="selected_value">
-           
+            <option value="" selected>Select supervisor</option>
             {% for u in supervisor %}
             <option value="{{u.username}}">{{ u.username }}</option>
             {% endfor %}
@@ -1645,7 +1649,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
           <div class="form-group">
             <label>Institute</label>
           <select class="form-select" aria-label="Default select example" name="institute" id="selected_value">
-          
+            <option value="" selected>Select institute</option>
             {% for u in institute %}
             <option value="{{u.institute}}">{{ u.institute }}</option>
             {% endfor %}
@@ -1656,6 +1660,10 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
           <div class="form-group">
             <label>Password</label>
             <input type="password" name="password" value="" placeholder="password ">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
           </div>
         
       <div class="modal-footer">
