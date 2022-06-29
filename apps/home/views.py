@@ -413,10 +413,10 @@ def generate_bar_chart(request):
             
 
         data = read_data(request,upload_file)
-        if data == None:
-            msg = "Invalid file, RAW worksheet is not found"
-            messages.error(request, msg)
-            return render(request,'home/sample.html')
+        # if data == None:
+        #     msg = "Invalid file, RAW worksheet is not found"
+        #     messages.error(request, msg)
+        #     return render(request,'home/sample.html')
 
         total_cases = len(data)
         current_year = date.today().year
