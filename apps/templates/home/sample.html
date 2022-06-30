@@ -521,7 +521,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
 .w3-col,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{float:left;width:100%}
 .w3-col.s1{width:8.33333%}.w3-col.s2{width:16.66666%}.w3-col.s3{width:24.99999%}.w3-col.s4{width:33.33333%}
-.w3-col.s5{width:41.66666%}.w3-col.s6{width:49.99999%}.w3-col.s7{width:58.33333%}.w3-col.s8{width:66.66666%}
+.w3-col.s5{width:41.66666%}.wx3-col.s6{width:49.99999%}.w3-col.s7{width:58.33333%}.w3-col.s8{width:66.66666%}
 .w3-col.s9{width:74.99999%}.w3-col.s10{width:83.33333%}.w3-col.s11{width:91.66666%}.w3-col.s12{width:99.99999%}
 @media (min-width:601px){.w3-col.m1{width:8.33333%}.w3-col.m2{width:16.66666%}.w3-col.m3,.w3-quarter{width:24.99999%}.w3-col.m4,.w3-third{width:33.33333%}
 .w3-col.m5{width:41.66666%}.w3-col.m6,.w3-half{width:49.99999%}.w3-col.m7{width:58.33333%}.w3-col.m8,.w3-twothird{width:66.66666%}
@@ -1118,7 +1118,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
   </div>
   
   <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
-    {% if not request.user.is_superuser %}
+    {% if not request.user.is_superuser and not request.user.is_supervisor %}
     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
       Upload Excel File
       </button>
@@ -1153,7 +1153,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
   <div class="container-fluid desktop-section-section">
       <div class="row mt-3">
           <div class="col-md-2 top_header">
-            {% if not request.user.is_superuser %}
+            {% if not request.user.is_superuser and not request.user.is_supervisor %}
               <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Upload Excel File
                 </button>
@@ -1162,12 +1162,13 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
-                    {% if request.user.is_superuser %}
+                    {% if request.user.is_superuser or request.user.is_supervisor %}
                     <form method="GET">
                     <select class="form-select" aria-label="Default select example" name="user_id" id="selected_value">
                       <option selected>User List</option>
+                     
                       {% for u in users %}
-                      <option value="{{u.id}}" name="checks" {% if u.id == 4 %}selected="selected"{% endif %}>{{ u.username }}</option>
+                      <option value="{{u.id}}" name="checks" {% if u.id == u.username %}selected="selected"{% endif %}>{{ u.username }}</option>
                       {% endfor %}
                      
                       <input type="hidden" value="is_admin">
@@ -1257,6 +1258,8 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
                 </ul>            
                 </div>     
                 {%endif%}
+                
+               
               <select class="form-select select_box_sidebar fg country"  aria-label="Default select example">
                <!-- main screen -->
                 <option>Open select</option>
@@ -1266,56 +1269,69 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
             <option value="Role">Role</option>
             <option value="PGY">PGY</option>
               </select>
-              <form method="post" action="">
-                {% csrf_token %}
+              
+              <div class="main_form_submit">
+                <form method="post" action="">  
+                  {% csrf_token %}
+              <!-- <form method="post" action="">
+                {% csrf_token %} -->
               <div class="get_location get_scroll">
               {% for i in get_location%}
               <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
-              <div class="btn_select_sbmt">
+              <!-- <div class="btn_select_sbmt">
                 <input type="submit" value="Submit">
-                </div>
-            </div></form>
-              <form method="post" action="">
-                {% csrf_token %}
+                </div> -->
+            </div>
+          <!-- </form> -->
+              <!-- <form method="post" action="">
+                {% csrf_token %} -->
               <div class="sub_specialty get_scroll">
               {% for i in get_sub_specialty%}
               <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
-              <input type="submit" value="Submit"></div></form>
+              <!-- <input type="submit" value="Submit"> -->
+              </div>
+            <!-- </form>
               <form method="post" action="">
-                {% csrf_token %}
+                {% csrf_token %} -->
               <div class="get_role_data get_scroll">
               {% for i in get_role_data %}
               <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
-              <input type="submit" value="Submit">
-            </div></form>
-            <form method="post" action="">
-              {% csrf_token %}
+              <!-- <input type="submit" value="Submit"> -->
+            </div>
+          <!-- </form> -->
+            <!-- <form method="post" action="">
+              {% csrf_token %} -->
               <div class="get_staff get_scroll">
               {% for i in get_staff %}
               <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
-              <input type="submit" value="Submit">
+              <!-- <input type="submit" value="Submit"> -->
             </div>
            
-          </form>
+          <!-- </form>
           <form method="post" action="">
-            {% csrf_token %}
+            {% csrf_token %} -->
             <div class="get_pgy get_scroll">
             {% for i in get_pgy %}
             <input type="checkbox" id="myCheckBoxID" name="PGY" value='{{i}}'>
             <label for="vehicle1" class="color_change"> {{i}}</label><br>
             {%endfor%}
-            <input type="submit" value="Submit">
+            <!-- <input type="submit" value="Submit"> -->
           </div>
          
+        <!-- </form> -->
+        <div class="btn_select_sbmt">
+          <input type="submit" value="Submit">
+          </div>
         </form>
+      </div>
           <br><br>
             
               <script>

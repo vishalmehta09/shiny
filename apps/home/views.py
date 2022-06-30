@@ -1,9 +1,4 @@
 
-
-from tkinter import E
-from traceback import print_tb
-from unittest import result
-from urllib.parse import uses_params
 from django.contrib.auth.models import User
 from apps.authentication.models import *
 from typing import Counter
@@ -61,16 +56,18 @@ def color_line_chart(key):
 
 
 @login_required(login_url="/login/")
-def generate_bar_chart(request):
-      
+def generate_bar_chart(request):   
     if request.method == 'GET':
         institute = Institution.objects.all()
         supervisor = Supervisor.objects.all()
-        print(institute, "institute")
-        if not request.user.is_superuser:
+        # print(institute, "institute")
+        if not request.user.is_superuser and not request.user.is_supervisor:
             obj = Graphs.objects.filter(user=request.user)
-        elif request.method == "GET" and request.user.is_superuser and request.GET.get('user_id'):
-            obj = Graphs.objects.filter(user=int(request.GET.get('user_id')))
+        elif request.method == "GET" and request.user.is_superuser or request.user.is_supervisor  :
+            if request.GET.get('user_id'):
+                obj = Graphs.objects.filter(user=int(request.GET.get('user_id')))
+            else:
+                obj = Graphs.objects.filter(user=int(4565465465456))
         else:
             obj = Graphs.objects.filter(user=int(4565465465456))
 
@@ -249,7 +246,7 @@ def generate_bar_chart(request):
             for i in data['Date'].dt.year:
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
-            print(roles, "rolesss")
+           
         
             labels = []
             role_keys = []
@@ -285,9 +282,10 @@ def generate_bar_chart(request):
             return render(request, 'home/sample.html',{'users':NewUser.objects.all().exclude(is_superuser=True),"institute":institute, "supervisor":supervisor})
         
     if request.method == 'POST' :
+        print("Two Lists",request.POST.values)
         institute = Institution.objects.all()
         supervisor = Supervisor.objects.all()
-        print(institute, "institute")
+        # print(institute, "institute")
         # print(request.GET.get('user_id'),"bbb")
         if not request.FILES.get('document') and not request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.user)
@@ -321,8 +319,8 @@ def generate_bar_chart(request):
             return redirect("/")
 
         elif not request.FILES.get('document') and request.POST.get("email"):
-            print("true case")
-            print(request.POST.values,"valuess")
+            # print("true case")
+            # print(request.POST.values,"valuess")
             email=request.POST.get("email")
             username=request.POST.get("username")
             first_name=request.POST.get("first_name")
@@ -360,6 +358,7 @@ def generate_bar_chart(request):
             else:
                 messages.error(request, "Password doesn't matched")
                 return redirect("/")
+                
             
         elif not request.FILES.get('document') and request.user.is_superuser:
             obj = Graphs.objects.filter(user=request.GET.get('user_id'))
@@ -435,7 +434,7 @@ def generate_bar_chart(request):
         if request.POST.getlist("Staff"):
             get_data_staff = request.POST.getlist("Staff")
             get_g_staff = data[data["Staff"].isin(get_data_staff)]
-            print(get_g_staff, "get_g_staff")
+            # print(get_g_staff, "get_g_staff")
         if request.POST.getlist("Role"):
             get_data_role = request.POST.getlist("Role")
             get_g_role = data[data["Role"].isin(get_data_role)]
@@ -836,11 +835,11 @@ def generate_bar_chart(request):
                     context_dib[i] =  get_g_pgy[get_g_pgy['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
-                print(get_g_pgy['Staff'], "staffs")
+                # print(get_g_pgy['Staff'], "staffs")
                 name_set = []
                 for i in range(len(staffs)):
                     name_set.append(list(staffs.keys())[i])
-                print(name_set,"name_set")
+                # print(name_set,"name_set")
                 only_final_data = []
 
                 for d in staffs:
@@ -1017,7 +1016,7 @@ def generate_bar_chart(request):
                     context_dib[i] =  get_g_role[get_g_role['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
-                print(get_g_role['Staff'], "staffs")
+                # print(get_g_role['Staff'], "staffs")
                 name_set = []
                 for i in range(len(staffs)):
                     name_set.append(list(staffs.keys())[i])
@@ -1404,7 +1403,7 @@ def generate_bar_chart(request):
                     context_dib[i] =  get_g_location[get_g_location['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
-                print(get_g_location['Staff'], "staffs")
+                # print(get_g_location['Staff'], "staffs")
                 name_set = []
                 for i in range(len(staffs)):
                     name_set.append(list(staffs.keys())[i])
