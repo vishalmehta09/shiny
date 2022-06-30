@@ -1382,7 +1382,7 @@ Upload Excel File
             
             {% for i in get_pgy %}
             
-            <input type="checkbox" id="myCheckBoxID" name="PGY" value='{{i}}'>
+            <input type="checkbox" id="myCheckBoxID" name="PGY" value={{i}}>
             
             <label for="vehicle1" class="color_change"> {{i}}</label><br>
             
@@ -1906,12 +1906,16 @@ role_bar = document.getElementById('Role-bar-chart');
       options: {
 
     scales: {
-        xAxes: [{
+        xAxes: [{ ticks: {
+                beginAtZero: true
+            },
             gridLines: {
                 drawOnChartArea: false
             }
         }],
-        yAxes: [{
+        yAxes: [{ ticks: {
+                beginAtZero: true
+            },
             gridLines: {
                 drawOnChartArea: false
             }
