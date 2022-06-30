@@ -1336,6 +1336,9 @@ Upload Excel File
             <option value="Role">Role</option>
             <option value="PGY">PGY</option>
               </select>
+
+
+
               <form method="post" action="">
                 {% csrf_token %}
               <div class="get_location get_scroll">
@@ -1346,27 +1349,24 @@ Upload Excel File
               <div class="btn_select_sbmt">
                 <input type="submit" value="Submit">
                 </div>
-            </div></form>
-              <form method="post" action="">
-                {% csrf_token %}
+            </div>
+ 
                      <div class="sub_specialty get_scroll">
               {% for i in get_sub_specialty%}
               <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
               <input type="submit" value="Submit"></div>
-            </form>
-              <form method="post" action="">
-                {% csrf_token %}
+            
+
               <div class="get_role_data get_scroll">
               {% for i in get_role_data %}
               <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
               <label for="vehicle1" class="color_change"> {{i}}</label><br>
               {%endfor%}
               <input type="submit" value="Submit">
-            </div></form>
-            <form method="post" action="">
-              {% csrf_token %}
+            </div>
+
               <div class="get_staff get_scroll">
               {% for i in get_staff %}
               <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
@@ -1375,10 +1375,8 @@ Upload Excel File
               <input type="submit" value="Submit">
             </div>
            
-          </form>
-          <form method="post" action="">
+          
 
-            {% csrf_token %}
             
             <div class="get_pgy get_scroll">
             
@@ -1395,6 +1393,11 @@ Upload Excel File
             </div>
             
             </form><br><br>
+
+
+
+
+
             
               <script>
                 $(document).ready(function(){

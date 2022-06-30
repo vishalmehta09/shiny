@@ -489,20 +489,103 @@ def generate_bar_chart(request):
 
         e = data['PGY']
         get_pgy = list(e.unique())
-        if request.POST.getlist("Staff"):
+        if request.POST.getlist("Staff") and request.POST.getlist("Role"):
             get_data_staff = request.POST.getlist("Staff")
-            get_g_staff = data[data["Staff"].isin(get_data_staff)]
-        if request.POST.getlist("Role"):
             get_data_role = request.POST.getlist("Role")
-            get_g_role = data[data["Role"].isin(get_data_role)]
-        if request.POST.getlist("Location") :
-            get_data_location = request.POST.getlist("Location")
-            get_g_location = data[data["Location"].isin(get_data_location)]
-        if request.POST.getlist("Sub-Specialty"):
+            filter1 = data["Staff"].isin(get_data_staff)
+            filter2 = data["Role"].isin(get_data_role)
+            get_g_role = data[filter1 & filter2]
+            get_g_staff =data[filter1 & filter2]
+
+        if request.POST.getlist("Sub-Specialty") and request.POST.getlist("Role"):
+            print("Speciality and role")
             get_data_specialty = request.POST.getlist("Sub-Specialty")
-            get_g_specialty = data[data["Sub-Specialty"].isin(get_data_specialty)]
+            get_data_role = request.POST.getlist("Role")
+            filter4= data["Sub-Specialty"].isin(get_data_specialty)
+            filter2 = data["Role"].isin(get_data_role)
+            get_g_role = data[filter2 & filter4]
+            get_g_specialty =data[filter2 & filter4]
+
+        if request.POST.getlist("Location") and request.POST.getlist("Role"):
+            print("Location and role")
+            get_data_role = request.POST.getlist("Role")
+            get_data_location = request.POST.getlist("Location")
+            filter3 = data["Location"].isin(get_data_location)
+            filter2 = data["Role"].isin(get_data_role)
+            get_g_role = data[filter2 & filter3]
+            get_g_location =data[filter2 & filter3]
+
+        if request.POST.getlist("PGY") and request.POST.getlist("Role"):
+            print("PGY and role")
+            get_data_p = request.POST.getlist("PGY")
+            get_data_role = request.POST.getlist("Role")
+            get_data_pgy = [i.replace(".0", "") for i in get_data_p]
+        
+            for i in range(0, len(get_data_pgy)):
+                get_data_pgy[i] = int(get_data_pgy[i])
+            filter5 = data["PGY"].isin(get_data_pgy)
+
+            filter2 = data["Role"].isin(get_data_role)
+            get_g_role = data[filter2 & filter5]
+            get_g_pgy =data[filter2 & filter5]
+
+        if request.POST.getlist("PGY") and request.POST.getlist("Role") and request.POST.getlist("Staff") and request.POST.getlist("Location") and request.POST.getlist("Sub-Specialty"):
+            get_data_staff = request.POST.getlist("Staff")
+            filter1 = data["Staff"].isin(get_data_staff)
+
+            get_data_role = request.POST.getlist("Role")
+            filter2 = data["Role"].isin(get_data_role)
+
+            get_data_location = request.POST.getlist("Location")
+            filter3 = data["Location"].isin(get_data_location)
+
+            get_data_specialty = request.POST.getlist("Sub-Specialty")
+            filter4= data["Sub-Specialty"].isin(get_data_specialty)
+
+            get_data_pgy = [i.replace(".0", "") for i in request.POST.getlist("PGY")]
+        
+            for i in range(0, len(get_data_pgy)):
+                get_data_pgy[i] = int(get_data_pgy[i])
+            filter5 = data["PGY"].isin(get_data_pgy)
+
+            get_g_pgy =data[filter1 & filter2 & filter3 & filter4 & filter5]
+            get_g_role = data[filter1 & filter2 & filter3 & filter4 & filter5]
+            get_g_staff =data[filter1 & filter2 & filter3 & filter4 & filter5]
+            get_g_location =data[filter1 & filter2 & filter3 & filter4 & filter5]
+            get_g_specialty =data[filter1 & filter2 & filter3 & filter4 & filter5]
+
+
+
            
-        if request.POST.getlist("PGY"):
+
+
+        
+
+        if request.POST.getlist("Staff") and not request.POST.getlist("Role") and not request.POST.getlist("Location") and not request.POST.getlist("Sub-Specialty") and not request.POST.getlist("PGY"):
+            print("staff arrival")
+            get_data_staff = request.POST.getlist("Staff")
+            filter1 = data["Staff"].isin(get_data_staff)
+            get_g_staff = data[filter1]
+
+        if request.POST.getlist("Role") and not request.POST.getlist("Staff") and not request.POST.getlist("Location") and not request.POST.getlist("Sub-Specialty") and not request.POST.getlist("PGY"):
+            print("role arrival")
+            get_data_role = request.POST.getlist("Role")
+            filter2 = data["Role"].isin(get_data_role)
+            get_g_role = data[filter2]
+
+        if request.POST.getlist("Location") and not request.POST.getlist("Role") and not request.POST.getlist("Staff") and not request.POST.getlist("Sub-Specialty") and not request.POST.getlist("PGY"):
+            print("location arrival")
+            get_data_location = request.POST.getlist("Location")
+            filter3 = data["Location"].isin(get_data_location)
+            get_g_location = data[filter3]
+
+        if request.POST.getlist("Sub-Specialty") and not request.POST.getlist("Role") and not request.POST.getlist("Location") and not request.POST.getlist("Staff") and not request.POST.getlist("PGY"):
+            print("Sub speci arrival")
+            get_data_specialty = request.POST.getlist("Sub-Specialty")
+            filter4= data["Sub-Specialty"].isin(get_data_specialty)
+            get_g_specialty = data[filter4]
+           
+        if request.POST.getlist("PGY") and not request.POST.getlist("Role") and not request.POST.getlist("Location") and not request.POST.getlist("Sub-Specialty") and not request.POST.getlist("Staff"):
             get_data_p = request.POST.getlist("PGY")
             get_data_pgy = [i.replace(".0", "") for i in get_data_p]
         
@@ -637,11 +720,11 @@ def generate_bar_chart(request):
                 for role in roles:
                     labels.append(role)
                     role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
+                    # role_keys.append(role_key)
                     raw_data.append(roles[role])
                
                 final_data = []
-                for key in role_keys[1]:
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
             
@@ -905,11 +988,15 @@ def generate_bar_chart(request):
                 for role in roles:
                     labels.append(role)
                     role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
+                    # if len(role_key)>1:
+                    #     role_keys.append(role_key)
+                    # else:
+                    #     print(role_key)
                     raw_data.append(roles[role])
 
                 final_data = []
-                for key in role_keys[1]:
+                print("HERe",len(role_keys),role_keys)
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
             
@@ -1419,6 +1506,7 @@ def generate_bar_chart(request):
                 
 
             if request.POST.getlist("Staff"):
+                print(request.POST.getlist("Role"))
                 context_dib = {}
 
                 staffs = {}
@@ -1533,11 +1621,11 @@ def generate_bar_chart(request):
                 for role in roles:
                     labels.append(role)
                     role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
+                    # role_keys.append(role_key)
                     raw_data.append(roles[role])
                
                 final_data = []
-                for key in role_keys[1]:
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
             
