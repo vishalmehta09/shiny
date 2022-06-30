@@ -1134,7 +1134,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
           <h3><a href="#">OR Logbook</a> </h3>
         <ul>
             <li class="active ">
-                <a href="#">
+                <a href="{% url 'generate_bar_chart' %}">
                   <i class="fa fa-pie-chart" aria-hidden="true"></i>
                   <p>Dashboard</p>
                 </a>
@@ -1147,8 +1147,17 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
                 </a>
               </li>
               {%endif%}
+
+              {%if request.user.is_superuser%}
               <li>
-                <a href="#">
+                <a href="{% url 'delete_user' %}">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  <p>Remove User</p>
+                </a>
+              </li>
+              {%endif%}
+              <li>
+                <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
                   <p>Logout</p>
                 </a>
@@ -1283,7 +1292,7 @@ Upload Excel File
                 <h3><a href="#">OR Logbook</a> </h3>
               <ul>
                   <li class="active ">
-                      <a href="#">
+                      <a href="{% url 'generate_bar_chart' %}">
                         <i class="fa fa-pie-chart" aria-hidden="true"></i>
                         <p>Dashboard</p>
                       </a>
@@ -1297,6 +1306,16 @@ Upload Excel File
                       </a>
                     </li>
                     {% endif %}
+
+
+                    {%if request.user.is_superuser%}
+                    <li>
+                      <a href="{% url 'delete_user' %}">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <p>Remove User</p>
+                      </a>
+                    </li>
+                    {%endif%}
                     <li>
                  
                      
@@ -1482,7 +1501,7 @@ Upload Excel File
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>Cases to-date this year</p>
+                      <p>Cases to-date this year (after 6july)</p>
                       <h4>{{count_of_current_year}}</h4>  
                       </div>
                   </div>
@@ -1495,7 +1514,7 @@ Upload Excel File
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>Cases to date this year
+                      <p>Cases to date this year as Primary Surgeon
                       
                       </p>
                       

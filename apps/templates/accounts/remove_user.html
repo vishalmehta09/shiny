@@ -1320,12 +1320,13 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 
                     {% csrf_token %}
                         <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" name="password" value="">
-                        </div>
-                        <div class="form-group">
-                            <label>Confirm Password</label>
-                            <input type="password" name="confirm_password" value="">
+                            <select class="form-select" aria-label="Default select example" name="user_id">
+                                <option selected>Users</option>
+                                {% for u in users %}
+                                <option value="{{u.id}}" name="users" >{{ u.username }}</option>
+                                {% endfor %}
+                               
+                              </select>
                         </div>
                         <div class="form-group">
                             <button class="psswrd_btn">Submit</button>
