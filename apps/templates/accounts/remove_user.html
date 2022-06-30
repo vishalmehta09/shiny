@@ -1320,6 +1320,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 
                     {% csrf_token %}
                         <div class="form-group">
+                            <lable>Select user you want to delete:</lable><br><br>
                             <select class="form-select" aria-label="Default select example" name="user_id">
                                 <option selected>Users</option>
                                 {% for u in users %}
