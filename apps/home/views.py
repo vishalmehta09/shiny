@@ -698,6 +698,7 @@ def generate_bar_chart(request):
             get_data_staff = request.POST.getlist("Staff")
             get_data_role = request.POST.getlist("Role")
             get_data_pgy = request.POST.getlist("PGY")
+            get_data_pgy = list(map(int, get_data_pgy))
             filter1 = data["Staff"].isin(get_data_staff)
             filter2 = data["Role"].isin(get_data_role)
             filter4= data["PGY"].isin(get_data_pgy)
@@ -706,7 +707,7 @@ def generate_bar_chart(request):
             get_g_role = data[filter1 & filter2 & filter4]
             get_g_pgy =data[filter1 & filter2 & filter4]
 
-        if request.POST.getlist("PGY") and request.POST.getlist("Role") and not request.POST.getlist("Location"):
+        if request.POST.getlist("PGY") and request.POST.getlist("Role") and not request.POST.getlist("Location") and not request.POST.getlist("Staff"):
             print("PGY and role")
             get_data_p = request.POST.getlist("PGY")
             get_data_role = request.POST.getlist("Role")
