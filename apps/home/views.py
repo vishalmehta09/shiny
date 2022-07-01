@@ -257,26 +257,35 @@ def generate_bar_chart(request):
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
         
-            labels = []
+            _data = {}
+               
+            for r in roles:
+                _data_set = {
+                    'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                    'First Assist': roles[r].get('First Assist', 0),
+                    'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                }
+                
+                _data[r] = _data_set
+        
+            labels = list(roles.keys())
             role_keys = []
             raw_data = []
-            for role in roles:
-
-                labels.append(role)
-                role_key = list(roles[role].keys())
-                role_keys.append(role_key)
-                raw_data.append(roles[role])   
+            for role in _data:
+                role_keys = (list(_data[role].keys()))
+                raw_data.append(_data[role])
             final_data = []
-            for key in role_keys[1]:
+            for key in role_keys:
                 data = []
                 for raw in raw_data:
-                    data.append(raw.get(key,0))
-           
+                    data.append(raw[key])
+                    
                 final_data.append({
-                    "data": data,
-                    "borderColor": color_line_chart(key),
-                    "backgroundColor": 'transparent',
-                    })
+                "label": key,
+                "data": data,
+                "borderColor": color_line_chart(key),
+                "fill": "true",
+                })
         
             final_final_data = {
                 "labels": labels,
@@ -557,7 +566,7 @@ def generate_bar_chart(request):
             get_data_location = request.POST.getlist("Location")
             filter1 = data["Staff"].isin(get_data_staff)
             filter2 = data["Location"].isin(get_data_location)
-            get_g_role = data[filter1 & filter2]
+            get_g_staff = data[filter1 & filter2]
             get_g_location =data[filter1 & filter2]
 
         
@@ -565,9 +574,10 @@ def generate_bar_chart(request):
             get_data_staff = request.POST.getlist("Staff")
             sub_specialty = request.POST.getlist("Sub-Specialty")
             filter1 = data["Staff"].isin(get_data_staff)
-            print(data['Sub-Specialty'])
-            filter4 = data['Sub-Specialty'].isin(sub_specialty).any()
-            get_g_role = data[filter1 & filter4]
+            print(filter1)
+           
+            filter4 = data['Sub-Specialty'].isin(sub_specialty)
+            get_g_staff = data[filter1 & filter4]
             get_g_specialty =data[filter1 & filter4]
 
         if request.POST.getlist("Staff") and request.POST.getlist("Role") and request.POST.getlist("Sub-Specialty"):
@@ -677,6 +687,7 @@ def generate_bar_chart(request):
             get_data_pgy = request.POST.getlist("PGY")
             filter1 = data["Location"].isin(get_data_location)
             filter2 = data["Role"].isin(get_data_role)
+            get_data_pgy = list(map(int, get_data_pgy))
             filter4= data["PGY"].isin(get_data_pgy)
             get_g_role = data[filter1 & filter2 & filter4]
             get_g_location =data[filter1 & filter2 & filter4]
@@ -694,7 +705,7 @@ def generate_bar_chart(request):
             get_g_role = data[filter1 & filter2 & filter4]
             get_g_pgy =data[filter1 & filter2 & filter4]
 
-        if request.POST.getlist("PGY") and request.POST.getlist("Role"):
+        if request.POST.getlist("PGY") and request.POST.getlist("Role") and not request.POST.getlist("Location"):
             print("PGY and role")
             get_data_p = request.POST.getlist("PGY")
             get_data_role = request.POST.getlist("Role")
@@ -735,7 +746,25 @@ def generate_bar_chart(request):
 
 
 
+        if request.POST.getlist("Role") and request.POST.getlist("Staff") and request.POST.getlist("Location") and request.POST.getlist("Sub-Specialty"):
+            get_data_staff = request.POST.getlist("Staff")
+            filter1 = data["Staff"].isin(get_data_staff)
+
+            get_data_role = request.POST.getlist("Role")
+            filter2 = data["Role"].isin(get_data_role)
+
+            get_data_location = request.POST.getlist("Location")
+            filter3 = data["Location"].isin(get_data_location)
+
+            get_data_specialty = request.POST.getlist("Sub-Specialty")
+            filter4= data["Sub-Specialty"].isin(get_data_specialty)
+
            
+
+            get_g_role = data[filter1 & filter2 & filter3 & filter4 ]
+            get_g_staff =data[filter1 & filter2 & filter3 & filter4 ]
+            get_g_location =data[filter1 & filter2 & filter3 & filter4 ]
+            get_g_specialty =data[filter1 & filter2 & filter3 & filter4 ]
 
 
         
@@ -859,7 +888,7 @@ def generate_bar_chart(request):
             specialty_chart = []
             site =[]
             if request.POST.getlist("PGY"):
-               
+                role=[]
                 for i in get_g_pgy['Role']:
                     role.append(i)
 
@@ -869,7 +898,7 @@ def generate_bar_chart(request):
                 keys = list(dashboard1.keys())
                 values = list(dashboard1.values())
                
-
+                specialty_chart =[]
                 for i in get_g_pgy['Sub-Specialty']:
                     specialty_chart.append(i)
                 
@@ -878,6 +907,7 @@ def generate_bar_chart(request):
                 keys1 = list(dashboard3.keys())
                 values1 = list(dashboard3.values())
 
+                site=[]
                 for i in get_g_pgy['Location']:
                     site.append(i)
                 
@@ -894,29 +924,39 @@ def generate_bar_chart(request):
                     context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.year == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
      
-                labels = []
+                _data = {}
+               
+                for r in roles:
+                    _data_set = {
+                        'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                        'First Assist': roles[r].get('First Assist', 0),
+                        'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                    }
+                    
+                    _data[r] = _data_set
+            
+
+                labels = list(roles.keys())
                 role_keys = []
                 raw_data = []
-                for role in roles:
-                    labels.append(role)
-                    role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
-                    raw_data.append(roles[role])
-               
+
+                for role in _data:
+
+                    role_keys = (list(_data[role].keys()))
+                    raw_data.append(_data[role])
+
                 final_data = []
-                print("ROLE ")
-                for key in role_keys[0]:
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
-            
-                        data.append(raw.get(key,0))
-                
-
+                        data.append(raw[key])
+                        
                     final_data.append({
-                        "data": data,
-                      "borderColor": color_line_chart(key),
-                    "backgroundColor": 'transparent',
-                        })
+                    "label": key,
+                    "data": data,
+                    "borderColor": color_line_chart(key),
+                    "fill": "true",
+                    })
             
                 final_final_data = {
                     "labels": labels,
@@ -1055,7 +1095,7 @@ def generate_bar_chart(request):
             specialty_chart = []
             site =[]
             if request.POST.getlist("Role"):
-    
+                role =[]
                 for i in get_g_role['Role']:
                     role.append(i)
                 
@@ -1064,7 +1104,8 @@ def generate_bar_chart(request):
 
                 keys = list(dashboard1.keys())
                 values = list(dashboard1.values())
-
+                
+                specialty_chart=[]
                 for i in get_g_role['Sub-Specialty']:
                     specialty_chart.append(i)
                 
@@ -1074,6 +1115,7 @@ def generate_bar_chart(request):
                 keys1 = list(dashboard3.keys())
                 values1 = list(dashboard3.values())
 
+                site=[]
                 for i in get_g_role['Location']:
                     site.append(i)
                 
@@ -1163,34 +1205,40 @@ def generate_bar_chart(request):
                     context_dict[i] =  get_g_role[get_g_role['Date'].dt.year == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
-                labels = []
+                _data = {}
+               
+                for r in roles:
+                    _data_set = {
+                        'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                        'First Assist': roles[r].get('First Assist', 0),
+                        'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                    }
+                    
+                    _data[r] = _data_set
+            
+
+                labels = list(roles.keys())
                 role_keys = []
                 raw_data = []
-                for role in roles:
-                    labels.append(role)
-                    role_key = list(roles[role].keys())
-                    # if len(role_key)>1:
-                    role_keys.append(role_key)
-                    # else:
-                    #     print(role_key)
-                    raw_data.append(roles[role])
+
+                for role in _data:
+
+                    role_keys = (list(_data[role].keys()))
+                    raw_data.append(_data[role])
 
                 final_data = []
-                
-                for key in role_keys[0]:
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
-            
-                        data.append(raw.get(key,0))
-                
-
+                        data.append(raw[key])
+                        
                     final_data.append({
+                    "label": key,
+                    "data": data,
+                    "borderColor": color_line_chart(key),
+                    "fill": "true",
+                    })
 
-                        "data": data,
-                        "borderColor": color_line_chart(key),
-                        "backgroundColor": 'transparent',
-                        })
-            
                 final_final_data = {
                     "labels": labels,
                     "datasets": final_data,
@@ -1252,6 +1300,7 @@ def generate_bar_chart(request):
                 return render(request, 'home/sample.html', context)
                 
             else:
+                role =[]
                 for i in data['Role']:
                     role.append(i)
                 
@@ -1368,7 +1417,7 @@ def generate_bar_chart(request):
                         # end of get staff filter
 
 
-
+                role=[]
                 for i in get_g_specialty['Role']:
                     role.append(i)
                 
@@ -1506,7 +1555,8 @@ def generate_bar_chart(request):
 
                 keys2 = list(dashboard6.keys())
                 values2 = list(dashboard6.values())
-
+                
+                role=[]
                 for i in get_g_location['Role']:
                     role.append(i)
                 
@@ -1588,6 +1638,7 @@ def generate_bar_chart(request):
                     elif dataset['label'] == 'Secondary Assist':
                         dataset['data'] = s_list
                         # end of staff filter
+                specialty_chart =[]
                 for i in get_g_location['Sub-Specialty']:
                     specialty_chart.append(i)
                 
@@ -1605,30 +1656,41 @@ def generate_bar_chart(request):
                     context_dict[i] =  get_g_location[get_g_location['Date'].dt.year == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
-                labels = []
+                _data = {}
+               
+                for r in roles:
+                    _data_set = {
+                        'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                        'First Assist': roles[r].get('First Assist', 0),
+                        'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                    }
+                    
+                    _data[r] = _data_set
+            
+
+                labels = list(roles.keys())
                 role_keys = []
                 raw_data = []
-                for role in roles:
-                    labels.append(role)
-                    role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
-                    raw_data.append(roles[role])
+
+                for role in _data:
+
+                    role_keys = (list(_data[role].keys()))
+                    raw_data.append(_data[role])
 
                 final_data = []
-                for key in role_keys[1]:
+                for key in role_keys:
                     data = []
                     for raw in raw_data:
-            
-                        data.append(raw.get(key,0))
-                
-
+                        data.append(raw[key])
+                        
                     final_data.append({
-    
-                        "data": data,
-                        "borderColor": color_line_chart(key),
-                        "backgroundColor": 'transparent',
-                        })
-            
+                    "label": key,
+                    "data": data,
+                    "borderColor": color_line_chart(key),
+                    "fill": "true",
+                    })
+
+
                 final_final_data = {
                     "labels": labels,
                     "datasets": final_data,
@@ -1689,6 +1751,7 @@ def generate_bar_chart(request):
                 return render(request, 'home/sample.html', context)
                 
             else:
+                site=[]
                 for i in data['Location']:
                     site.append(i)
                 
@@ -1809,30 +1872,39 @@ def generate_bar_chart(request):
                     context_dict[i] =  get_g_staff[get_g_staff['Date'].dt.year == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                
-                labels = []
+                _data = {}
+               
+                for r in roles:
+                    _data_set = {
+                        'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                        'First Assist': roles[r].get('First Assist', 0),
+                        'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                    }
+                    
+                    _data[r] = _data_set
+            
+
+                labels = list(roles.keys())
                 role_keys = []
                 raw_data = []
-                for role in roles:
-                    labels.append(role)
-                    role_key = list(roles[role].keys())
-                    role_keys.append(role_key)
-                    raw_data.append(roles[role])
-               
+
+                for role in _data:
+
+                    role_keys = (list(_data[role].keys()))
+                    raw_data.append(_data[role])
+
                 final_data = []
-                data = []
-                print(role_keys)
                 for key in role_keys:
+                    data = []
                     for raw in raw_data:
-
                         data.append(raw[key])
-                
-
+                        
                     final_data.append({
-                        "data": data,
-                        "borderColor": color_line_chart(key),
-                        "backgroundColor": 'transparent',
-                        })
-            
+                    "label": key,
+                    "data": data,
+                    "borderColor": color_line_chart(key),
+                    "fill": "true",
+                    })
                 final_final_data = {
                     "labels": labels,
                     "datasets": final_data,
@@ -1900,31 +1972,37 @@ def generate_bar_chart(request):
                 context_dict[i] =  data[data['Date'].dt.year == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
-            labels = []
+            _data = {}
+               
+            for r in roles:
+                _data_set = {
+                    'Secondary Assist': roles[r].get('Secondary Assist', 0),
+                    'First Assist': roles[r].get('First Assist', 0),
+                    'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+                }
+                
+                _data[r] = _data_set
+        
+            labels = list(roles.keys())
             role_keys = []
             raw_data = []
-            for role in roles:
-                labels.append(role)
-                role_key = list(roles[role].keys())
-                role_keys.append(role_key)
-                raw_data.append(roles[role])
-
+            for role in _data:
+                role_keys = (list(_data[role].keys()))
+                raw_data.append(_data[role])
             final_data = []
-            for key in role_keys[1]:
+            for key in role_keys:
                 data = []
                 for raw in raw_data:
-        
-                    data.append(raw.get(key,0))
-               
-
+                    data.append(raw[key])
+                    
                 final_data.append({
-                
-                    "data": data,
-                    "borderColor": color_line_chart(key),
-                    "backgroundColor": 'transparent',
-                    })
-          
-            final_final_data = {
+                "label": key,
+                "data": data,
+                "borderColor": color_line_chart(key),
+                "fill": "true",
+                })
+        
+            finl_final_data = {
                    "labels": labels,
                 "datasets": final_data,
              
