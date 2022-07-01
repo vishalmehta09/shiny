@@ -57,3 +57,15 @@ def change_password(request):
             return redirect('change_password')
     else:
         return render(request, 'accounts/change_password.html')
+
+
+def delete_user(request): 
+    get_user= NewUser.objects.filter(is_superuser=False,is_supervisor=False).all()
+    if request.method == "POST":
+        get_user= NewUser.objects.filter(is_superuser=False,is_supervisor=False).all()
+        get_data = request.POST.get("user_id")
+        delete_user = NewUser.objects.filter(id=get_data)
+        delete_user.delete()
+        messages.success(request, "Successfully Deleted")
+        return render(request,"accounts/remove_user.html", {'users':get_user})
+    return render(request,"accounts/remove_user.html", {'users':get_user})

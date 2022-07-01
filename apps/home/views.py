@@ -382,6 +382,7 @@ def generate_bar_chart(request):
 
             if NewUser.objects.filter(email=email).exists():
                 messages.error(request, "Email already exists")
+                return redirect('/')
             else:
                 email=email
             if password == confirm_password:
