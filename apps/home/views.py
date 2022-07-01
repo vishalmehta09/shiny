@@ -2003,7 +2003,7 @@ def generate_bar_chart(request):
                 "fill": "true",
                 })
         
-            finl_final_data = {
+            final_final_data = {
                    "labels": labels,
                 "datasets": final_data,
              
