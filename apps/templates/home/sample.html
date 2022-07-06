@@ -1126,6 +1126,8 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
   <div class="container-fluid mobile-section-header">
     <div class="row">
       <div class="col-md-2 col-xs-2 side_bar_mbl">
@@ -1823,12 +1825,15 @@ $('.image-upload-wrap').bind('dragover', function () {
 });
 
 
+
+// Chart.plugins.unregister(ChartDataLabels);
 role_bar = document.getElementById('Role-bar-chart');
       
 
         names = {{ names | safe}}
 
         data_list = {{ final_data_list | safe }}
+
 
 
 
@@ -1839,6 +1844,9 @@ role_bar = document.getElementById('Role-bar-chart');
             datasets:data_list
         },
         options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
           title: {
       display: true,
       text: 'Procedures by Surgeon'
@@ -1864,17 +1872,58 @@ role_bar = document.getElementById('Role-bar-chart');
                 stacked: true
             }]
         },
-        // tooltips: {enabled: false},
-        // hover: {mode: null},
+      animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+    
+      // draw total count
+     
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index] + this.data.datasets[1].data[index] + this.data.datasets[2].data[index];
+      var meta = chartInstance.controller.getDatasetMeta(2);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
     },
    
     };
     
     var myPieChart = new Chart(role_bar, role_chart_config);
    
-    role_pie = document.getElementById('Role-pie-chart');
+    role_pie = document.getElementById('Role-pie-chart')
         df = {{ keys | safe}}
         df1 = {{ values | safe}}
+
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        var total1 = df1.reduce(reducer);
+      
         role_pie_config = {
         type: 'pie',
         data: {
@@ -1886,28 +1935,39 @@ role_bar = document.getElementById('Role-bar-chart');
             }],
             labels: df,
         },
-        options: {  
+        options: { 
           title: {
       display: true,
       text:'Procedures by Role'
           },
-         
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                display: true,
+                color: 'black',
+            }
+    },       
           legend: {
-        display: false,
+        display: true,
         position: 'bottom'
-    },
-    
+    }, 
             responsive: true
         },
-
-
     };
-    var myPieChart = new Chart(role_pie, role_pie_config);
+     
+    var mypiehartsss = new Chart(role_pie, role_pie_config);
 
     specialty_bar = document.getElementById('specialty-bar-chart');
         df = {{ keys1 | safe}}
         
         df1 = {{ values1 | safe}}
+
+
+
         specialty_bar_config = {
 
         type: 'horizontalBar',
@@ -1923,6 +1983,9 @@ role_bar = document.getElementById('Role-bar-chart');
         },
     
       options: {
+        plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
 
     scales: {
         xAxes: [{ ticks: {
@@ -1940,6 +2003,47 @@ role_bar = document.getElementById('Role-bar-chart');
             }
         }]
     },
+    animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+     
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+     
+
+      // draw total count
+
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index]
+
+      var meta = chartInstance.controller.getDatasetMeta(0);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
    title: {
       display: true,
       text: 'Procedures by Sub-Specialty '
@@ -1968,6 +2072,9 @@ role_bar = document.getElementById('Role-bar-chart');
             labels: df
         },
         options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
           
           title: {
       display: true,
@@ -1990,7 +2097,47 @@ role_bar = document.getElementById('Role-bar-chart');
                 drawOnChartArea: false
             }
         }]
-    },
+    },animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+     
+
+      // draw total count
+     
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index]
+
+      var meta = chartInstance.controller.getDatasetMeta(0);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
             responsive: true,
             legend: {
         display: false,
@@ -2003,15 +2150,17 @@ role_bar = document.getElementById('Role-bar-chart');
 
     site_bar = document.getElementById('year-to-date-line-chart');
         df = {{ final_data| safe}}
-        console.log(df,"here")
         df1 = {{ labels | safe}}
-        // console.log(df1,"here")
+    
 
     
         site_bar_config = {
         type: 'line',
         data: df,
         options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
           title: {
       display: true,
       text:'Role over Time'
@@ -2029,14 +2178,17 @@ role_bar = document.getElementById('Role-bar-chart');
         }]
     },
           legend: {
-        display: false,
+        display: true,
+        position: 'bottom',
+       
+        
     },
             responsive: true
         }, 
     
 
     };
-    var myPieChart = new Chart(site_bar, site_bar_config);
+    var barPieChart = new Chart(site_bar, site_bar_config);
 
     $(document).on('click', 'th', function () {
             var table = $(this).parents('table').eq(0);
