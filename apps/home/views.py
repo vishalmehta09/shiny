@@ -1,5 +1,6 @@
 
 from apps.authentication.models import *
+from apps.home.models import *
 from typing import Counter
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -323,78 +324,7 @@ def generate_bar_chart(request):
                 obj = obj.last()
             
                 upload_file = obj.upload.path
-            
-        elif not request.FILES.get('document') and request.POST.get("username") and not request.POST.get("email"):
-
-            username=request.POST.get("username")
-            password = request.POST.get("password")
-            confirm_password = request.POST.get("confirm_password")
-            if NewUser.objects.filter(username=username).exists():
-                messages.error(request, "Username already exists")
-                return redirect('/')
-            else:
-                username=username
-            if password == confirm_password:
-                user = NewUser.objects.create(username=username)
-                user.password=make_password(password)
-                user.is_supervisor=True
-                user.save()
-                supervisor = Supervisor.objects.create(username=username)
-                messages.success(request, "Supervisor created successfully")
-                return redirect("/")
-            else:
-                messages.error(request, "Password doesn't matched")
-                return redirect("/")
         
-        elif not request.FILES.get('document') and request.POST.get("institute") and not request.POST.get("email"):
-
-            institute=request.POST.get("institute")
-            user = Institution.objects.create(institute=institute)
-            messages.success(request, "Institute created successfully")
-            return redirect("/")
-
-        elif not request.FILES.get('document') and request.POST.get("email"):
-         
-            email=request.POST.get("email")
-            username=request.POST.get("username")
-            first_name=request.POST.get("first_name")
-            last_name=request.POST.get("last_name")
-            institute=request.POST.get("institute")
-            supervisor=request.POST.get("supervisor")
-            password=request.POST.get("password")
-            confirm_password=request.POST.get("confirm_password")
-            try:
-                obj_institute = Institution.objects.get(institute=institute)
-            except:
-                messages.error(request, "Institute doesn't exists")
-                return redirect('/')
-            try:
-                obj_supervisor = Supervisor.objects.get(username=supervisor)
-            except:
-                messages.error(request, "Supervisor doesn't exists")
-                return redirect('/')
-
-            if NewUser.objects.filter(username=username).exists():
-                messages.error(request, "Username already exists")
-                return redirect('/')
-            else:
-                username=username
-
-            if NewUser.objects.filter(email=email).exists():
-                messages.error(request, "Email already exists")
-                return redirect('/')
-            else:
-                email=email
-            if password == confirm_password:
-                users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
-                users.password=make_password(password)
-                users.is_active=True
-                users.save()
-                messages.success(request, "User created successfully")
-                return redirect("/")
-            else:
-                messages.error(request, "Password doesn't matched")
-                return redirect("/")
 
         elif not request.FILES.get('document') and request.user.is_superuser and  not request.user.is_supervisor:
             obj = Graphs.objects.filter(user=request.GET.get('user_id'))
@@ -1090,7 +1020,8 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
 
             role = []
@@ -1298,7 +1229,8 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -1530,7 +1462,8 @@ def generate_bar_chart(request):
                 dashboard223 = dict(Counter(coded_case))
                 dashboard23 = (dict(sorted(dashboard223.items(), key=lambda x:x[1],reverse=True)))
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
                 
 
@@ -1749,7 +1682,8 @@ def generate_bar_chart(request):
                         count_of_this_month+=1
                     else:
                         pass
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_pgy":get_pgy,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_pgy":get_pgy,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -1965,7 +1899,8 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
 
             context_dict = {}
@@ -2010,7 +1945,8 @@ def generate_bar_chart(request):
              
             }
             
-            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor}
+            context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor, 
+                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
             if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
                 return render(request, 'home/sample.html', context)
@@ -2034,16 +1970,95 @@ def profile_pic(request):
 
     
 def AddSupervisor(request):
-    return render(request, 'home/add-supervisor.html')
+    get_values= Supervisor.objects.all()
+    if request.method == "POST":
+        username=request.POST.get("username")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+        if NewUser.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('/')
+        else:
+            username=username
+        if password == confirm_password:
+            user = NewUser.objects.create(username=username)
+            user.password=make_password(password)
+            user.is_supervisor=True
+            user.save()
+            supervisor = Supervisor.objects.create(username=username)
+            messages.success(request, "Supervisor created successfully")
+            return redirect("/supervisor")
+        else:
+            messages.error(request, "Password doesn't matched")
+            return redirect("/supervisor")
+    return render(request, 'home/add-supervisor.html', {"get_values":get_values})
 
 def AddInstitute(request):
-    return render(request, 'home/add-institute.html')
+    get_institute= Institution.objects.all()
+    if request.method == "POST":
+        institute=request.POST.get("institute")
+        user = Institution.objects.create(institute=institute)
+        messages.success(request, "Institute created successfully")
+        return redirect("/institute")
+
+    return render(request, 'home/add-institute.html', {"get_institute":get_institute})
 
 def AddUser(request):
-        return render(request, 'home/add-user.html')
+    get_user= NewUser.objects.filter(is_superuser=False, is_supervisor=False)
+    institute = Institution.objects.all()
+    supervisor = Supervisor.objects.all()
+    if request.method =="POST":
+        email=request.POST.get("email")
+        username=request.POST.get("username")
+        first_name=request.POST.get("first_name")
+        last_name=request.POST.get("last_name")
+        institute=request.POST.get("institute")
+        supervisor=request.POST.get("supervisor")
+        password=request.POST.get("password")
+        confirm_password=request.POST.get("confirm_password")
+        try:
+            obj_institute = Institution.objects.get(institute=institute)
+        except:
+            messages.error(request, "Institute doesn't exists")
+            return redirect('user')
+        try:
+            obj_supervisor = Supervisor.objects.get(username=supervisor)
+        except:
+            messages.error(request, "Supervisor doesn't exists")
+            return redirect('user')
+
+        if NewUser.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('user')
+        else:
+            username=username
+
+        if NewUser.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists")
+            return redirect('user')
+        else:
+            email=email
+        if password == confirm_password:
+            users = NewUser.objects.create(email=email,username=username,first_name=first_name,last_name=last_name,institute=obj_institute,supervisor=obj_supervisor)
+            users.password=make_password(password)
+            users.is_active=True
+            users.save()
+            messages.success(request, "User created successfully")
+            return redirect("/user")
+        else:
+            messages.error(request, "Password doesn't matched")
+            return redirect("/user")
+    return render(request, 'home/add-user.html', {"get_user":get_user, "institute":institute, "supervisor":supervisor})
 
 def UserProfile(request):
-            return render(request, 'home/user-profile.html')
+    if request.method =="POST":
+        print(request.user)
+        get_profile = NewUser.objects.get(username=request.user)
+        get_profile.profile_photo=request.FILES.get('profile_photo')
+        get_profile.save()
+        messages.success(request, "saved")
+        return redirect("/UserProfile")
+    return render(request, 'home/user-profile.html')
 
 def Procedure(request):
             return render(request, 'home/procedure.html')            

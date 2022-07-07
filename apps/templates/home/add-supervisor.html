@@ -10,6 +10,11 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title>OR LOGBOOK</title> 
 </head>
+<style>
+   div.a {
+        text-transform: uppercase;
+      }
+</style>
 <body class="main_body_section"> 
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
@@ -35,7 +40,7 @@
               </li>
               {%if not request.user.is_superuser%}
               <li>
-                <a href="{% url 'change_password' %}">
+                <a href="{% url 'UserProfile' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
@@ -61,17 +66,17 @@
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
                 <ul>
-                    <li><a href="{% url 'AddSupervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                    <li><a href="{% url 'AddInstitute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                    <li><a href="{% url 'AddUser' %}"><i class="fa fa-user"></i>Add User</a></li>
+                    <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                    <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
+                    <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
                 </ul>  
               </div>
           </div>
-          <div class="user_profile_section">
+          <!-- <div class="user_profile_section">
             <ul>
               <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
           </ul>
-          </div>
+          </div> -->
           <!----End Sidebar User--->
           <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
             <!-- main screen -->
@@ -164,9 +169,18 @@ Upload Excel File
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   <div class="nav_video_photo">
-                    
-                      <img src="{% url 'profile_image' %}" alt="Profile Photo">
+                  <div class="nav_video_photo">
+                    {%if request.user.profile_photo%}
+                    <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
+                    {%elif request.user.is_superuser%}
+                    <img src="/profile_pic" alt="Profile Photo">
+                    {%elif request.user.is_supervisor%}
+                    <img src="/profile_pic" alt="Profile Photo">
+                    {%else%}
+                    <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
+                      <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
+                  </div>
+                    {%endif%}
                    </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -197,26 +211,7 @@ Upload Excel File
                   <div class="container-fluid">
                   
                     
-                    <div class="user_cntain">
-                      {% if request.user.is_superuser or request.user.is_supervisor %}
-            
-                    <form method="GET">
-                      <div class="usr_list">
-                    <select class="form-select" aria-label="Default select example" name="user_id">
-                      <option selected>User List</option>
-                      {% for u in users %}
-                      <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option>
-                      {% endfor %}
-                      <input type="hidden" value="is_admin">
-                    </select>
-                    </div>
-                    <div class="usr_btn">
-                    <input type="submit">
-                    </div>
-                  </form>
-                   {%endif%}
-                  </div>
-                   
+                    
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
                     </button>
@@ -233,8 +228,18 @@ Upload Excel File
                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                             <div class="nav_video_photo">
-                                <img src="{% url 'profile_image' %}" alt="Profile Photo">
+                            <div class="nav_video_photo">
+                              {%if request.user.profile_photo%}
+                              <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
+                              {%elif request.user.is_superuser%}
+                              <img src="/profile_pic" alt="Profile Photo">
+                              {%elif request.user.is_supervisor%}
+                              <img src="/profile_pic" alt="Profile Photo">
+                              {%else%}
+                              <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
+                                <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
+                            </div>
+                              {%endif%}
                              </div>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -269,7 +274,7 @@ Upload Excel File
                     </li>
                      {%if not request.user.is_superuser%}
                     <li>
-                      <a href="{% url 'change_password' %}">
+                      <a href="{% url 'UserProfile' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         <p>User Profile</p>
                       </a>
@@ -302,17 +307,17 @@ Upload Excel File
               <div class="d-flex align-items-start orlog_book_sidebar">
                 <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
                   <ul>
-                      <li><a href="{% url 'AddSupervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                      <li><a href="{% url 'AddInstitute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                      <li><a href="{% url 'AddUser' %}"><i class="fa fa-user"></i>Add User</a></li>
+                      <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                      <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
+                      <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
                   </ul>  
                 </div>
               </div>
-              <div class="user_profile_section">
+              <!-- <div class="user_profile_section">
                 <ul>
                   <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
               </ul>
-              </div>
+              </div> -->
              
                 {%endif%}
 
@@ -458,11 +463,15 @@ Upload Excel File
                       <th>Password</th>
                       <th>Confirm Password</th>
                     </tr>
+                    {%for values in get_values%}
                     <tr>
+                      
+                      <td>{{values.username}}</td>
                       <td>*******</td>
                       <td>*******</td>
-                      <td>*******</td>
+                      
                     </tr>
+                    {%endfor%}
                   </table>
                   </div>
               </div>
