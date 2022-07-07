@@ -978,10 +978,6 @@ nav.navbar.navbar-expand-lg.lg_in_out {
   background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
   margin-bottom: 10px;
 }
-.bg_mbl_sectn button {
-  background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
-  margin-top: 10px;
-}
 .bg_mbl_sectn button:hover {
   color: #fff !important;
 }
@@ -1211,8 +1207,11 @@ td {
   margin-bottom: 10px;
 }
 .bg_mbl_sectn button {
-  background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
+  background: #398AB9 !Important;
   margin-top: 10px;
+}
+.bg_mbl_sectn button:hover{
+  background: #398AB9 !Important;
 }
 .bg_mbl_sectn button:hover {
   color: #fff !important;
@@ -1303,7 +1302,49 @@ label.color_change {
   box-shadow: 0px 0px 0px transparent;
   border: 1px solid #dcdcdc;
 }
-
+.remove_user_logbook {
+  background: #fff;
+  padding: 20px;
+  padding-bottom: 40px;
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 50px !important;
+  box-shadow: 0px 0px 7px #ebebeb;
+}
+.user_main_remove{
+  align-items: center;
+}
+.user_main_remove lable{
+  font-family: "Poppins", sans-serif;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+.user_main_remove select:hover{
+  box-shadow: 0px 0px 0px transparent;
+}
+.user_main_remove select:focus-visible{
+  outline: none;
+}
+.user_main_remove select{
+  font-size: 13px;
+  color:#333;
+  padding: 8px 15px;
+  font-family: "Poppins", sans-serif;
+  margin-top: 5px;
+}
+.user_main_remove select:focus{
+  border-color:#dcdcdc !important;
+  box-shadow: 0px 0px 0px transparent;
+}
+.user_main_remove .psswrd_btn{
+  font-family: "Poppins", sans-serif;
+  background: #1a374d;
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 5px;
+  margin-top: 26px;
+}
 /*--end user profile---*/
 /*---End 6-july---*/
 /*------End Left Sidebar orlogbook---*/
@@ -1498,7 +1539,7 @@ label.color_change {
   }
   .bg_mbl_sectn button {
     padding: 0px 10px;
-    padding-bottom: 2px;
+    padding-bottom: 5px;
   }
   .top_section_cases .col-md-2 {
     width: 48%;
@@ -1529,6 +1570,7 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 768px) {
+ 
   .main_mdl_clr .btn.btn-primary {
     font-size: 14px;
   }
@@ -1635,6 +1677,9 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 768px) {
+  .django_bg_sidebar{
+    width: 200px;
+  }
   .top_section_cases .col-md-2 {
     width: 100%;
     margin: 0px;
@@ -1649,7 +1694,16 @@ label.color_change {
     justify-content: left;
   }
 }
-
+@media only screen and (max-width: 767px) {
+.user_main_remove .psswrd_btn{
+  padding: 6px 13px;
+  margin-top: 16px;
+  float: right;
+}
+label.color_change{
+  font-size: 10px;
+}
+}
 @media only screen and (max-width: 320px) {
   .search_box {
     padding: 2px 3px !important;

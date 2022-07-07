@@ -46,7 +46,7 @@
               <li>
                 <a href="{% url 'delete_user' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
-                  <p>Remove User</p>
+                  <p>User List</p>
                 </a>
               </li>
               {%endif%}
@@ -82,7 +82,59 @@
          <option value="Role">Role</option>
          <option value="PGY">PGY</option>
            </select>
+           <form method="post" action="">
+            {% csrf_token %}
+          <div class="get_location get_scroll">
+          {% for i in get_location%}
+          <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <div class="btn_select_sbmt">
+            <input type="submit" value="Submit">
+            </div>
+        </div>
 
+                 <div class="sub_specialty get_scroll">
+          {% for i in get_sub_specialty%}
+          <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit"></div>
+        
+
+          <div class="get_role_data get_scroll">
+          {% for i in get_role_data %}
+          <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+
+          <div class="get_staff get_scroll">
+          {% for i in get_staff %}
+          <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+       
+      
+
+        
+        <div class="get_pgy get_scroll">
+        
+        {% for i in get_pgy %}
+        
+        <input type="checkbox" id="myCheckBoxID" name="PGY" value={{i}}>
+        
+        <label for="vehicle1" class="color_change"> {{i}}</label><br>
+        
+        {%endfor%}
+        
+        <input type="submit" value="Submit">
+
+        </div>     
+        </form>
         
     </div>
     <div class="w3-main" style="margin-left:200px">
@@ -229,7 +281,7 @@ Upload Excel File
                     <li>
                       <a href="{% url 'delete_user' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <p>Remove User</p>
+                        <p>User List</p>
                       </a>
                     </li>
                     {%endif%}

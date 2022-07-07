@@ -68,7 +68,7 @@
               <li>
                 <a href="{% url 'delete_user' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
-                  <p>Remove User</p>
+                  <p>User List</p>
                 </a>
               </li>
               {%endif%}
@@ -104,7 +104,59 @@
          <option value="Role">Role</option>
          <option value="PGY">PGY</option>
            </select>
+           <form method="post" action="">
+            {% csrf_token %}
+          <div class="get_location get_scroll">
+          {% for i in get_location%}
+          <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <div class="btn_select_sbmt">
+            <input type="submit" value="Submit">
+            </div>
+        </div>
 
+                 <div class="sub_specialty get_scroll">
+          {% for i in get_sub_specialty%}
+          <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit"></div>
+        
+
+          <div class="get_role_data get_scroll">
+          {% for i in get_role_data %}
+          <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+
+          <div class="get_staff get_scroll">
+          {% for i in get_staff %}
+          <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+       
+      
+
+        
+        <div class="get_pgy get_scroll">
+        
+        {% for i in get_pgy %}
+        
+        <input type="checkbox" id="myCheckBoxID" name="PGY" value={{i}}>
+        
+        <label for="vehicle1" class="color_change"> {{i}}</label><br>
+        
+        {%endfor%}
+        
+        <input type="submit" value="Submit">
+
+        </div>     
+        </form>
         
     </div>
     <div class="w3-main" style="margin-left:200px">
@@ -250,7 +302,7 @@ Upload Excel File
                     <li>
                       <a href="{% url 'delete_user' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <p>Remove User</p>
+                        <p>User List</p>
                       </a>
                     </li>
                     {%endif%}
@@ -409,7 +461,43 @@ Upload Excel File
           </div>
   
           <div class="col-lg-10 col-md-12 og_logbook">
-                <div class="main_contain_form">
+            <div class="edit_profile_bg">
+              <h2>All Employees</h2>
+              <div class="table_content_section">
+               <table class="table">
+                   <thead>
+                     <tr>
+                       <th>Employee ID</th>
+                       <th>First Name</th>
+                       <th>Last Name</th>
+                       <th>Position</th>
+                       <th>Location Name</th>
+                       <th>Location No</th>
+                       <th>Start Date </th>
+                       <th>Length of Service</th>
+                       <th>Action</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <tr>
+                       <td>66972</td>
+                       <td>Shane</td>
+                       <td>Allen</td>
+                       <td>Driver</td>
+                       <td>Amozon Coalville DNG</td>
+                       <td>1</td>
+                       <td>16 Oct 2021</td>
+                       <td>8 months, 16 days</td>
+                       <td class="ellipse_icon"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></td>
+                     </tr>
+                   </tbody>
+                 </table>
+              </div>
+           </div> 
+
+               <!---- <div class="main_contain_form remove_user_logbook">
+                  <div class="row user_main_remove">
+                    <div class="col-md-10">
                     <form method="post">
                         {% if messages %}
   
@@ -423,7 +511,7 @@ Upload Excel File
 
                     {% csrf_token %}
                         <div class="form-group">
-                            <lable>Select user you want to delete:</lable><br><br>
+                            <lable>Select user you want to delete:</lable>
                             <select class="form-select" aria-label="Default select example" name="user_id">
                                 <option selected>Users</option>
                                 {% for u in users %}
@@ -432,11 +520,15 @@ Upload Excel File
                                
                               </select>
                         </div>
+                      </div>
+                      <div class="col-md-2">
                         <div class="form-group">
                             <button class="psswrd_btn">Submit</button>
                         </div>
+                        </div>
                     </form>
-                </div>
+                    </div>
+                </div>-->
            </div>
    
             <!-- <div class="row mt-4 main-chart-section">
