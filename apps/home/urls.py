@@ -12,6 +12,12 @@ urlpatterns = [
     path('', views.generate_bar_chart, name='generate_bar_chart'),
 
     path('profile_pic', views.profile_pic, name='profile_image'),
+    path('AddSupervisor', views.AddSupervisor, name='AddSupervisor'),
+    path('AddInstitute', views.AddInstitute, name='AddInstitute'),
+    path('AddUser', views.AddUser, name='AddUser'),
+    path('UserProfile', views.UserProfile, name='UserProfile'),
+    path('Procedure', views.Procedure, name='Procedure')
+    
 
 ]
 

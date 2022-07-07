@@ -2033,6 +2033,19 @@ def profile_pic(request):
     return response
 
     
-    
+def AddSupervisor(request):
+    return render(request, 'home/add-supervisor.html')
+
+def AddInstitute(request):
+    return render(request, 'home/add-institute.html')
+
+def AddUser(request):
+        return render(request, 'home/add-user.html')
+
+def UserProfile(request):
+            return render(request, 'home/user-profile.html')
+
+def Procedure(request):
+            return render(request, 'home/procedure.html')            
    
    
