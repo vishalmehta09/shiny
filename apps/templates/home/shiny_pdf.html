@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
+    <title>OR LOGBOOK</title>
+<script>
+  function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+
+</script>
+ <style>
+   div.a {
+        text-transform: uppercase;
+      }
+ </style>
+</head>
+<body class="main_body_section"> 
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+ 
+
+                  
+                   
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <i class="fa fa-bars"></i>
+                    </button>
+                    {% if messages %}
+  
+                    {% for message in messages %}
+                    
+                    <div id="myElem" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                    
+                    {% endfor %}
+                    
+                    {% endif %}
+                   
+                  </div>
+                </nav>
+          </div>
+      </div>
+  </div>
+  
+  
+         
+           <div class="container-fluid">
+             <div class="row">
+               <div class="col-md-12">
+                <div class="row mb-4 main-chart-section">
+                  <div class="col-md-6">
+                      <div id="container3" class="bg_main_cntnt bgcolor_chart">
+                          <canvas id="Role-bar-chart" height="200"></canvas>
+                      </div>
+                   </div>
+                   <div class="col-md-6">        
+                      <div id="container3" class="bg_main_cntnt bgcolor_chart">
+                          <canvas id="specialty-bar-chart" height="180"></canvas>
+                       
+                      </div>
+                   </div>
+              </div>
+              <div class="row main-chart-section">
+                  <div class="col-md-6">
+                      <div id="container" class="bg_main_cntnt bgcolor_chart">
+                            <canvas id="Role-pie-chart" height="180" ></canvas>
+                      </div>
+                   </div>
+                   <div class="col-md-6">
+                    
+                          <div id="container4" class="bg_main_cntnt bgcolor_chart">
+                              <canvas id="site-bar-chart" height="180"></canvas>
+                          </div>
+                      </div>
+                   </div>
+              </div>
+
+              <div class="row mt-4 main-chart-section">
+                  <div class="col-md-12">
+                      <div class="bg_main_cntnt bgcolor_chart">
+                          <div  id="container2">
+                              <canvas id="year-to-date-line-chart" height="100" ></canvas>
+                          </div>
+                    </div>
+                  </div>
+              </div>
+               </div>
+             </div>
+             <div class="container-fluid r_shiny_table bgcolor_chart">
+
+              <div class="row ">
+                <div class="col-md-12 ">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="background-color:#f6f2f2">Coded Case &nbsp;<i class="arrow down"></i></th>
+                        <th style="background-color:#f6f2f2"># &nbsp;<i class="arrow down"></i></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for key, value in dashboard23.items %}
+                      <tr>
+                          <td>{{key}}</td>
+                          <td>{{value}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+           </div>
+   
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="" placeholder="user name">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="" placeholder="password ">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+          </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade main_mdl_clr" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Institute Name</label>
+            <input type="text" name="institute" value="" placeholder="institute name">
+          </div>
+        
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade main_mdl_clr" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body institute_section">
+        <form action="" method="POST">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="" placeholder="email" required>
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="" placeholder="user name" required>
+          </div>
+          <div class="form-group">
+            <label>First name</label>
+            <input type="text" name="first_name" value="" placeholder="first name" required>
+          </div>
+          <div class="form-group">
+            <label>Last name</label>
+            <input type="text" name="last_name" value="" placeholder="user name" required>
+          </div>
+          <div class="form-group">
+            <label>Supervisor</label>
+          <select class="form-select" aria-label="Default select example" name="supervisor" id="selected_value" required>
+            <option value="" selected>Select supervisor </option>
+            {% for u in supervisor %}
+            <option value="{{u.username}}">{{ u.username }}</option>
+            {% endfor %}
+           
+            <input type="hidden" value="is_admin">
+          </select>
+          </div>
+          <div class="form-group">
+            <label>Institute</label>
+          <select class="form-select" aria-label="Default select example" name="institute" id="selected_value" required>
+            <option value="" selected>Select institute </option>
+            {% for u in institute %}
+            <option value="{{u.institute}}">{{ u.institute }}</option>
+            {% endfor %}
+           
+            <input type="hidden" value="is_admin">
+          </select>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" value="" placeholder="password" required >
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+          </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
+         <!-- Modal -->
+<div class="modal fade main_popup_mdl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center"> 
+            <form form method="POST" enctype="multipart/form-data">
+            
+              {%csrf_token%}
+            <div class="file-upload">
+                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
+              
+                <div class="image-upload-wrap">
+                  <input class="file-upload-input" name="document" id="document" required="required" type='file' onchange="readURL(this);"  />
+                  <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                  </div>
+                </div>
+                <div class="file-upload-content">
+                  <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary sbmt_btn">Submit</button>
+            </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+  
+ <script>
+
+              
+                $("#myElem").show();
+                setTimeout(function() { $("#myElem").hide(); }, 5000);
+                
+                $('select').on('change', function() {
+                   var get_value = this.value;
+       
+                   if (get_value == 'Role'){
+                    $('.get_role_data').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    $('.get_pgy').hide();
+                    
+                  }
+                  if (get_value == 'Location'){
+                    $('.get_location').show();
+                    $('.sub_specialty').hide();
+                    $('.get_staff').hide();
+                    $('.get_role_data').hide();
+                    $('.get_pgy').hide();
+                    
+                  }
+                  if (get_value == 'Staff'){
+                    $('.get_staff').show();
+                    $('.get_location').hide();
+                    $('.sub_specialty').hide();
+                    $('.get_role_data').hide();
+                    $('.get_pgy').hide();
+                  }
+                  if (get_value == 'Sub-Specialty'){
+                    $('.sub_specialty').show();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+                    $('.get_pgy').hide();
+                  }if (get_value == 'PGY'){
+
+                    $('.get_pgy').show();
+                    $('.sub_specialty').hide();
+                    $('.get_role_data').hide();
+                    $('.get_staff').hide();
+                    $('.get_location').hide();
+
+}
+                  });
+                  
+                $('.get_location').hide();
+                $('.sub_specialty').hide();
+                $('.get_role_data').hide();
+                $('.get_staff').hide();
+                $('.get_pgy').hide();
+            
+
+function readURL(input) {
+  if (input.files && input.files[0]) {
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('.image-upload-wrap').hide();
+
+      $('.file-upload-image').attr('src', e.target.result);
+      $('.file-upload-content').show();
+
+      $('.image-title').html(input.files[0].name);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+
+  } else {
+    removeUpload();
+  }
+}
+
+function removeUpload() {
+  $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+  $('.file-upload-content').hide();
+  $('.image-upload-wrap').show();
+}
+$('.image-upload-wrap').bind('dragover', function () {
+		$('.image-upload-wrap').addClass('image-dropping');
+	});
+	$('.image-upload-wrap').bind('dragleave', function () {
+		$('.image-upload-wrap').removeClass('image-dropping');
+});
+
+
+
+// Chart.plugins.unregister(ChartDataLabels);
+role_bar = document.getElementById('Role-bar-chart');
+      
+
+        names = {{ names | safe}}
+
+        data_list = {{ final_data_list | safe }}
+
+
+
+
+        role_chart_config = {
+        type: 'horizontalBar',
+        data: {
+            labels : names,
+            datasets:data_list
+        },
+        options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
+          title: {
+      display: true,
+      text: 'Procedures by Surgeon'
+          },
+          legend: {
+        display: true,
+        position: 'bottom',
+    }, 
+        scales: {
+            xAxes: [{    
+          gridLines: {
+                drawOnChartArea: false,
+            },
+                ticks: {
+                    min: 0 // Edit the value according to what you need
+                },
+              stacked: true
+            }],
+            yAxes: [{
+              gridLines: {
+                drawOnChartArea: false,
+            },
+                stacked: true
+            }]
+        },
+      animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+    
+      // draw total count
+     
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index] + this.data.datasets[1].data[index] + this.data.datasets[2].data[index];
+      var meta = chartInstance.controller.getDatasetMeta(2);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
+    },
+   
+    };
+    
+    var myPieChart = new Chart(role_bar, role_chart_config);
+   
+    role_pie = document.getElementById('Role-pie-chart')
+        df = {{ keys | safe}}
+        df1 = {{ values | safe}}
+
+        reducer = (accumulator, currentValue) => accumulator + currentValue;
+        var total1 = df1.reduce(reducer);
+      
+        role_pie_config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#D8D2CB", "#1A374D", "#398AB9",],
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                display: true,
+                color: 'black',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+     
+    var mypiehartsss = new Chart(role_pie, role_pie_config);
+
+    specialty_bar = document.getElementById('specialty-bar-chart');
+        df = {{ keys1 | safe}}
+        
+        df1 = {{ values1 | safe}}
+
+
+
+        specialty_bar_config = {
+
+        type: 'horizontalBar',
+        data: {
+
+            datasets: [{
+
+                data: df1,
+                backgroundColor: "#1A374D",
+            }],
+            labels: df,
+            
+        },
+    
+      options: {
+        plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
+
+    scales: {
+        xAxes: [{ ticks: {
+                beginAtZero: true
+            },
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }],
+        yAxes: [{ ticks: {
+                beginAtZero: true
+            },
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }]
+    },
+    animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+     
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+     
+
+      // draw total count
+
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index]
+
+      var meta = chartInstance.controller.getDatasetMeta(0);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
+   title: {
+      display: true,
+      text: 'Procedures by Sub-Specialty '
+          },
+            responsive: true,
+            legend: {
+        display: false,
+            },
+        }, 
+      };
+
+
+    var myPieChart = new Chart(specialty_bar, specialty_bar_config);
+    
+            
+    site_bar = document.getElementById('site-bar-chart');
+        df = {{ keys2 | safe}}
+        df1 = {{ values2| safe}}
+        site_bar_config = {
+        type: 'horizontalBar',
+        data: {
+            datasets: [{ 
+                data: df1,
+                backgroundColor: "#1A374D",
+            }],
+            labels: df
+        },
+        options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
+          
+          title: {
+      display: true,
+      text:'Procedures by Site'
+          },
+          scales: {
+        xAxes: [{
+          ticks: {
+                beginAtZero: true
+            },
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }],
+        yAxes: [{
+          ticks: {
+                beginAtZero: true
+            },
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }]
+    },animation: {
+      onComplete: function() {
+      var chartInstance = this.chart;
+      var ctx = chartInstance.ctx;
+      ctx.textAlign = "center";
+      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "black";
+
+
+      Chart.helpers.each(
+        this.data.datasets.forEach(function(dataset, i)
+         {
+          var meta = chartInstance.controller.getDatasetMeta(i);
+          Chart.helpers.each(
+            meta.data.forEach(function(bar, index) {
+              data = dataset.data[index];
+          
+            }),
+            this
+          );
+        }
+        ),
+        this
+      );
+     
+
+      // draw total count
+     
+      this.data.datasets[0].data.forEach(function(data, index) {
+      var total = this.data.datasets[0].data[index]
+
+      var meta = chartInstance.controller.getDatasetMeta(0);
+      var posX = meta.data[index]._model.x;
+      var posY = meta.data[index]._model.y;
+      ctx.fillStyle = 'black';
+      ctx.fillText(total, posX + 10 , posY + 1 );
+    }, this);
+
+      
+    }
+  },
+            responsive: true,
+            legend: {
+        display: false,
+            },
+        },
+
+    };
+    var myPieChart = new Chart(site_bar, site_bar_config);
+
+
+    site_bar = document.getElementById('year-to-date-line-chart');
+        df = {{ final_data| safe}}
+        df1 = {{ labels | safe}}
+    
+
+    
+        site_bar_config = {
+        type: 'line',
+        data: df,
+        options: {
+          plugins: {
+            datalabels: false   // disable plugin 'p1' for this instance
+        },
+          title: {
+      display: true,
+      text:'Role over Time'
+          },
+          scales: {
+        xAxes: [{
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }],
+        yAxes: [{
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }]
+    },
+          legend: {
+        display: true,
+        position: 'bottom',
+       
+        
+    },
+            responsive: true
+        }, 
+    
+
+    };
+    var barPieChart = new Chart(site_bar, site_bar_config);
+
+    $(document).on('click', 'th', function () {
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+            }
+            table.children('tbody').empty().html(rows);
+        });
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index),
+                    valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ?
+                    valA - valB : valA.localeCompare(valB);
+            };
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text();
+        }
+
+
+    //get dropdown value ajax
+    function get_user(user_id){
+      $.ajax({
+          url: '{% url "generate_bar_chart" %}',
+          type: 'GET',
+          data: {
+              'id': user_id,
+              'is_admin': true
+          },
+          success: function(data) {   
+                         
+          }
+      });
+    }
+
+</script>
+    
+</body>
+</html>

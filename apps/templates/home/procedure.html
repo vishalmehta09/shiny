@@ -52,6 +52,7 @@
               </li>
               {%endif%}
               <li>
+                
                 <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
                   <p>Logout</p>
@@ -202,6 +203,7 @@ Upload Excel File
             
             {%endif%}
           </div>
+
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
@@ -239,6 +241,8 @@ Upload Excel File
                     {% endfor %}
                     
                     {% endif %}
+
+                    
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
@@ -462,30 +466,13 @@ Upload Excel File
           <div class="col-lg-10 col-md-12">
         
             <!---Start pill--->
-            <div class="edit_profile_bg">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th style="background-color:#f6f2f2">Coded Case &nbsp;<i class="arrow down"></i></th>
-                    <th style="background-color:#f6f2f2"># &nbsp;<i class="arrow down"></i></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for key, value in dashboard23.items %}
-                  <tr>
-                      <td>{{key}}</td>
-                      <td>{{value}}</td>
-                  </tr>
-                
-                  {% endfor %}
-                 
-                </tbody>
-              </table>
+            <div class="edit_profile_bg" style="width:100%;">
+                {{greek|safe}}
+
             </div> 
             <!---End Pills---->
            </div>
    
-<!-- Modal -->
 
 <!-- Modal -->
 

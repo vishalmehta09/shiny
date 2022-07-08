@@ -14,8 +14,13 @@ import os
 from django.http import FileResponse
 from openpyxl import load_workbook
 from django.contrib.auth.hashers import make_password
-
-
+import openpyxl
+from io import BytesIO
+import json
+from reportlab.pdfgen import canvas
+from weasyprint import HTML
+# from itertools import groupby
+# from .helpers import render_to_pdf
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
@@ -52,7 +57,6 @@ def generate_bar_chart(request):
     print(request.GET.values,"GET")
       
     if request.method == 'GET':
-
         institute = Institution.objects.all()
         supervisor = Supervisor.objects.all()
         if not request.user.is_superuser and not request.user.is_supervisor:
@@ -62,7 +66,6 @@ def generate_bar_chart(request):
                 obj = Graphs.objects.filter(user=int(request.GET.get('user_id')))
             else:
                 obj = Graphs.objects.filter(user=int(77777))
-           
         else:
             obj = Graphs.objects.filter(user=int(7777))
 
@@ -81,10 +84,8 @@ def generate_bar_chart(request):
             for i in data['Staff']:
                 context_di[i] =  data[data['Staff'] == i]
 
-
                 staff[i] = dict(Counter(context_di[i]['Role']))
 
-    
             a = data['Staff']
             get_staff = list(a.unique())
 
@@ -99,7 +100,6 @@ def generate_bar_chart(request):
 
             e = data['PGY']
             get_pgy = list(e.unique())
-    
 
             total_cases = len(data)
             current_year = date.today().year
@@ -2061,6 +2061,230 @@ def UserProfile(request):
     return render(request, 'home/user-profile.html')
 
 def Procedure(request):
-            return render(request, 'home/procedure.html')            
+    print(request.GET.get("get_name"), "name")
+    print(request.user, "valiwg")
+    new_user = NewUser.objects.get(username=request.user)
+    get_file_data = Graphs.objects.filter(user=new_user).last()
+    print(get_file_data,'get_file_data')
+    file_path = get_file_data.upload.path
+    print(file_path, "path")
+    data = read_data(file_path)
+    columns = list(data.columns.values)
+    greek = data.to_html(classes="data", header='true')
+
+    # json_record = data.reset_index().to_json(orient ='records')
+ 
+    # data_list = json.loads(json_record)
    
+    # print(data_list, "data_list")
+    # key_list = data_list.keys()
+    # val_list = data_list.values()
+    # print(key_list, "key_list")
+    # print(val_list, "val_list")
+    # get_ff = data.to_html()
+    # print(get_ff, "get_ff")
+    # excel_file = file_path
+
+    #     # you may put validations here to check extension or file size
+
+    # wb = openpyxl.load_workbook(excel_file)
+    # worksheet = wb["RAW"]
+    # excel_data = list()
+    # # iterating over the rows and
+    # # getting value from each cell in row
+    # for row in worksheet.iter_rows():
+    #     row_data = list()
+    #     for cell in row:
+    #         row_data.append(str(cell.value))
+    #     excel_data.append(row_data)
+    # print(type(excel_data))
+    # # columns = list(data.columns.values)
+    # # headers = data.values.tolist()
+    
+    # # empty_list=[]
+    # # for header in headers:
+    # #     empty_list.append(header)
+    # # print(empty_list, "i")
+    return render(request, 'home/procedure.html', {"greek":greek})            
    
+def download_pdf_file(request):
+    name = NewUser.objects.get(username=request.user)
+    get_file_data = Graphs.objects.filter(user=name).last()
+    response = HttpResponse(content_type="application/pdf")
+    filename='shiny.pdf'
+    response["Content-Disposition"] = 'inline; filename="{}"'.format(filename)
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+    upload_file = get_file_data.upload.path 
+    print(upload_file, "file")
+    data = read_data(upload_file)
+    print(data,"dataaa")
+    context_di = {}
+    staff = {}
+    
+    for i in data['Staff']:
+        context_di[i] =  data[data['Staff'] == i]
+
+        staff[i] = dict(Counter(context_di[i]['Role']))
+    coded_case = []
+    for i in data['Coded Case']:
+
+        coded_case.append(i)
+
+    
+    dashboard113 = (dict(Counter(coded_case)))
+    dashboard23 = (dict(sorted(dashboard113.items(), key=lambda x:x[1], reverse=True)))
+
+    datasets = [
+        {
+        "label": 'Primary Surgeon',
+        "backgroundColor": '#398AB9',
+        "data": []
+        },
+        {
+        "label": 'First Assist',
+        "backgroundColor": '#D8D2CB',
+        "data": []
+        },
+        {
+        "label": 'Secondary Assist',
+        "backgroundColor": '#1A374D',
+        "data": []
+        }
+    ]
+
+
+    only_final_data = []
+
+    for d in staff:
+        final_data = {
+            "name": d,
+            "Primary Surgeon": staff[d].get('Primary Surgeon', 0),
+            "First Assist": staff[d].get('First Assist', 0),
+            "Secondary Assist": staff[d].get('Secondary Assist', 0),
+        }
+    
+        only_final_data.append(final_data)
+
+    lists = []
+    
+    for i in only_final_data:
+        total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+        i['Total'] = total
+        lists.append(i)
+    
+
+    shorted_data = sorted(lists, key=lambda x: x['Total'], reverse=True)
+    name_set = []
+    for i in shorted_data:
+        name_set.append(i['name'])
+
+    p_list = []
+    f_list = []
+    s_list = []
+    for d in shorted_data:
+        p_list.append(d['Primary Surgeon']) 
+        f_list.append(d['First Assist']) 
+        s_list.append(d['Secondary Assist']) 
+        # s_list.append(d['Secondary Assist']) 
+
+    
+    for dataset in datasets:
+        if dataset['label'] == 'Primary Surgeon':
+            dataset['data'] = p_list
+        elif dataset['label'] == 'First Assist':
+            dataset['data'] = f_list
+        elif dataset['label'] == 'Secondary Assist':
+            dataset['data'] = s_list
+    
+    role = []
+    for i in data['Role']:
+        role.append(i)
+    
+    dashboard1 = dict(Counter(role))
+    keys = list(dashboard1.keys())
+    values = list(dashboard1.values())
+
+
+    specialty_chart = []
+    for i in data['Sub-Specialty']:
+        specialty_chart.append(i)
+    
+    dashboard13 = dict(Counter(specialty_chart))
+    dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1], reverse=True)))
+    
+
+    keys1 = list(dashboard3.keys())
+    
+    values1 = list(dashboard3.values())
+    
+    
+    site = []
+    for i in data['Location']:
+        site.append(i)
+    
+    dashboard16 = dict(Counter(site))
+    dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],reverse=True)))
+
+    keys2 = list(dashboard6.keys())
+    values2 = list(dashboard6.values())
+
+    context_dict = {}
+    roles = {}
+    for i in data['Date'].dt.year:
+        context_dict[i] =  data[data['Date'].dt.year == i]
+        roles[i] = dict(Counter(context_dict[i]['Role']))
+    
+
+    _data = {}
+        
+    for r in roles:
+        _data_set = {
+            'Secondary Assist': roles[r].get('Secondary Assist', 0),
+            'First Assist': roles[r].get('First Assist', 0),
+            'Primary Surgeon': roles[r].get('Primary Surgeon', 0)
+        }
+        
+        _data[r] = _data_set
+
+    labels = list(roles.keys())
+    role_keys = []
+    raw_data = []
+    for role in _data:
+        role_keys = (list(_data[role].keys()))
+        raw_data.append(_data[role])
+    final_data = []
+    for key in role_keys:
+        data = []
+        for raw in raw_data:
+            data.append(raw[key])
+            
+        final_data.append({
+        "label": key,
+        "data": data,
+        "borderColor": color_line_chart(key),
+        "fill": "true",
+        })
+
+    final_final_data = {
+        "labels": labels,
+        "datasets": final_data,   
+    }
+    context = { 'keys':keys , 'values':values,
+            'keys1': keys1, 'values1': values1 ,
+             'keys2': keys2, 'values2': values2, 
+             'final_data': final_final_data,
+              'labels': labels, 'dashboard23':dashboard23,
+               "final_data_list":datasets,"names":name_set}
+    return render(request,"home/shiny_pdf.html",context)
+    html_string = render_to_string("home/shiny_pdf.html", context)
+
+    html = HTML(string=html_string)
+
+    #         html.write_pdf(target="/tmp/{}".format(filename), stylesheets=[CSS('http://psymphony.in/static/pdf/css/style.css')])
+    #         fs = FileSystemStorage("/tmp")
+
+    #         with fs.open("{}".format(filename)) as pdf:
+    #             response = HttpResponse(pdf, content_type="application/pdf")
+    #             response["Content-Disposition"] = 'attachment; filename="{}"'.format(filename)
+    #         return response
