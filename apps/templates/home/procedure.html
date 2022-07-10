@@ -63,12 +63,14 @@ th {
                   <p>Dashboard</p>
                 </a>
               </li>
+              {% if not request.user.is_superuser %}
               <li>
                 <a href="{% url 'Procedure' %}">
                   <i class="fa fa-bars"></i>
                   <p>Procedures</p>
                 </a>
               </li>
+              {%endif%}
               {%if not request.user.is_superuser%}
               <li>
                 <a href="{% url 'UserProfile' %}">
@@ -78,21 +80,8 @@ th {
               </li>
               {%endif%}
 
-              {%if request.user.is_superuser%}
-              <li>
-                <a href="{% url 'delete_user' %}">
-                  <i class="fa fa-user-o" aria-hidden="true"></i>
-                  <p>User List</p>
-                </a>
-              </li>
-              {%endif%}
-              <li>
-                
-                <a href="{% url 'logout' %}">
-                  <i class="fa fa-sign-out" aria-hidden="true"></i>
-                  <p>Logout</p>
-                </a>
-              </li>
+
+  
         </ul>
           <!---Start Sidebar User-->
           <div class="d-flex align-items-start orlog_book_sidebar">
@@ -101,6 +90,11 @@ th {
                   <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
                   <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
                   <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+                  <li>              
+                    <a href="{% url 'logout' %}">
+                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <p>Logout</p>
+                    </a></li>
               </ul>  
             </div>
           </div>
@@ -185,7 +179,7 @@ th {
     {% if not request.user.is_superuser  and not request.user.is_supervisor %}
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
-Upload Excel File
+
 
 </button>
 
@@ -231,11 +225,11 @@ Upload Excel File
           <div class="col-md-2 top_header">
             {% if not request.user.is_superuser  and not request.user.is_supervisor %}
 
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             
-            Upload Excel File
+        
             
-            </button>
+            </button> -->
             
             {%endif%}
           </div>
@@ -314,18 +308,20 @@ Upload Excel File
               <div class="django_bg_sidebar">
                 <h3><a href="#">OR Logbook</a> </h3>
               <ul>
-                  <li class="active ">
+                  <li class="active">
                       <a href="{% url 'generate_bar_chart' %}">
                         <i class="fa fa-pie-chart" aria-hidden="true"></i>
                         <p>Dashboard</p>
                       </a>
                     </li>
+                    {% if not request.user.is_superuser %}
                     <li>
-                        <a href="{% url 'Procedure' %}">
-                          <i class="fa fa-bars"></i>
-                          <p>Procedures</p>
-                        </a>
+                      <a href="{% url 'Procedure' %}">
+                        <i class="fa fa-bars"></i>
+                        <p>Procedures</p>
+                      </a>
                     </li>
+                    {%endif%}
                      {%if not request.user.is_superuser%}
                     <li>
                       <a href="{% url 'UserProfile' %}">
@@ -334,24 +330,20 @@ Upload Excel File
                       </a>
                     </li>
                     {% endif %}
-
-
-                    {%if request.user.is_superuser%}
+                    {%if not request.user.is_superuser%}
                     <li>
-                      <a href="{% url 'delete_user' %}">
-                        <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <p>User List</p>
-                      </a>
-                    </li>
-                    {%endif%}
-                    <li>
-                 
                      
                       <a href="{% url 'logout' %}">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
                         <p>Logout</p>
                       </a>
                     </li>
+                    {%endif%}
+
+
+                 
+                     
+             
               </ul>
 
               {%if request.user.is_superuser%}
@@ -375,15 +367,7 @@ Upload Excel File
                
                 {%endif%}
 
-              <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
-               <!-- main screen -->
-            <option selected>Select Filter</option>
-            <option value="Staff">Staff</option>
-            <option value="Sub-Specialty">Sub-Specialty</option>
-            <option value="Location">Location</option>
-            <option value="Role">Role</option>
-            <option value="PGY">PGY</option>
-              </select>
+       
 
 
 

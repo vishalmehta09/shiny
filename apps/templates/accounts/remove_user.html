@@ -64,14 +64,7 @@
               </li>
               {%endif%}
 
-              {%if request.user.is_superuser%}
-              <li>
-                <a href="{% url 'delete_user' %}">
-                  <i class="fa fa-user-o" aria-hidden="true"></i>
-                  <p>User List</p>
-                </a>
-              </li>
-              {%endif%}
+
               <li>
                 <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -318,15 +311,7 @@ Upload Excel File
                     {% endif %}
 
 
-                    {%if request.user.is_superuser%}
-                    <li>
-                      <a href="{% url 'delete_user' %}">
-                        <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <p>User List</p>
-                      </a>
-                    </li>
-                    {%endif%}
-                    <li>
+
                  
                      
                       <a href="{% url 'logout' %}">
