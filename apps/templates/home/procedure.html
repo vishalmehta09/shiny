@@ -9,12 +9,47 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/custom.css">
     <link rel="stylesheet" type="text/css" href="/static/assets/css/style.css">
     <title>OR LOGBOOK</title>
+
+    <style>
+      table, th, td {
+    border: 1px solid black;
+}
+th {
+    cursor: pointer;
+}
+      table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: center;
+  padding: 8px;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+}
+.r_shiny_table tr th, td{
+  font-size: 13px;
+}
+tr:nth-child(even){background-color: #FFD5D5}
+
+th {
+  background-color: #f0f3f6;
+  color: #525f7f;
+  font-size: 14px;
+
+}
+    </style>
     
 </head>
 <body class="main_body_section"> 
-  
+  <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
   <div class="container-fluid mobile-section-header">
     <div class="row">
       <div class="col-md-2 col-xs-2 side_bar_mbl">
@@ -36,7 +71,7 @@
               </li>
               {%if not request.user.is_superuser%}
               <li>
-                <a href="{% url 'change_password' %}">
+                <a href="{% url 'UserProfile' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
@@ -52,6 +87,7 @@
               </li>
               {%endif%}
               <li>
+                
                 <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
                   <p>Logout</p>
@@ -62,17 +98,17 @@
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
               <ul>
-                  <li><a href="{% url 'AddSupervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                  <li><a href="{% url 'AddInstitute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                  <li><a href="{% url 'AddUser' %}"><i class="fa fa-user"></i>Add User</a></li>
+                  <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                  <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
+                  <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
               </ul>  
             </div>
           </div>
-          <div class="user_profile_section">
+          <!-- <div class="user_profile_section">
             <ul>
               <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
           </ul>
-          </div>
+          </div> -->
           <!----End Sidebar User--->
           <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
             <!-- main screen -->
@@ -166,9 +202,18 @@ Upload Excel File
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   <div class="nav_video_photo">
-                    
-                      <img src="{% url 'profile_image' %}" alt="Profile Photo">
+                  <div class="nav_video_photo">
+                    {%if request.user.profile_photo%}
+                    <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
+                    {%elif request.user.is_superuser%}
+                    <img src="/profile_pic" alt="Profile Photo">
+                    {%elif request.user.is_supervisor%}
+                    <img src="/profile_pic" alt="Profile Photo">
+                    {%else%}
+                    <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
+                      <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
+                  </div>
+                    {%endif%}
                    </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -194,12 +239,13 @@ Upload Excel File
             
             {%endif%}
           </div>
+
           <div class="col-md-10">
               <nav class="navbar navbar-expand-lg lg_in_out">
                   <div class="container-fluid">
                   
                     
-                    <div class="user_cntain">
+                    <!-- <div class="user_cntain">
                       {% if request.user.is_superuser or request.user.is_supervisor %}
             
                     <form method="GET">
@@ -217,7 +263,7 @@ Upload Excel File
                     </div>
                   </form>
                    {%endif%}
-                  </div>
+                  </div> -->
                    
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
@@ -231,12 +277,24 @@ Upload Excel File
                     {% endfor %}
                     
                     {% endif %}
+
+                    
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                             <div class="nav_video_photo">
-                                <img src="{% url 'profile_image' %}" alt="Profile Photo">
+                            <div class="nav_video_photo">
+                              {%if request.user.profile_photo%}
+                              <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
+                              {%elif request.user.is_superuser%}
+                              <img src="/profile_pic" alt="Profile Photo">
+                              {%elif request.user.is_supervisor%}
+                              <img src="/profile_pic" alt="Profile Photo">
+                              {%else%}
+                              <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
+                                <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
+                            </div>
+                              {%endif%}
                              </div>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -270,7 +328,7 @@ Upload Excel File
                     </li>
                      {%if not request.user.is_superuser%}
                     <li>
-                      <a href="{% url 'change_password' %}">
+                      <a href="{% url 'UserProfile' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         <p>User Profile</p>
                       </a>
@@ -303,17 +361,17 @@ Upload Excel File
               <div class="d-flex align-items-start orlog_book_sidebar">
                 <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
                   <ul>
-                      <li><a href="{% url 'AddSupervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                      <li><a href="{% url 'AddInstitute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                      <li><a href="{% url 'AddUser' %}"><i class="fa fa-user"></i>Add User</a></li>
+                      <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                      <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
+                      <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
                   </ul>  
                 </div>
               </div>
-              <div class="user_profile_section">
+              <!-- <div class="user_profile_section">
                 <ul>
                   <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
               </ul>
-              </div>
+              </div> -->
                
                 {%endif%}
 
@@ -444,30 +502,14 @@ Upload Excel File
           <div class="col-lg-10 col-md-12">
         
             <!---Start pill--->
-            <div class="edit_profile_bg">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th style="background-color:#f6f2f2">Coded Case &nbsp;<i class="arrow down"></i></th>
-                    <th style="background-color:#f6f2f2"># &nbsp;<i class="arrow down"></i></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for key, value in dashboard23.items %}
-                  <tr>
-                      <td>{{key}}</td>
-                      <td>{{value}}</td>
-                  </tr>
-                
-                  {% endfor %}
-                 
-                </tbody>
-              </table>
+            <div class="edit_profile_bg" style="width:100%;">
+              <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+                {{greek|safe}}
+
             </div> 
             <!---End Pills---->
            </div>
    
-<!-- Modal -->
 
 <!-- Modal -->
 
@@ -515,6 +557,93 @@ function w3_open() {
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
 }
+
+
+
+const isEmptyOrNaN = (obj) => obj === "" || isNaN(obj);
+
+const getCellValueInColumn = (tr, columnIdx) =>
+  tr.children[columnIdx].innerText || tr.children[columnIdx].textContent;
+
+const compareCellValues = (cellValue1, cellValue2) => {
+  return isEmptyOrNaN(cellValue1) || isEmptyOrNaN(cellValue2)
+    ? cellValue1.toString().localeCompare(cellValue2)
+    : cellValue1 - cellValue2;
+};
+
+const compareFnFactory = (columnIdx, ascending) => (firstEl, secondEl) => {
+  const cellValue1 = getCellValueInColumn(firstEl, columnIdx);
+  const cellValue2 = getCellValueInColumn(secondEl, columnIdx);
+  return ascending
+    ? compareCellValues(cellValue1, cellValue2)
+    : compareCellValues(cellValue2, cellValue1);
+};
+
+document.querySelectorAll("th").forEach((th) =>
+  th.addEventListener("click", () => {
+    const table = th.closest("table");
+    const tbody = table.querySelector("tbody");
+    const columnIdx = Array.from(th.parentNode.children).indexOf(th);
+    const compareFn = compareFnFactory(columnIdx, (this.ascending = !this.ascending));
+    Array.from(tbody.querySelectorAll("tr"))
+      .sort(compareFn)
+      .forEach((tr) => tbody.appendChild(tr));
+  })
+);
+
+
+//for search bar
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("procedure_table");
+  tr = table.getElementsByTagName("tr");
+
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+
+//
+$(document).ready(function(){
+    $('#procedure_table').after('<div id="nav"></div>');
+    var rowsShown = 20;
+    var rowsTotal = $('#procedure_table tbody tr').length;
+    var numPages = rowsTotal/rowsShown;
+    for(i = 0;i < numPages;i++) {
+        var pageNum = i + 1;
+        $('#nav').append('<a href="#" rel="'+i+'">'+pageNum+'</a> ');
+    }
+    $('#procedure_table tbody tr').hide();
+    $('#procedure_table tbody tr').slice(0, rowsShown).show();
+    $('#nav a:first').addClass('active');
+    $('#nav a').bind('click', function(){
+
+        $('#nav a').removeClass('active');
+        $(this).addClass('active');
+        var currPage = $(this).attr('rel');
+        var startItem = currPage * rowsShown;
+        var endItem = startItem + rowsShown;
+        $('#procedure_table tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
+        css('display','table-row').animate({opacity:1}, 300);
+    });
+});
+
+
 </script>
     
 </body>

@@ -57,6 +57,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     confirm_password = models.CharField(max_length=100)
     is_supervisor = models.BooleanField(default=False)
+    profile_photo = models.ImageField(upload_to='images')
 
 
 
