@@ -944,6 +944,9 @@ def generate_bar_chart(request):
             site =[]
         
             if request.POST.getlist("PGY"):
+
+                #ADD ROLE
+
                 role=[]
                 for i in get_g_pgy['Role']:
                     role.append(i)
@@ -954,30 +957,128 @@ def generate_bar_chart(request):
                 keys = list(dashboard1.keys())
                 values = list(dashboard1.values())
                
-                specialty_chart =[]
-                for i in get_g_pgy['Sub-Specialty']:
-                    specialty_chart.append(i)
+
+                #ADD SPECIALTY
+
+
+
+                specialty_chart = {}
+                roles = {}
+                for i in get_g_pgy['Role']:
+                    specialty_chart[i] = get_g_pgy[get_g_pgy['Role'] == i]
+                    roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
+
+                get_data_label = []
+            
+                for key, value in roles.items():
                 
-                dashboard13 = dict(Counter(specialty_chart))
-                dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1],reverse=True )))
-                keys1 = list(dashboard3.keys())
-                values1 = list(dashboard3.values())
+                    dat = {
+                 
+                        "Trauma": value.get("Trauma",0),
+                        "Arthroplasty": value.get("Arthroplasty",0),
+                        "Pediatrics": value.get("Pediatrics",0),
+                        "Sports": value.get("Sports",0),
+                        "Foot and Ankle": value.get("Foot and Ankle",0),
+                        "Upper Extremity": value.get("Upper Extremity",0),
+                        "General": value.get("General",0),
+                        
+                    }
+                    get_data_label.append(dat)
 
-                site=[]
-                for i in get_g_pgy['Location']:
-                    site.append(i)
+                get_data = []
+
+                for key, value in roles.items():
                 
-                dashboard16 = dict(Counter(site))
-                dashboard6 = (dict(sorted(dashboard16.items(), key=lambda x:x[1],reverse=True)))
+                    dat = {
+                        "label": key,
+                        "Trauma": value.get("Trauma",0),
+                        "Arthroplasty": value.get("Arthroplasty",0),
+                        "Pediatrics": value.get("Pediatrics",0),
+                        "Sports": value.get("Sports",0),
+                        "Foot and Ankle": value.get("Foot and Ankle",0),
+                        "Upper Extremity": value.get("Upper Extremity",0),
+                        "General": value.get("General",0),
+                        "total": value.get("Trauma",0) + value.get("Arthroplasty",0) + value.get("Pediatrics",0) + value.get("Sports",0) + value.get("Foot and Ankle",0) + value.get("Upper Extremity",0) + value.get("General",0)
+                    }
+                    get_data.append(dat)
+
+                shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
 
 
-                keys2 = list(dashboard6.keys())
-                values2 = list(dashboard6.values())
+                labels_data = list(get_data_label[0].keys())
+
+
+                grt_Data = []
+
+                for i in shorted_data_list:
+                    d ={
+                            "label": i.get("label"),
+                            "data": [i.get("Trauma"), i.get("Arthroplasty"), i.get("Pediatrics"), i.get("Sports"), i.get("Foot and Ankle"), i.get("Upper Extremity"), i.get("General")],
+                            "backgroundColor": color_line_chart(i.get("label"))
+                        }
+                    grt_Data.append(d)    
+
+
+                #ADD SITE
+
+                site_chart = {}
+                roles_list = {}
+                for i in get_g_pgy['Role']:
+                    site_chart[i] = get_g_pgy[get_g_pgy['Role'] == i]
+                    roles_list[i] = dict(Counter(site_chart[i]['Location']))
+
+
+                get_data_label = []
+
+                for key, value in roles_list.items():
+                
+                    dat = {
+                        "HGH": value.get("HGH",0),
+                        "JH": value.get("JH",0),
+                        "MUMC": value.get("MUMC",0),
+                        "SJH": value.get("SJH",0),
+                    }
+                    get_data_label.append(dat)
+                    
+                get_data = []
+
+                for key, value in roles_list.items():
+                
+                    dat = {
+                        "label": key,
+                        "HGH": value.get("HGH",0),
+                        "JH": value.get("JH",0),
+                        "MUMC": value.get("MUMC",0),
+                        "SJH": value.get("SJH",0),
+                    }
+                    get_data.append(dat)
+
+
+
+
+                # key1 = list(roles_list.values())
+                labels_site = list(get_data_label[0].keys())
+    
+
+
+                granted_Data = []
+
+                for i in get_data:
+                    d ={
+                            "label": i.get("label"),
+                            "data": [i.get("HGH"), i.get("JH"), i.get("MUMC"), i.get("SJH")],
+                            "backgroundColor": color_line_chart(i.get("label"))
+                        }
+                    granted_Data.append(d) 
+
+
+
+                #ADD DATE
 
                 context_dict = {}
                 roles = {}
-                for i in get_g_pgy['Date'].dt.year:
-                    context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.year == i]
+                for i in get_g_pgy['Date'].dt.strftime('%b'):
+                    context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.strftime('%b') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
      
                 _data = {}
@@ -1144,14 +1245,15 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,"labels_data":labels_data, "final_data_specialty_chart":grt_Data,"labels_site":labels_site,"granted_Data":granted_Data,
+                 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
                 return render(request, 'home/sample.html', context)
 
            
 
             if request.POST.getlist("Role"):
-                specialty_chart = []
-                site =[]
+                # add Role
+
                 role =[]
                 
                 for i in get_g_role['Role']:
@@ -1162,28 +1264,123 @@ def generate_bar_chart(request):
 
                 keys = list(dashboard1.keys())
                 values = list(dashboard1.values())
-                
-                specialty_chart=[]
-                for i in get_g_role['Sub-Specialty']:
-                    specialty_chart.append(i)
-                
-                dashboard13 = dict(Counter(specialty_chart))
-                dashboard3 = (dict(sorted(dashboard13.items(), key=lambda x:x[1],reverse=True )))
 
-                keys1 = list(dashboard3.keys())
-                values1 = list(dashboard3.values())
+            # add specialty
+            
+                specialty_chart = {}
+                roles = {}
+                for i in get_g_role['Role']:
+                    specialty_chart[i] = get_g_role[get_g_role['Role'] == i]
+                    roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
-                site=[]
-                for i in get_g_role['Location']:
-                    site.append(i)
+                get_data_label = []
+            
+                for key, value in roles.items():
                 
-                dashboard61 = dict(Counter(site))
-                dashboard6 = (dict(sorted(dashboard61.items(), key=lambda x:x[1],reverse=True)))
+                    dat = {
+                 
+                        "Trauma": value.get("Trauma",0),
+                        "Arthroplasty": value.get("Arthroplasty",0),
+                        "Pediatrics": value.get("Pediatrics",0),
+                        "Sports": value.get("Sports",0),
+                        "Foot and Ankle": value.get("Foot and Ankle",0),
+                        "Upper Extremity": value.get("Upper Extremity",0),
+                        "General": value.get("General",0),
+                        
+                    }
+                    get_data_label.append(dat)
 
-                keys2 = list(dashboard6.keys())
-                values2 = list(dashboard6.values())
+                get_data = []
+
+                for key, value in roles.items():
                 
-                # add code of staff filter
+                    dat = {
+                        "label": key,
+                        "Trauma": value.get("Trauma",0),
+                        "Arthroplasty": value.get("Arthroplasty",0),
+                        "Pediatrics": value.get("Pediatrics",0),
+                        "Sports": value.get("Sports",0),
+                        "Foot and Ankle": value.get("Foot and Ankle",0),
+                        "Upper Extremity": value.get("Upper Extremity",0),
+                        "General": value.get("General",0),
+                        "total": value.get("Trauma",0) + value.get("Arthroplasty",0) + value.get("Pediatrics",0) + value.get("Sports",0) + value.get("Foot and Ankle",0) + value.get("Upper Extremity",0) + value.get("General",0)
+                    }
+                    get_data.append(dat)
+
+                shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
+
+
+                labels_data = list(get_data_label[0].keys())
+
+
+                grt_Data = []
+
+                for i in shorted_data_list:
+                    d ={
+                            "label": i.get("label"),
+                            "data": [i.get("Trauma"), i.get("Arthroplasty"), i.get("Pediatrics"), i.get("Sports"), i.get("Foot and Ankle"), i.get("Upper Extremity"), i.get("General")],
+                            "backgroundColor": color_line_chart(i.get("label"))
+                        }
+                    grt_Data.append(d)   
+
+
+            # add location
+
+                # site=[]
+                # for i in get_g_role['Location']:
+                #     site.append(i)
+                
+                # dashboard61 = dict(Counter(site))
+                # dashboard6 = (dict(sorted(dashboard61.items(), key=lambda x:x[1],reverse=True)))
+
+                # keys2 = list(dashboard6.keys())
+                # values2 = list(dashboard6.values())
+
+                site_chart = {}
+                roles_list = {}
+                for i in get_g_role['Role']:
+                    site_chart[i] = get_g_role[get_g_role['Role'] == i]
+                    roles_list[i] = dict(Counter(site_chart[i]['Location']))
+
+
+                get_data_label = []
+
+                for key, value in roles_list.items():
+                
+                    dat = {
+                        "HGH": value.get("HGH",0),
+                        "JH": value.get("JH",0),
+                        "MUMC": value.get("MUMC",0),
+                        "SJH": value.get("SJH",0),
+                    }
+                    get_data_label.append(dat)
+                    
+                get_data = []
+
+                for key, value in roles_list.items():
+                
+                    dat = {
+                        "label": key,
+                        "HGH": value.get("HGH",0),
+                        "JH": value.get("JH",0),
+                        "MUMC": value.get("MUMC",0),
+                        "SJH": value.get("SJH",0),
+                    }
+                    get_data.append(dat)
+                labels_site = list(get_data_label[0].keys())
+
+                granted_Data = []
+
+                for i in get_data:
+                    d ={
+                            "label": i.get("label"),
+                            "data": [i.get("HGH"), i.get("JH"), i.get("MUMC"), i.get("SJH")],
+                            "backgroundColor": color_line_chart(i.get("label"))
+                        }
+                    granted_Data.append(d) 
+
+            # add staff
+                
                 context_dib = {}
 
                 staffs = {}
@@ -1255,11 +1452,13 @@ def generate_bar_chart(request):
                     elif dataset['label'] == 'Secondary Assist':
                         dataset['data'] = s_list
                         #end code of staff filter
+
+                # add date
                 
                 context_dict = {}
                 roles = {}
-                for i in get_g_role['Date'].dt.year:
-                    context_dict[i] =  get_g_role[get_g_role['Date'].dt.year == i]
+                for i in get_g_role['Date'].dt.strftime('%b'):
+                    context_dict[i] =  get_g_role[get_g_role['Date'].dt.strftime('%b') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
                 _data = {}
@@ -1353,7 +1552,8 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,'keys1': keys1, 'values1': values1, 'keys2': keys2, 'values2': values2 , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
+                context = {"keys":keys,"values":values,"labels_data":labels_data,"final_data_specialty_chart":grt_Data,"labels_site":labels_site,"granted_Data":granted_Data,
+                    'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -1378,15 +1578,7 @@ def generate_bar_chart(request):
 
             
             if request.POST.getlist("Sub-Specialty"):
-                # for i in get_g_specialty['Sub-Specialty']:
-                #     specialty_chart.append(i)
-                
-                # dashboard33 = dict(Counter(specialty_chart))
-                # dashboard3 = (dict(sorted(dashboard33.items(), key=lambda x:x[1],reverse=True)))
-                
-
-                # keys1 = list(dashboard3.keys())
-                # values1 = list(dashboard3.values())
+             
                 specialty_chart = {}
                 roles = {}
                 for i in get_g_specialty['Role']:
