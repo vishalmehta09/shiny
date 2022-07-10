@@ -16,7 +16,9 @@ urlpatterns = [
     path('institute', views.AddInstitute, name='institute'),
     path('user', views.AddUser, name='user'),
     path('UserProfile', views.UserProfile, name='UserProfile'),
-    path('Procedure', views.Procedure, name='Procedure')
+    path('Procedure', views.Procedure, name='Procedure'),
+
+    path('gen', views.gen, name='gen')
     
 
 ]

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.home' ,
     'chartjs',
-    "apps.authentication",
+    "apps.authentication"
+    # "wkhtmltopdf"
     # 'graphs' # Enable the inner home (home)
 ]
 
