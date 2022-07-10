@@ -2682,8 +2682,8 @@ def UserProfile(request):
         get_profile = NewUser.objects.get(username=request.user)
         get_profile.profile_photo=request.FILES.get('profile_photo')
         get_profile.save()
-        messages.success(request, "saved")
-        return redirect("/UserProfile")
+        messages.success(request, "Profile Updated Sucessfully")
+        return redirect("/Profile")
     return render(request, 'home/user-profile.html')
 
 def Procedure(request):

@@ -20,25 +20,20 @@ function w3_close() {
 }
 
 </script>
- <style>
-   div.a {
-        text-transform: uppercase;
-      }
- </style>
+ 
 </head>
 <body class="main_body_section"> 
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
   <div class="container-fluid mobile-section-header">
     <div class="row">
       <div class="col-md-2 col-xs-2 side_bar_mbl">
         <div class="django_bg_sidebar w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" id="mySidebar">
           <button class="w3-bar-item w3-button w3-large w3-hide-large cross_btn" onclick="w3_close()"> ×</button>
           <h3><a href="#">OR Logbook</a> </h3>
-          
         <ul>
             <li class="active ">
                 <a href="{% url 'generate_bar_chart' %}">
@@ -46,26 +41,29 @@ function w3_close() {
                   <p>Dashboard</p>
                 </a>
               </li>
-              {% if not request.user.is_superuser %}
               <li>
                 <a href="{% url 'generate_bar_chart' %}">
                   <i class="fa fa-pie-chart" aria-hidden="true"></i>
                   <p>Procedures</p>
                 </a>
               </li>
-              {%endif%}
               {%if not request.user.is_superuser%}
               <li>
-                <!-- <a href="{% url 'change_password' %}"> -->
-                  <a href="{% url 'UserProfile' %}">
+                <a href="{% url 'change_password' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
               </li>
               {%endif%}
 
- 
-            
+              {%if request.user.is_superuser%}
+              <li>
+                <a href="{% url 'delete_user' %}">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                  <p>User List</p>
+                </a>
+              </li>
+              {%endif%}
               <li>
                 <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -77,18 +75,18 @@ function w3_close() {
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
               <ul>
-                  <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                  <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                  <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+                <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
+                <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
 
               </ul>  
             </div>
           </div>
-          <!-- <div class="user_profile_section">
+          <div class="user_profile_section">
             <ul>
               <li><a href="/UserProfile"><i class="fa fa-id-badge"></i>User Profile</a></li>
           </ul>
-          </div> -->
+          </div>
           <!----End Sidebar User--->
           <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
             <!-- main screen -->
@@ -184,18 +182,9 @@ Upload Excel File
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <div class="nav_video_photo">
-                    {%if request.user.profile_photo%}
-                    <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
-                    {%elif request.user.is_superuser%}
-                    <img src="/profile_pic" alt="Profile Photo">
-                    {%elif request.user.is_supervisor%}
-                    <img src="/profile_pic" alt="Profile Photo">
-                    {%else%}
-                    <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
-                      <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
-                  </div>
-                    {%endif%}
+                   <div class="nav_video_photo">
+                    
+                      <img src="{% url 'profile_image' %}" alt="Profile Photo">
                    </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -262,18 +251,8 @@ Upload Excel File
                       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="nav_video_photo">
-                              {%if request.user.profile_photo%}
-                              <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
-                              {%elif request.user.is_superuser%}
-                              <img src="/profile_pic" alt="Profile Photo">
-                              {%elif request.user.is_supervisor%}
-                              <img src="/profile_pic" alt="Profile Photo">
-                              {%else%}
-                              <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
-                                <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
-                            </div>
-                              {%endif%}
+                             <div class="nav_video_photo">
+                                <img src="{% url 'profile_image' %}" alt="Profile Photo">
                              </div>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -289,154 +268,154 @@ Upload Excel File
   </div>
   <div class="container-fluid">
       <div class="row mt-1 mb-5 tablet_section">
-          <div class="col-md-2 desktop-section-section">
-              <div class="django_bg_sidebar">
-                <h3><a href="#">OR Logbook</a> </h3>
-              <ul>
-                  <li class="active ">
-                      <a href="{% url 'generate_bar_chart' %}">
-                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
-                        <p>Dashboard</p>
-                      </a>
-                     
-                    </li>
-                    {% if not request.user.is_superuser %}
-                    <li>
-                      <a href="{% url 'Procedure' %}">
-                        <i class="fa fa-bars"></i>
-                        <p>Procedures</p>
-                      </a>
-                    </li>
-                    {%endif%}
-                     {%if not request.user.is_superuser%}
-                    <li>
-                      <a href="{% url 'UserProfile' %}">
-                        <i class="fa fa-id-badge"></i>
-                        <p>User Profile</p>
-                      </a>
-                    </li>
-                    {% endif %}
-                    {%if not request.user.is_superuser%}
-                    <li><a href="#" id="downloadPdf"><i class="fa fa-user" aria-hidden="true"></i>Export to PDF</a></li>    {%endif%}
-                    {%if not request.user.is_superuser%}
-                  
-                    <li>
-                     
-                      <a href="{% url 'logout' %}">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
-                        <p>Logout</p>
-                      </a>
-                    </li>
-                    {%endif%}
-
-
-
-              </ul>
-
-              {%if request.user.is_superuser%}
-
-
-              <!---Start Sidebar User-->
-              <div class="d-flex align-items-start orlog_book_sidebar">
-                <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
-                  <ul>
-                    <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Institute</a></li>
-                      <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Supervisors</a></li>
-                      <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Users</a></li>
-                      <li><a href="#" id="downloadPdf"><i class="fa fa-user"></i>Export to PDF</a></li>
-                      <li>
-                     
-                        <a href="{% url 'logout' %}">
-                          <i class="fa fa-sign-out" aria-hidden="true"></i>
-                          <p>Logout</p>
-                        </a>
-                      </li>
-                  </ul>  
-                </div>
-              </div>
-              <!----End Sidebar User--->
-              <!-- <div class="user_profile_section">
-                <ul>
-                  <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
-              </ul>
-              </div> -->
-             
-                
+        <div class="col-md-2 desktop-section-section">
+          <div class="django_bg_sidebar">
+            <h3><a href="#">OR Logbook</a> </h3>
+          <ul>
+              <li class="active ">
+                  <a href="{% url 'generate_bar_chart' %}">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                    <p>Dashboard</p>
+                  </a>
+                 
+                </li>
+                {% if not request.user.is_superuser %}
+                <li>
+                  <a href="{% url 'Procedure' %}">
+                    <i class="fa fa-bars"></i>
+                    <p>Procedures</p>
+                  </a>
+                </li>
+                {%endif%}
+                 {%if not request.user.is_superuser%}
+                <li>
+                  <a href="{% url 'UserProfile' %}">
+                    <i class="fa fa-id-badge"></i>
+                    <p>User Profile</p>
+                  </a>
+                </li>
+                {% endif %}
+                {%if not request.user.is_superuser%}
+                <li><a href="#" id="downloadPdf"><i class="fa fa-user" aria-hidden="true"></i>Export to PDF</a></li>    {%endif%}
+                {%if not request.user.is_superuser%}
+              
+                <li>
+                 
+                  <a href="{% url 'logout' %}">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    <p>Logout</p>
+                  </a>
+                </li>
                 {%endif%}
 
-              <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
-               <!-- main screen -->
-            <option selected>Select Filter</option>
-            <option value="Staff">Staff</option>
-            <option value="Sub-Specialty">Sub-Specialty</option>
-            <option value="Location">Location</option>
-            <option value="Role">Role</option>
-            <option value="PGY">PGY</option>
-              </select>
 
 
+          </ul>
 
-              <form method="post" action="">
-                {% csrf_token %}
-              <div class="get_location get_scroll">
-              {% for i in get_location%}
-              <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
-              <label for="vehicle1" class="color_change"> {{i}}</label><br>
-              {%endfor%}
-              <div class="btn_select_sbmt">
-                <input type="submit" value="Submit">
-                </div>
+          {%if request.user.is_superuser%}
+
+
+          <!---Start Sidebar User-->
+          <div class="d-flex align-items-start orlog_book_sidebar">
+            <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
+              <ul>
+                <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Institute</a></li>
+                  <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Supervisors</a></li>
+                  <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Users</a></li>
+                  <li><a href="#" id="downloadPdf"><i class="fa fa-user"></i>Export to PDF</a></li>
+                  <li>
+                 
+                    <a href="{% url 'logout' %}">
+                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <p>Logout</p>
+                    </a>
+                  </li>
+              </ul>  
             </div>
- 
-                     <div class="sub_specialty get_scroll">
-              {% for i in get_sub_specialty%}
-              <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
-              <label for="vehicle1" class="color_change"> {{i}}</label><br>
-              {%endfor%}
-              <input type="submit" value="Submit"></div>
+          </div>
+          <!----End Sidebar User--->
+          <!-- <div class="user_profile_section">
+            <ul>
+              <li><a href="{% url 'UserProfile' %}"><i class="fa fa-id-badge"></i>User Profile</a></li>
+          </ul>
+          </div> -->
+         
             
+            {%endif%}
 
-              <div class="get_role_data get_scroll">
-              {% for i in get_role_data %}
-              <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
-              <label for="vehicle1" class="color_change"> {{i}}</label><br>
-              {%endfor%}
-              <input type="submit" value="Submit">
-            </div>
+          <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
+           <!-- main screen -->
+        <option selected>Select Filter</option>
+        <option value="Staff">Staff</option>
+        <option value="Sub-Specialty">Sub-Specialty</option>
+        <option value="Location">Location</option>
+        <option value="Role">Role</option>
+        <option value="PGY">PGY</option>
+          </select>
 
-              <div class="get_staff get_scroll">
-              {% for i in get_staff %}
-              <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
-              <label for="vehicle1" class="color_change"> {{i}}</label><br>
-              {%endfor%}
-              <input type="submit" value="Submit">
-            </div>
-           
-          
 
-            
-            <div class="get_pgy get_scroll">
-            
-            {% for i in get_pgy %}
-            
-            <input type="checkbox" id="myCheckBoxID" name="PGY" value={{i}}>
-            
-            <label for="vehicle1" class="color_change"> {{i}}</label><br>
-            
-            {%endfor%}
-            
+
+          <form method="post" action="">
+            {% csrf_token %}
+          <div class="get_location get_scroll">
+          {% for i in get_location%}
+          <input type="checkbox" id="get_location" name="Location" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <div class="btn_select_sbmt">
             <input type="submit" value="Submit">
-            
             </div>
-            
-            </form><br><br>
+        </div>
+
+                 <div class="sub_specialty get_scroll">
+          {% for i in get_sub_specialty%}
+          <input type="checkbox" id="sub_specialty" name="Sub-Specialty" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit"></div>
+        
+
+          <div class="get_role_data get_scroll">
+          {% for i in get_role_data %}
+          <input type="checkbox" id="get_role_data" name="Role" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+
+          <div class="get_staff get_scroll">
+          {% for i in get_staff %}
+          <input type="checkbox" id="myCheckBoxID" name="Staff" value='{{i}}'>
+          <label for="vehicle1" class="color_change"> {{i}}</label><br>
+          {%endfor%}
+          <input type="submit" value="Submit">
+        </div>
+       
+      
+
+        
+        <div class="get_pgy get_scroll">
+        
+        {% for i in get_pgy %}
+        
+        <input type="checkbox" id="myCheckBoxID" name="PGY" value={{i}}>
+        
+        <label for="vehicle1" class="color_change"> {{i}}</label><br>
+        
+        {%endfor%}
+        
+        <input type="submit" value="Submit">
+        
+        </div>
+        
+        </form><br><br>
 
 
 
 
 
-          </div>
-          </div>
+      </div>
+      </div>
   
           <div class="col-lg-10 col-md-12">
             <div class="row top_section_cases">
@@ -1233,7 +1212,9 @@ role_bar = document.getElementById('Role-bar-chart');
       });
     }
 
-    $('#downloadPdf').click(function(event) {
+
+// for PDF
+$('#downloadPdf').click(function(event) {
     // get size of report page
     var reportPageHeight = $('#main').innerHeight();
     var reportPageWidth = $('#main').innerWidth();
