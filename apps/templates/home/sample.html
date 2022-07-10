@@ -157,7 +157,7 @@ function w3_close() {
     </div>
   </div>
   
-  <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
+  <div class="col-md-9  col-xs-9 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser  and not request.user.is_supervisor %}
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
@@ -166,8 +166,11 @@ Upload Excel File
 </button>
 
 {%endif%}
+
+
+<div class="user_cntain mobile_conatin_user"> {% if request.user.is_superuser or request.user.is_supervisor %} <form method="GET"> <div class="usr_list"> <select class="form-select" aria-label="Default select example" name="user_id"> <option selected>User List</option> {% for u in users %} <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option> {% endfor %} <input type="hidden" value="is_admin"> </select> </div> <div class="usr_btn"> <input type="submit"> </div> </form> {%endif%} </div>
   </div>
-  <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
+  <div class="col-md-1  col-xs-1 side_bar_rygt_mbl">
     <nav class="navbar navbar-expand-lg lg_in_out">
         <div class="container-fluid">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -799,10 +802,10 @@ role_bar = document.getElementById('Role-bar-chart');
 
         names = {{ names | safe}}
 
+
         data_list = {{ final_data_list | safe }}
 
-
-
+  
 
         role_chart_config = {
         type: 'horizontalBar',
@@ -864,10 +867,12 @@ role_bar = document.getElementById('Role-bar-chart');
       );
     
       // draw total count
-     
+    
       this.data.datasets[0].data.forEach(function(data, index) {
       var total = this.data.datasets[0].data[index] + this.data.datasets[1].data[index] + this.data.datasets[2].data[index];
+      console.log(total,"total")
       var meta = chartInstance.controller.getDatasetMeta(2);
+      
       var posX = meta.data[index]._model.x;
       var posY = meta.data[index]._model.y;
 
@@ -929,27 +934,21 @@ role_bar = document.getElementById('Role-bar-chart');
     var mypiehartsss = new Chart(role_pie, role_pie_config);
 
     specialty_bar = document.getElementById('specialty-bar-chart');
-        df = {{ keys1 | safe}}
-        
-        df1 = {{ values1 | safe}}
-
-
-
+        df = {{ labels_data | safe}}
+        console.log(df,"df")
+        df1 = {{ final_data_specialty_chart | safe}}
+        console.log(df1,"df1")
         specialty_bar_config = {
 
         type: 'horizontalBar',
         data: {
-
-            datasets: [{
-
-                data: df1,
-                backgroundColor: "#1A374D",
-            }],
-            labels: df,
+          labels: df,
+          datasets: df1,
             
         },
     
       options: {
+        
         plugins: {
             datalabels: false   // disable plugin 'p1' for this instance
         },
@@ -958,6 +957,7 @@ role_bar = document.getElementById('Role-bar-chart');
         xAxes: [{ ticks: {
                 beginAtZero: true
             },
+            stacked: true,
             gridLines: {
                 drawOnChartArea: false
             }
@@ -965,6 +965,7 @@ role_bar = document.getElementById('Role-bar-chart');
         yAxes: [{ ticks: {
                 beginAtZero: true
             },
+            stacked: true,
             gridLines: {
                 drawOnChartArea: false
             }
@@ -999,9 +1000,9 @@ role_bar = document.getElementById('Role-bar-chart');
       // draw total count
 
       this.data.datasets[0].data.forEach(function(data, index) {
-      var total = this.data.datasets[0].data[index]
+      var total = this.data.datasets[0].data[index] + this.data.datasets[1].data[index] + this.data.datasets[2].data[index];
 
-      var meta = chartInstance.controller.getDatasetMeta(0);
+      var meta = chartInstance.controller.getDatasetMeta(2);
       var posX = meta.data[index]._model.x;
       var posY = meta.data[index]._model.y;
       ctx.fillStyle = 'black';
@@ -1014,10 +1015,12 @@ role_bar = document.getElementById('Role-bar-chart');
    title: {
       display: true,
       text: 'Procedures by Sub-Specialty '
+      
           },
             responsive: true,
             legend: {
-        display: false,
+        display: true,
+        position: 'bottom',
             },
         }, 
       };
@@ -1027,16 +1030,16 @@ role_bar = document.getElementById('Role-bar-chart');
     
             
     site_bar = document.getElementById('site-bar-chart');
-        df = {{ keys2 | safe}}
-        df1 = {{ values2| safe}}
+        df = {{ labels_site | safe}}
+
+        df1 = {{ granted_Data | safe}}
+
         site_bar_config = {
         type: 'horizontalBar',
-        data: {
-            datasets: [{ 
-                data: df1,
-                backgroundColor: "#1A374D",
-            }],
-            labels: df
+          data: {
+          labels: df,
+          datasets: df1,
+            
         },
         options: {
           plugins: {
@@ -1052,6 +1055,7 @@ role_bar = document.getElementById('Role-bar-chart');
           ticks: {
                 beginAtZero: true
             },
+            stacked: true,
             gridLines: {
                 drawOnChartArea: false
             }
@@ -1060,6 +1064,7 @@ role_bar = document.getElementById('Role-bar-chart');
           ticks: {
                 beginAtZero: true
             },
+            stacked: true,
             gridLines: {
                 drawOnChartArea: false
             }
@@ -1093,9 +1098,9 @@ role_bar = document.getElementById('Role-bar-chart');
       // draw total count
      
       this.data.datasets[0].data.forEach(function(data, index) {
-      var total = this.data.datasets[0].data[index]
+      var total = this.data.datasets[0].data[index] + this.data.datasets[1].data[index] + this.data.datasets[2].data[index];
 
-      var meta = chartInstance.controller.getDatasetMeta(0);
+      var meta = chartInstance.controller.getDatasetMeta(2);
       var posX = meta.data[index]._model.x;
       var posY = meta.data[index]._model.y;
       ctx.fillStyle = 'black';
@@ -1107,7 +1112,8 @@ role_bar = document.getElementById('Role-bar-chart');
   },
             responsive: true,
             legend: {
-        display: false,
+        display: true,
+        position: 'bottom',
             },
         },
 
@@ -1150,7 +1156,8 @@ role_bar = document.getElementById('Role-bar-chart');
        
         
     },
-            responsive: true
+            responsive: true,
+ 
         }, 
     
 

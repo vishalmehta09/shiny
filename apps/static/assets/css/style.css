@@ -1416,6 +1416,12 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 992px) {
+  .usr_btn input{
+    padding: 6px 17px;
+  }
+  .mobile_conatin_user{
+  width:100% !important;
+  }
   .table_content_section tr th{
     font-size: 12px;
     line-height: 14px;

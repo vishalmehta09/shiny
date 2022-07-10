@@ -145,7 +145,7 @@
     </div>
   </div>
   
-  <div class="col-md-8  col-xs-8 top_header side_br_mbl_cntr">
+  <div class="col-md-9  col-xs-9 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser  and not request.user.is_supervisor %}
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
@@ -154,8 +154,9 @@ Upload Excel File
 </button>
 
 {%endif%}
+<div class="user_cntain mobile_conatin_user"> {% if request.user.is_superuser or request.user.is_supervisor %} <form method="GET"> <div class="usr_list"> <select class="form-select" aria-label="Default select example" name="user_id"> <option selected>User List</option> {% for u in users %} <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option> {% endfor %} <input type="hidden" value="is_admin"> </select> </div> <div class="usr_btn"> <input type="submit"> </div> </form> {%endif%} </div>
   </div>
-  <div class="col-md-2  col-xs-2 side_bar_rygt_mbl">
+  <div class="col-md-1  col-xs-1 side_bar_rygt_mbl">
     <nav class="navbar navbar-expand-lg lg_in_out">
         <div class="container-fluid">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
