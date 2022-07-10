@@ -1626,7 +1626,10 @@ def generate_bar_chart(request):
             
                 
                 # key1 = list(roles.values())
-                labels_data = list(get_data_label[0].keys())
+                try:
+                    labels_data = list(get_data_label[0].keys())
+                except:
+                    labels_data = []
                 
             
             
@@ -1678,7 +1681,10 @@ def generate_bar_chart(request):
 
 
                 # key1 = list(roles_list.values())
-                labels_site = list(get_data_label[0].keys())
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
     
 
 
@@ -2070,8 +2076,10 @@ def generate_bar_chart(request):
 
                 shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
 
-
-                labels_data = list(get_data_label[0].keys())
+                try:
+                    labels_data = list(get_data_label[0].keys())
+                except:
+                    labels_data = []
 
 
                 grt_Data = []
@@ -2119,7 +2127,10 @@ def generate_bar_chart(request):
                     get_data.append(dat)
 
                 # key1 = list(roles_list.values())
-                labels_site = list(get_data_label[0].keys())
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
   
                 granted_Data = []
 
@@ -2414,8 +2425,10 @@ def generate_bar_chart(request):
                 shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
             
                 
-                
-                labels_data = list(get_data_label[0].keys())
+                try:
+                    labels_data = list(get_data_label[0].keys())
+                except:
+                    labels_data = []
             
             
                 grt_Data = []
@@ -2463,8 +2476,10 @@ def generate_bar_chart(request):
                     }
                     get_data.append(dat)
                 
-        
-                labels_site = list(get_data_label[0].keys())
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
     
                 
             
