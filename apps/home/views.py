@@ -1434,7 +1434,10 @@ def generate_bar_chart(request):
             
                 
                 # key1 = list(roles.values())
-                labels_data = list(get_data_label[0].keys())
+                try:
+                    labels_data = list(get_data_label[0].keys())
+                except:
+                    labels_data = []
                 
             
             
@@ -1486,7 +1489,10 @@ def generate_bar_chart(request):
 
 
                 # key1 = list(roles_list.values())
-                labels_site = list(get_data_label[0].keys())
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
     
 
 
