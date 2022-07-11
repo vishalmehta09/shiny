@@ -1,3 +1,96 @@
+
+/*--start procedure css--*/
+.search_procedure {
+  text-align: right;
+  margin-bottom: 10px;
+}
+.search_procedure input {
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  padding: 7px 12px;
+  background: #f4f4f4;
+  font-size: 13px;
+  width: 23%;
+}
+.search_procedure input:focus{
+  outline: none;
+}
+.procedure_table th{
+  background-color: #f6f2f2;
+  border:1px solid #dddddd;
+  font-size: 14px;
+  color: #525f7f;
+}
+.procedure_table td{
+  border-bottom: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  color: #525f7f;
+  font-size: 14px;
+  border: 1px solid #dddddd;
+  background: transparent;
+}
+.procedure_table tr:nth-child(odd) {
+  background-color: #fff;
+}
+.procedure_table tr:nth-child(even) {
+  background-color: #f0f3f6;
+}
+.procedure_table tbody tr:nth-child(odd) th{
+  font-weight: 400;
+  background-color: #fff;
+}
+.procedure_table tbody tr:nth-child(even) th{
+  font-weight: 400;
+  background-color: #f0f3f6;
+}
+.procedure_table #nav{
+  text-align: center;
+  padding: 40px 0px;
+}
+.procedure_table #nav a{
+  text-decoration: none;
+  padding: 4px 7px;
+  color: #000;
+  background: #f8f8f8;
+  border-radius: 2px;
+  margin: 0px 2px;
+}
+.procedure_table #nav .active{
+  color: #fff;
+  background: #1a374d;
+}
+.django_bg_sidebar #downloadPdf{
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-family: "Poppins", sans-serif;
+}
+/*--end procedure css--*/
+.action_delet{
+  position: relative;
+}
+.add_supervisor_btn:focus{
+  box-shadow:0px 0px 0px 0px transparent;
+}
+.delet_icon{
+  background: #d1d1d1;
+  padding: 5px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.delt_btn_tbl {    
+    position: absolute;
+    left: 10px;
+    bottom: 7px;
+    border: none;
+    background: #cd0505;
+    color: #fff;
+    padding: 3px 4px;
+    font-size: 11px;
+    border-radius: 3px;
+}
 #imageUpload
 {
     display: none;
@@ -217,7 +310,8 @@
   font-family: "Poppins", sans-serif;
 }
 .django_bg_sidebar ul li a i {
-  padding-right: 20px;
+  padding-right: 30px;
+  width: 20px;
 }
 .django_bg_sidebar ul li a p {
   margin-bottom: 0px;
@@ -502,20 +596,26 @@ nav.navbar.navbar-expand-lg.lg_in_out {
   width: 100%;
   text-align: right;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
 }
 .search_box input {
   border: none;
   font-size: 13px;
   width: 90%;
   float: left;
-  padding: 3px 10px;
+  padding: 4px 10px;
+  font-family: "Poppins", sans-serif;
+  background: #f4f4f4;
+}
+.search_box{
+  margin-right: 7px;
 }
 .search_box {
-  border: 1px solid #c3c3c3;
-  border-radius: 3px;
-  padding: 4px 7px;
-  background: #fff;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  padding: 3px 5px;
+  background: #f4f4f4;
+  width: 19%;
 }
 .search_box input::placeholder {
   font-size: 13px;
@@ -526,13 +626,13 @@ nav.navbar.navbar-expand-lg.lg_in_out {
 .search_box i {
   position: absolute;
   right: 8px;
-  top: 9px;
-  color: #b8b8b8;
+  top: 10px;
+  color: #dadada;
   font-size: 13px;
 }
 .search_box input:focus-visible {
-  outline: 1px solid #ededed;
-  padding: 3px 10px;
+  outline: none;
+  padding: 4px 10px;
 }
 /* Track */
 .supervisor_field::-webkit-scrollbar-track {
@@ -784,9 +884,7 @@ nav.navbar.navbar-expand-lg.lg_in_out {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-}
-.django_bg_sidebar ul li a i {
-  padding-right: 20px;
+  font-weight: 300;
 }
 .django_bg_sidebar ul li a p {
   margin-bottom: 0px;
@@ -943,6 +1041,7 @@ nav.navbar.navbar-expand-lg.lg_in_out {
   float: right;
   width: 100%;
   text-align: right;
+  padding-bottom: 0px;
 }
 .mobile-section-header {
   display: none;
@@ -1017,9 +1116,10 @@ nav.navbar.navbar-expand-lg.lg_in_out {
 }
 .usr_list select {
   width: 97%;
-  background: #efefef;
-  border: 1px solid #afafaf;
+  background: #f4f4f4;
+  border: 1px solid #dddddd;
   border-radius: 7px;
+  font-size: 13px;
 }
 .usr_btn input {
   background: #1a374d;
@@ -1416,8 +1516,47 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 992px) {
+  .side_br_mbl_cnt button{
+    color:#212529;
+  }
+  .procedure_table table{
+    overflow-x: scroll;
+    display: block;
+    border: none;
+  }
+  .procedure_table #nav a{
+    font-size: 11px;
+    padding: 2px 4px;
+    margin: 0px 0px;
+  }
+  .procedure_table td{
+    font-size: 12px;
+  }
+  .procedure_table th{
+    font-size: 12px;
+  }
+  .main_body_section .tablet_section div#main {
+  padding: 0px 0px;
+  }
+  .supervisor_field table tr th{
+  font-size: 12px;
+  }
+  .org_log_pill{
+  margin-top: 0px
+  }
+.r_shiny_table tr th,
+td {
+  font-size: 12px;
+}
+  .org_log_pills{
+    margin: 0px 20px;
+  }
+  .side_bar_rygt_mbl .navbar-toggler{
+    box-shadow: none !IMPORTANT;
+  }
   .usr_btn input{
     padding: 6px 17px;
+    font-size: 13px;
   }
   .mobile_conatin_user{
   width:100% !important;
@@ -1481,6 +1620,10 @@ label.color_change {
     right: 0px;
     left: -60px !important;
     top: 0px;
+    width: 60px;
+  }
+  .navbar.navbar-expand-lg.lg_in_out{
+    width: auto !important;
   }
   .mobile-section-header .lg_in_out a#navbarDropdown {
     padding: 5px 5px;
@@ -1491,6 +1634,23 @@ label.color_change {
   .lg_in_out .container-fluid {
     display: block !important;
     float: right;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  .lg_in_out a.dropdown-item{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 0px;
+  }
+  .nav_video_photo{
+    height: 25px;
+    width: 25px;
+  }
+  .side_bar_mbl{
+    width: 15%;
+  }
+  .mobile-section-header .row{
+    justify-content: space-around;
   }
   .lg_in_out i {
     color: #333;
@@ -1576,7 +1736,6 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 768px) {
- 
   .main_mdl_clr .btn.btn-primary {
     font-size: 14px;
   }
@@ -1602,9 +1761,6 @@ label.color_change {
     font-size: 11px !important;
   }
   .search_box input::placeholder {
-    font-size: 11px !important;
-  }
-  .add_supervisor_btn {
     font-size: 11px !important;
   }
   .search_box input:focus-visible {
@@ -1639,7 +1795,7 @@ label.color_change {
   }
   .supervisor_field table tr th {
     line-height: 12px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .add_supervisor_btn {
     font-size: 12px;
@@ -1701,6 +1857,12 @@ label.color_change {
   }
 }
 @media only screen and (max-width: 767px) {
+  .search_box{
+  width: 30%;
+  }
+  .search_procedure input{
+  width: 43%;
+  }
 .user_main_remove .psswrd_btn{
   padding: 6px 13px;
   margin-top: 16px;
@@ -1709,17 +1871,28 @@ label.color_change {
 label.color_change{
   font-size: 10px;
 }
+.usr_list select{
+  font-size: 12px;
+}
+}
+@media only screen and (max-width: 425px) {
+  .search_box {
+    width: 40%;
+  }
 }
 @media only screen and (max-width: 320px) {
   .search_box {
     padding: 2px 3px !important;
   }
   .org_log_pills {
-    margin: 10px 0px;
+    margin: 0px 0px;
   }
   .search_box {
     display: flex;
   }
+  .search_procedure input {
+    width: 60%;
+}
 }
 @media only screen and (max-width: 1200px) and (min-width: 768px) {
     .side_bar_tabs ul li i{
@@ -1745,3 +1918,4 @@ label.color_change{
     font-size: 23px;
   }
 }
+

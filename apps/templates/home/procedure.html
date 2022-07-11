@@ -178,9 +178,7 @@ th {
   <div class="col-md-9  col-xs-9 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser  and not request.user.is_supervisor %}
 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-
-
-
+  Upload Excel File
 </button>
 
 {%endif%}
@@ -487,9 +485,12 @@ th {
         
             <!---Start pill--->
             <div class="edit_profile_bg" style="width:100%;">
-              <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+              <div class="search_procedure">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+              </div>
+              <div class="procedure_table">
                 {{greek|safe}}
-
+              </div>
             </div> 
             <!---End Pills---->
            </div>

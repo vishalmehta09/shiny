@@ -43,7 +43,7 @@ function w3_close() {
               </li>
               <li>
                 <a href="{% url 'generate_bar_chart' %}">
-                  <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                  <i class="fa fa-bars"></i>
                   <p>Procedures</p>
                 </a>
               </li>
@@ -296,7 +296,7 @@ Upload Excel File
                 </li>
                 {% endif %}
                 {%if not request.user.is_superuser%}
-                <li><a href="#" id="downloadPdf"><i class="fa fa-user" aria-hidden="true"></i>Export to PDF</a></li>    {%endif%}
+                <li><a href="#" id="downloadPdf"><i class="fa fa-download"></i>Export to PDF</a></li>    {%endif%}
                 {%if not request.user.is_superuser%}
               
                 <li>

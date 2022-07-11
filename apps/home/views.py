@@ -2708,3 +2708,8 @@ def Procedure(request):
 
     return render(request, 'home/procedure.html', {"greek":greek,"data":data}) 
 
+
+def delete(request,id):
+    obj = NewUser.objects.get(id=id)
+    obj.delete()
+    return redirect('user')

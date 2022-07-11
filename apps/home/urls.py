@@ -17,6 +17,7 @@ urlpatterns = [
     path('user', views.AddUser, name='user'),
     path('Profile', views.UserProfile, name='UserProfile'),
     path('Procedure', views.Procedure, name='Procedure'),
+    path('delete/<int:id>', views.delete, name='delete'),
 
     
 

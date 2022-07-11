@@ -33,7 +33,7 @@
                   <p>Dashboard</p>
                 </a>
               </li>
-              {% if not request.user.is_superuser %}>
+              {% if not request.user.is_superuser %}
               <li>
                 <a href="{% url 'Procedure' %}">
                   <i class="fa fa-bars"></i>
@@ -281,7 +281,7 @@ Upload Excel File
                       </a>
                      
                     </li>
-                    {% if not request.user.is_superuser %}>
+                    {% if not request.user.is_superuser %}
                     <li>
                       <a href="{% url 'Procedure' %}">
                         <i class="fa fa-bars"></i>
@@ -474,6 +474,7 @@ Upload Excel File
                       <th>Institute</th>
                       <th>Password</th>
                       <th>Confirm Password</th>
+                      <th>Action</th>
                     </tr>
                     {%for user in get_user%}
                     <tr>
@@ -485,8 +486,11 @@ Upload Excel File
                       <td>{{user.supervisor}}</td>
                       <td>{{user.institute}}</td>
                       <td>********</td>
-                      <td>********</td> 
-                      
+                      <td>********</td>
+                      <td class="action_delet">
+ 
+                      <a href="{% url 'delete' user.id %}" class="delt_btn_tbl">Delete</a>
+                      </td> 
                     </tr>
                     {%endfor%}   
                   </table>
@@ -664,6 +668,7 @@ function w3_open() {
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
 }
+
 
 //for search bar
 function myFunction() {
