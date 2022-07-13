@@ -103,16 +103,16 @@ def generate_bar_chart(request):
             total_cases = len(data)
             current_year = date.today().year
             get_date = data[data['Date'].dt.year == current_year] 
-
-            date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+            date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
             count_of_current_year = 0
             for u in list(date_gt):
                 if u == True:
                     count_of_current_year+=1
                 else:
                     pass
-            this_year_ps = get_date['Role'] == 'Primary Surgeon'
-    
+           
+            date_equal =  data[data['Date'] == str(current_year)+'-'+'07-01'] 
+            this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
             count_of_current = 0
             for i in this_year_ps:
                 if i == True:
@@ -428,14 +428,15 @@ def generate_bar_chart(request):
         current_year = date.today().year
         get_date = data[data['Date'].dt.year == current_year] 
 
-        date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+        date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
         count_of_current_year = 0
         for u in list(date_gt):
             if u == True:
                 count_of_current_year+=1
             else:
                 pass
-        this_year_ps = get_date['Role'] == 'Primary Surgeon'
+        date_equal =  data[data['Date'] == str(current_year)+'-'+'07-01'] 
+        this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
         count_of_current = 0
         for i in this_year_ps:
@@ -1134,14 +1135,15 @@ def generate_bar_chart(request):
                 current_year = date.today().year
                 get_date = get_g_pgy[get_g_pgy['Date'].dt.year == current_year] 
 
-                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                tdate_equal =  get_g_pgy[get_g_pgy['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -1441,15 +1443,15 @@ def generate_bar_chart(request):
                 total_cases = len(get_g_role)
                 current_year = date.today().year
                 get_date = get_g_role[get_g_role['Date'].dt.year == current_year] 
-
-                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                date_equal =  get_g_role[get_g_role['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -1781,14 +1783,15 @@ def generate_bar_chart(request):
                 current_year = date.today().year
                 get_date = get_g_specialty[get_g_specialty['Date'].dt.year == current_year] 
 
-                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                date_equal =  get_g_specialty[get_g_specialty['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -2134,14 +2137,15 @@ def generate_bar_chart(request):
                 current_year = date.today().year
                 get_date = get_g_location[get_g_location['Date'].dt.year == current_year] 
 
-                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                date_equal =  get_g_location[get_g_location['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -2484,14 +2488,15 @@ def generate_bar_chart(request):
                 current_year = date.today().year
                 get_date = get_g_staff[get_g_staff['Date'].dt.year == current_year] 
 
-                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
+                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                date_equal =  get_g_staff[get_g_staff['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
                 for i in this_year_ps:
