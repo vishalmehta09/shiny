@@ -268,7 +268,72 @@ def generate_bar_chart(request):
                         "backgroundColor": color_line_chart(i.get("label"))
                     }
                 grt_Data.append(d)    
-            print(grt_Data,"grt_Data")
+
+
+            # Driver code by kapil START
+            raw_list = []
+            polished_data = []
+            total_roles = [] # Here storing roles
+            total_sub = [] # Here storing all the speiclaity
+            for single_role in roles.keys():
+                total_roles.append(single_role)
+    
+            for sub in total_roles:
+                for m in roles[sub].keys():
+                    if m not in total_sub:
+                        total_sub.append(m)
+
+            i = 0
+            while i<len(total_sub):
+                final_data = {
+                                "name": total_sub[i],
+                                "Primary Surgeon": roles['Primary Surgeon'].get(total_sub[i],0),
+                                "First Assist": roles['First Assist'].get(total_sub[i],0),
+                                "Secondary Assist": roles['Secondary Assist'].get(total_sub[i],0)
+                            }
+                raw_list.append(final_data)
+                i=i+1
+
+            for i in raw_list:
+                total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                i['Total'] = total
+                polished_data.append(i)
+
+            shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+            p_spec_list = []
+            f_spec_list = []
+            s_spec_list = []
+            for d in shorted_data_list:
+                p_spec_list.append(d['Primary Surgeon']) 
+                f_spec_list.append(d['First Assist']) 
+                s_spec_list.append(d['Secondary Assist']) 
+
+            datas = [
+                {
+                "label": 'Primary Surgeon',
+                "backgroundColor": '#398AB9',
+                "data": []
+                },
+                {
+                "label": 'First Assist',
+                "backgroundColor": '#D8D2CB',
+                "data": []
+                },
+                {
+                "label": 'Secondary Assist',
+                "backgroundColor": '#1A374D',
+                "data": []
+                }
+            ]
+            for dataset in datas:
+                if dataset['label'] == 'Primary Surgeon':
+                    dataset['data'] = p_spec_list
+                elif dataset['label'] == 'First Assist':
+                    dataset['data'] = f_spec_list
+                elif dataset['label'] == 'Secondary Assist':
+                    dataset['data'] = s_spec_list
+
+            # Driver code by kapil END
 
             #site bar chart       
             
@@ -308,8 +373,76 @@ def generate_bar_chart(request):
                         "backgroundColor": color_line_chart(i.get("label"))
                     }
                 granted_Data.append(d) 
+
+
+            ## Driver code by kapil START
+            raw_site_data = []
+            polish_site_data = []
+            roles_site = []
+            total_site = []
+            for role_sit in roles_list.keys():
+                roles_site.append(role_sit)
+    
+            for sub in roles_site:
+                for m in roles_list[sub].keys():
+                    if m not in total_site:
+                        total_site.append(m)
+
+            i = 0
+            while i<len(total_site):
+                final_site_data = {
+                    "name": total_site[i],
+                    "Primary Surgeon": roles_list['Primary Surgeon'].get(total_site[i],0),
+                    "First Assist": roles_list['First Assist'].get(total_site[i],0),
+                    "Secondary Assist": roles_list['Secondary Assist'].get(total_site[i],0)
+                }
+                raw_site_data.append(final_site_data)
+                i= i+1
+
+            for i in raw_site_data:
+                total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                i['Total'] = total
+                polish_site_data.append(i)
+
+            shorted_site_data = sorted(polish_site_data, key=lambda x: x['Total'], reverse=True)
+            p_site_list = []
+            f_site_list = []
+            s_site_list = []
+            for d in shorted_site_data:
+                p_site_list.append(d['Primary Surgeon']) 
+                f_site_list.append(d['First Assist']) 
+                s_site_list.append(d['Secondary Assist']) 
+
+            datas_site = [
+                {
+                "label": 'Primary Surgeon',
+                "backgroundColor": '#398AB9',
+                "data": []
+                },
+                {
+                "label": 'First Assist',
+                "backgroundColor": '#D8D2CB',
+                "data": []
+                },
+                {
+                "label": 'Secondary Assist',
+                "backgroundColor": '#1A374D',
+                "data": []
+                }
+            ]
+            for dataset in datas_site:
+                if dataset['label'] == 'Primary Surgeon':
+                    dataset['data'] = p_site_list
+                elif dataset['label'] == 'First Assist':
+                    dataset['data'] = f_site_list
+                elif dataset['label'] == 'Secondary Assist':
+                    dataset['data'] = s_site_list
+
+            ## Driver code by kapil END
             
    
+
+   #######
             
      
             context_dict = {}
@@ -359,8 +492,8 @@ def generate_bar_chart(request):
 
             context = { 'keys':keys , 'values':values,
             "labels_data":labels_data,
-            "final_data_specialty_chart":grt_Data,
-            "granted_Data":granted_Data,
+            "final_data_specialty_chart":datas,
+            "granted_Data":datas_site,
             "labels_site":labels_site,
              'final_data': final_final_data,
               'labels': labels, 'dashboard23':dashboard23,
@@ -1579,6 +1712,7 @@ def generate_bar_chart(request):
                 print(grt_Data,"grt_Data")
 
 
+
                 site_chart = {}
                 roles_list = {}
                 for i in get_g_specialty['Role']:
@@ -1829,7 +1963,7 @@ def generate_bar_chart(request):
                 dashboard223 = dict(Counter(coded_case))
                 dashboard23 = (dict(sorted(dashboard223.items(), key=lambda x:x[1],reverse=True)))
 
-                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":grt_Data,"granted_Data":granted_Data, "labels_site":labels_site, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":get_data,"granted_Data":granted_Data, "labels_site":labels_site, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
                 
 
