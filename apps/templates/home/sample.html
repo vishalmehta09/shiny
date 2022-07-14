@@ -361,7 +361,7 @@ Upload Excel File
          
             
             {%endif%}
-
+          {% if get_location %}
           <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
            <!-- main screen -->
         <option selected>Select Filter</option>
@@ -371,7 +371,7 @@ Upload Excel File
         <option value="Role">Role</option>
         <option value="PGY">PGY</option>
           </select>
-
+          {%endif%}
 
 
           <form method="post" action="">
@@ -519,10 +519,13 @@ Upload Excel File
                    <div class="col-md-6">        
                       <div id="container3" class="bg_main_cntnt bgcolor_chart">
                           <canvas id="specialty-bar-chart" height="180"></canvas>
-                       
+                      
                       </div>
                    </div>
               </div>
+            <div>
+              <p id="ignorePDF"> love</p>
+            </div>
               <div class="row main-chart-section">
                   <div class="col-md-6">
                       <div id="container" class="bg_main_cntnt bgcolor_chart">
@@ -732,6 +735,8 @@ Upload Excel File
       </div>
     </div>
   </div>
+  
+
   
  <script>
 
@@ -1238,6 +1243,7 @@ $('#downloadPdf').click(function(event) {
     // get size of report page
     var reportPageHeight = $('#main').innerHeight();
     var reportPageWidth = $('#main').innerWidth();
+  
     console.log(reportPageHeight,"reportPageHeight")
 
     var tb_h = $('#list_table').innerHeight();
@@ -1277,16 +1283,17 @@ $('#downloadPdf').click(function(event) {
         pdfctxY += canvasHeight + buffer;
       }
     });
-    
+
     // create new pdf and add our new canvas as an image
     var pdf = new jsPDF('l', 'pt', [reportPageWidth, reportPageHeight]);
-    pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0);
-    
-
-
+   
+    pdf.addImage($(pdfCanvas)[0], 'PNG', 10, 50);
+    pdf.text("Name : Love Aggarwal",20,25);
+    pdf.text("Operative Log Report",{align:'center'}, 40,250);
     
     // download the pdf
-    pdf.save('dashboard.pdf');
+    pdf.save('download.pdf');
+    
   });
 
 </script>
