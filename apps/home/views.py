@@ -490,7 +490,7 @@ def generate_bar_chart(request):
             }
           
 
-            context = { 'keys':keys , 'values':values,
+            context = { 'keys':keys , 'values':values,'sub_speciality_label':total_sub,
             "labels_data":labels_data,
             "final_data_specialty_chart":datas,
             "granted_Data":datas_site,
@@ -620,7 +620,7 @@ def generate_bar_chart(request):
         get_pgy = list(e.unique())
 
        
-        if request.POST.getlist("Staff") and request.POST.getlist("sub_specialty") and request.POST.getlist("location") and request.POST.getlist("role") and request.POST.getlist("pgy"):
+        if request.POST.getlist("Staff") and request.POST.getlist("Sub-Specialty") and request.POST.getlist("location") and request.POST.getlist("role") and request.POST.getlist("pgy"):
             staff = request.POST.getlist("Staff")
             sub_specialty = request.POST.getlist("sub_specialty")
             location = request.POST.getlist("location")
@@ -634,7 +634,7 @@ def generate_bar_chart(request):
            
          
 
-        if request.POST.getlist("Staff") and request.POST.getlist("Role") and not request.POST.getlist("PGY") and not request.POST.getlist("sub_specialty") and not request.POST.getlist("location"):
+        if request.POST.getlist("Staff") and request.POST.getlist("Role") and not request.POST.getlist("PGY") and not request.POST.getlist("Sub-Specialty") and not request.POST.getlist("location"):
             get_data_staff = request.POST.getlist("Staff")
             get_data_role = request.POST.getlist("Role")
             filter1 = data["Staff"].isin(get_data_staff)
@@ -1121,7 +1121,10 @@ def generate_bar_chart(request):
 
 
                 # key1 = list(roles_list.values())
-                labels_site = list(get_data_label[0].keys())
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
     
 
 
@@ -1310,7 +1313,127 @@ def generate_bar_chart(request):
                     else:
                         pass
 
-                context = {"keys":keys,"values":values,"labels_data":labels_data, "final_data_specialty_chart":grt_Data,"labels_site":labels_site,"granted_Data":granted_Data,
+                                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                for i in get_g_pgy['Sub-Specialty']:
+                    context_dib[i] =  get_g_pgy[get_g_pgy['Sub-Specialty'] == i]
+                    sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
+
+                for sub in sub_specialty:
+                    final_sub_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": sub_specialty[sub].get('Primary Surgeon', 0),
+                            "First Assist": sub_specialty[sub].get('First Assist', 0),
+                            "Secondary Assist": sub_specialty[sub].get('Secondary Assist', 0),
+                        }
+                    
+                    sub_specialty_raw.append(final_sub_specialty)
+                
+                datas = [
+                        {
+                        "label": 'Primary Surgeon',
+                        "backgroundColor": '#398AB9',
+                        "data": []
+                        },
+                        {
+                        "label": 'First Assist',
+                        "backgroundColor": '#D8D2CB',
+                        "data": []
+                        },
+                        {
+                        "label": 'Secondary Assist',
+                        "backgroundColor": '#1A374D',
+                        "data": []
+                        }
+                    ]
+                
+                for i in sub_specialty_raw:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+            # Driver code by kapil END
+                            #Driver Code for location start
+                            ## Driver code by kapil START
+                datas_loc = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                polish_location_data = []
+                location_data = {}
+                location_raw = []
+                for i in get_g_pgy['Location']:
+                    context_dib[i] =  get_g_pgy[get_g_pgy['Location'] == i]
+                    location_data[i] = dict(Counter(context_dib[i]['Role']))
+
+                for loc in location_data:
+                    final_location_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": location_data[loc].get('Primary Surgeon', 0),
+                            "First Assist": location_data[loc].get('First Assist', 0),
+                            "Secondary Assist": location_data[loc].get('Secondary Assist', 0),
+                        }
+                    
+                    location_raw.append(final_location_specialty)
+
+                                
+                for tot in location_raw:
+                    total = tot['Primary Surgeon'] + tot['First Assist'] + tot['Secondary Assist']
+                    tot['Total'] = total
+                    polish_location_data.append(tot)
+
+                shorted_loc_data = sorted(polish_location_data, key=lambda x: x['Total'], reverse=True)
+                p_loc_list = []
+                f_loc_list = []
+                s_loc_list = []
+                for d in shorted_loc_data:
+                    p_loc_list.append(d['Primary Surgeon']) 
+                    f_loc_list.append(d['First Assist']) 
+                    s_loc_list.append(d['Secondary Assist']) 
+                for dataset in datas_loc:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_loc_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_loc_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_loc_list
+
+            ## Driver code by kapil END
+            #Driver Code for location End
+
+                context = {"keys":keys,"values":values,"labels_data":labels_data, "final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
                  'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
@@ -1375,8 +1498,10 @@ def generate_bar_chart(request):
 
                 shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
 
-
-                labels_data = list(get_data_label[0].keys())
+                try:
+                    labels_data = list(get_data_label[0].keys())
+                except:
+                    labels_data = []
 
 
                 grt_Data = []
@@ -1433,8 +1558,10 @@ def generate_bar_chart(request):
                         "SJH": value.get("SJH",0),
                     }
                     get_data.append(dat)
-                labels_site = list(get_data_label[0].keys())
-
+                try:
+                    labels_site = list(get_data_label[0].keys())
+                except:
+                    labels_site = []
                 granted_Data = []
 
                 for i in get_data:
@@ -1617,8 +1744,127 @@ def generate_bar_chart(request):
                         count_of_this_month+=1
                     else:
                         pass
+                                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                for i in get_g_role['Sub-Specialty']:
+                    context_dib[i] =  get_g_role[get_g_role['Sub-Specialty'] == i]
+                    sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
-                context = {"keys":keys,"values":values,"labels_data":labels_data,"final_data_specialty_chart":grt_Data,"labels_site":labels_site,"granted_Data":granted_Data,
+                for sub in sub_specialty:
+                    final_sub_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": sub_specialty[sub].get('Primary Surgeon', 0),
+                            "First Assist": sub_specialty[sub].get('First Assist', 0),
+                            "Secondary Assist": sub_specialty[sub].get('Secondary Assist', 0),
+                        }
+                    
+                    sub_specialty_raw.append(final_sub_specialty)
+                
+                datas = [
+                        {
+                        "label": 'Primary Surgeon',
+                        "backgroundColor": '#398AB9',
+                        "data": []
+                        },
+                        {
+                        "label": 'First Assist',
+                        "backgroundColor": '#D8D2CB',
+                        "data": []
+                        },
+                        {
+                        "label": 'Secondary Assist',
+                        "backgroundColor": '#1A374D',
+                        "data": []
+                        }
+                    ]
+                
+                for i in sub_specialty_raw:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+            # Driver code by kapil END
+                            #Driver Code for location start
+                            ## Driver code by kapil START
+                datas_loc = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                polish_location_data = []
+                location_data = {}
+                location_raw = []
+                for i in get_g_role['Location']:
+                    context_dib[i] =  get_g_role[get_g_role['Location'] == i]
+                    location_data[i] = dict(Counter(context_dib[i]['Role']))
+
+                for loc in location_data:
+                    final_location_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": location_data[loc].get('Primary Surgeon', 0),
+                            "First Assist": location_data[loc].get('First Assist', 0),
+                            "Secondary Assist": location_data[loc].get('Secondary Assist', 0),
+                        }
+                    
+                    location_raw.append(final_location_specialty)
+
+                                
+                for tot in location_raw:
+                    total = tot['Primary Surgeon'] + tot['First Assist'] + tot['Secondary Assist']
+                    tot['Total'] = total
+                    polish_location_data.append(tot)
+
+                shorted_loc_data = sorted(polish_location_data, key=lambda x: x['Total'], reverse=True)
+                p_loc_list = []
+                f_loc_list = []
+                s_loc_list = []
+                for d in shorted_loc_data:
+                    p_loc_list.append(d['Primary Surgeon']) 
+                    f_loc_list.append(d['First Assist']) 
+                    s_loc_list.append(d['Secondary Assist']) 
+                for dataset in datas_loc:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_loc_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_loc_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_loc_list
+
+            ## Driver code by kapil END
+            #Driver Code for location End
+
+                context = {"keys":keys,"values":values,"labels_data":labels_data,"final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
                     'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
                     "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
@@ -1710,7 +1956,6 @@ def generate_bar_chart(request):
                         }
                     grt_Data.append(d)    
                 print(grt_Data,"grt_Data")
-
 
 
                 site_chart = {}
@@ -1917,15 +2162,14 @@ def generate_bar_chart(request):
                 current_year = date.today().year
                 get_date = get_g_specialty[get_g_specialty['Date'].dt.year == current_year] 
 
-                date_gt = get_date['Date'].dt.to_period('M') > str(current_year)+'-'+'06'
+                date_gt = get_date['Date'].dt.to_period('M') > '2022-06'
                 count_of_current_year = 0
                 for u in list(date_gt):
                     if u == True:
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_specialty[get_g_specialty['Date'] == str(current_year)+'-'+'07-01'] 
-                this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
+                this_year_ps = get_date['Role'] == 'Primary Surgeon'
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -1963,53 +2207,184 @@ def generate_bar_chart(request):
                 dashboard223 = dict(Counter(coded_case))
                 dashboard23 = (dict(sorted(dashboard223.items(), key=lambda x:x[1],reverse=True)))
 
-                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":get_data,"granted_Data":granted_Data, "labels_site":labels_site, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,"users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+
+                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                for i in get_g_specialty['Sub-Specialty']:
+                    context_dib[i] =  get_g_specialty[get_g_specialty['Sub-Specialty'] == i]
+                    sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
+
+                for sub in sub_specialty:
+                    final_sub_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": sub_specialty[sub].get('Primary Surgeon', 0),
+                            "First Assist": sub_specialty[sub].get('First Assist', 0),
+                            "Secondary Assist": sub_specialty[sub].get('Secondary Assist', 0),
+                        }
+                    
+                    sub_specialty_raw.append(final_sub_specialty)
+                
+                datas = [
+                        {
+                        "label": 'Primary Surgeon',
+                        "backgroundColor": '#398AB9',
+                        "data": []
+                        },
+                        {
+                        "label": 'First Assist',
+                        "backgroundColor": '#D8D2CB',
+                        "data": []
+                        },
+                        {
+                        "label": 'Secondary Assist',
+                        "backgroundColor": '#1A374D',
+                        "data": []
+                        }
+                    ]
+                
+                for i in sub_specialty_raw:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+            # Driver code by kapil END
+                
+
+
+                #Driver code for procedures of sub-speciality start
+                # labels_site = []
+                # for site_filter in sub_specialty.keys():
+                #     labels_site.append(site_filter)
+
+                            # Driver code by kapil END
+                
+            #Driver Code for location start
+                            ## Driver code by kapil START
+                datas_loc = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                polish_location_data = []
+                location_data = {}
+                location_raw = []
+                for i in get_g_specialty['Location']:
+                    context_dib[i] =  get_g_specialty[get_g_specialty['Location'] == i]
+                    location_data[i] = dict(Counter(context_dib[i]['Role']))
+
+                for loc in location_data:
+                    final_location_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": location_data[loc].get('Primary Surgeon', 0),
+                            "First Assist": location_data[loc].get('First Assist', 0),
+                            "Secondary Assist": location_data[loc].get('Secondary Assist', 0),
+                        }
+                    
+                    location_raw.append(final_location_specialty)
+
+                                
+                for tot in location_raw:
+                    total = tot['Primary Surgeon'] + tot['First Assist'] + tot['Secondary Assist']
+                    tot['Total'] = total
+                    polish_location_data.append(tot)
+
+                shorted_loc_data = sorted(polish_location_data, key=lambda x: x['Total'], reverse=True)
+                p_loc_list = []
+                f_loc_list = []
+                s_loc_list = []
+                for d in shorted_loc_data:
+                    p_loc_list.append(d['Primary Surgeon']) 
+                    f_loc_list.append(d['First Assist']) 
+                    s_loc_list.append(d['Secondary Assist']) 
+                for dataset in datas_loc:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_loc_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_loc_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_loc_list
+
+            ## Driver code by kapil END
+            #Driver Code for location End
+                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":datas,"granted_Data":datas_loc, "labels_site":labels_site, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'procedure_site_speciality':labels_site}
                 return render(request, 'home/sample.html', context)
                 
 
                 
             else:
+                pass
                 #ADD CODE HERE
-                specialty_chart = {}
-                roles = {}
-                for i in data['Role']:
-                    specialty_chart[i] = data[data['Role'] == i]
-                    roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
+                # specialty_chart = {}
+                # roles = {}
+                # for i in data['Role']:
+                #     specialty_chart[i] = data[data['Role'] == i]
+                #     roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
-                get_data = []
+                # get_data = []
           
-                for key, value in roles.items():
+                # for key, value in roles.items():
         
-                    dat = {
-                        "label": key,
-                        "Trauma": value.get("Trauma",0),
-                        "Arthroplasty": value.get("Arthroplasty",0),
-                        "Pediatrics": value.get("Pediatrics",0),
-                        "Sports": value.get("Sports",0),
-                        "Foot and Ankle": value.get("Foot and Ankle",0),
-                        "Upper Extremity": value.get("Upper Extremity",0),
-                        "General": value.get("General",0),
-                        "total": value.get("Trauma",0) + value.get("Arthroplasty",0) + value.get("Pediatrics",0) + value.get("Sports",0) + value.get("Foot and Ankle",0) + value.get("Upper Extremity",0) + value.get("General",0)
-                    }
-                    get_data.append(dat)
+                #     dat = {
+                #         "label": key,
+                #         "Trauma": value.get("Trauma",0),
+                #         "Arthroplasty": value.get("Arthroplasty",0),
+                #         "Pediatrics": value.get("Pediatrics",0),
+                #         "Sports": value.get("Sports",0),
+                #         "Foot and Ankle": value.get("Foot and Ankle",0),
+                #         "Upper Extremity": value.get("Upper Extremity",0),
+                #         "General": value.get("General",0),
+                #         "total": value.get("Trauma",0) + value.get("Arthroplasty",0) + value.get("Pediatrics",0) + value.get("Sports",0) + value.get("Foot and Ankle",0) + value.get("Upper Extremity",0) + value.get("General",0)
+                #     }
+                #     get_data.append(dat)
 
-                shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
+                # shorted_data_list = sorted(get_data, key=lambda x: x['total'], reverse=True)
           
             
-                key1 = list(roles.values())
-                labels_data = list(key1[0].keys())
+                # key1 = list(roles.values())
+                # labels_data = list(key1[0].keys())
         
          
-                grt_Data = []
+                # grt_Data = []
 
-                for i in shorted_data_list:
-                    d ={
-                            "label": i.get("label"),
-                            "data": [i.get("Trauma"), i.get("Arthroplasty"), i.get("Pediatrics"), i.get("Sports"), i.get("Foot and Ankle"), i.get("Upper Extremity"), i.get("General")],
-                            "backgroundColor": color_line_chart(i.get("label"))
-                        }
-                    grt_Data.append(d)    
-                print(grt_Data,"grt_Data")
+                # for i in shorted_data_list:
+                #     d ={
+                #             "label": i.get("label"),
+                #             "data": [i.get("Trauma"), i.get("Arthroplasty"), i.get("Pediatrics"), i.get("Sports"), i.get("Foot and Ankle"), i.get("Upper Extremity"), i.get("General")],
+                #             "backgroundColor": color_line_chart(i.get("label"))
+                #         }
+                #     grt_Data.append(d)    
+                # print(grt_Data,"grt_Data")
        
                 
 
@@ -2312,7 +2687,129 @@ def generate_bar_chart(request):
                         count_of_this_month+=1
                     else:
                         pass
-                context = {"keys":keys,"values":values,"final_data_list":datasets,"names":name_set,"labels_data":labels_data, "final_data_specialty_chart":grt_Data,"labels_site":labels_site,"granted_Data":granted_Data,
+                                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                for i in get_g_location['Sub-Specialty']:
+                    context_dib[i] =  get_g_location[get_g_location['Sub-Specialty'] == i]
+                    sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
+
+                for sub in sub_specialty:
+                    final_sub_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": sub_specialty[sub].get('Primary Surgeon', 0),
+                            "First Assist": sub_specialty[sub].get('First Assist', 0),
+                            "Secondary Assist": sub_specialty[sub].get('Secondary Assist', 0),
+                        }
+                    
+                    sub_specialty_raw.append(final_sub_specialty)
+                
+                datas = [
+                        {
+                        "label": 'Primary Surgeon',
+                        "backgroundColor": '#398AB9',
+                        "data": []
+                        },
+                        {
+                        "label": 'First Assist',
+                        "backgroundColor": '#D8D2CB',
+                        "data": []
+                        },
+                        {
+                        "label": 'Secondary Assist',
+                        "backgroundColor": '#1A374D',
+                        "data": []
+                        }
+                    ]
+                
+                for i in sub_specialty_raw:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+
+                                
+            #Driver Code for location start
+                            ## Driver code by kapil START
+                datas_loc = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                polish_location_data = []
+                location_data = {}
+                location_raw = []
+                for i in get_g_location['Location']:
+                    context_dib[i] =  get_g_location[get_g_location['Location'] == i]
+                    location_data[i] = dict(Counter(context_dib[i]['Role']))
+
+                for loc in location_data:
+                    final_location_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": location_data[loc].get('Primary Surgeon', 0),
+                            "First Assist": location_data[loc].get('First Assist', 0),
+                            "Secondary Assist": location_data[loc].get('Secondary Assist', 0),
+                        }
+                    
+                    location_raw.append(final_location_specialty)
+
+                                
+                for tot in location_raw:
+                    total = tot['Primary Surgeon'] + tot['First Assist'] + tot['Secondary Assist']
+                    tot['Total'] = total
+                    polish_location_data.append(tot)
+
+                shorted_loc_data = sorted(polish_location_data, key=lambda x: x['Total'], reverse=True)
+                p_loc_list = []
+                f_loc_list = []
+                s_loc_list = []
+                for d in shorted_loc_data:
+                    p_loc_list.append(d['Primary Surgeon']) 
+                    f_loc_list.append(d['First Assist']) 
+                    s_loc_list.append(d['Secondary Assist']) 
+                for dataset in datas_loc:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_loc_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_loc_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_loc_list
+
+            ## Driver code by kapil END
+            #Driver Code for location End
+
+            # Driver code by kapil END
+                context = {"keys":keys,"values":values,"final_data_list":datasets,"names":name_set,"labels_data":labels_data, "final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
                  'final_data': final_final_data, 'labels': labels, "get_staff":get_staff,"get_pgy":get_pgy,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)
                 }
@@ -2355,6 +2852,7 @@ def generate_bar_chart(request):
                             "backgroundColor": color_line_chart(i.get("label"))
                         }
                     granted_Data.append(d) 
+                    
                 
 
             if request.POST.getlist("Staff"):
@@ -2663,8 +3161,131 @@ def generate_bar_chart(request):
                         count_of_this_month+=1
                     else:
                         pass
+                                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                for i in get_g_staff['Sub-Specialty']:
+                    context_dib[i] =  get_g_staff[get_g_staff['Sub-Specialty'] == i]
+                    sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
-                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":grt_Data,"granted_Data":granted_Data,"labels_site":labels_site,'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month
+                for sub in sub_specialty:
+                    final_sub_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": sub_specialty[sub].get('Primary Surgeon', 0),
+                            "First Assist": sub_specialty[sub].get('First Assist', 0),
+                            "Secondary Assist": sub_specialty[sub].get('Secondary Assist', 0),
+                        }
+                    
+                    sub_specialty_raw.append(final_sub_specialty)
+                
+                datas = [
+                        {
+                        "label": 'Primary Surgeon',
+                        "backgroundColor": '#398AB9',
+                        "data": []
+                        },
+                        {
+                        "label": 'First Assist',
+                        "backgroundColor": '#D8D2CB',
+                        "data": []
+                        },
+                        {
+                        "label": 'Secondary Assist',
+                        "backgroundColor": '#1A374D',
+                        "data": []
+                        }
+                    ]
+                
+                for i in sub_specialty_raw:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+            # Driver code by kapil END
+                
+            #Driver Code for location start
+                            ## Driver code by kapil START
+                datas_loc = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                polish_location_data = []
+                location_data = {}
+                location_raw = []
+                for i in get_g_staff['Location']:
+                    context_dib[i] =  get_g_staff[get_g_staff['Location'] == i]
+                    location_data[i] = dict(Counter(context_dib[i]['Role']))
+
+                for loc in location_data:
+                    final_location_specialty = {
+                            "name": sub,
+                            "Primary Surgeon": location_data[loc].get('Primary Surgeon', 0),
+                            "First Assist": location_data[loc].get('First Assist', 0),
+                            "Secondary Assist": location_data[loc].get('Secondary Assist', 0),
+                        }
+                    
+                    location_raw.append(final_location_specialty)
+
+                                
+                for tot in location_raw:
+                    total = tot['Primary Surgeon'] + tot['First Assist'] + tot['Secondary Assist']
+                    tot['Total'] = total
+                    polish_location_data.append(tot)
+
+                shorted_loc_data = sorted(polish_location_data, key=lambda x: x['Total'], reverse=True)
+                p_loc_list = []
+                f_loc_list = []
+                s_loc_list = []
+                for d in shorted_loc_data:
+                    p_loc_list.append(d['Primary Surgeon']) 
+                    f_loc_list.append(d['First Assist']) 
+                    s_loc_list.append(d['Secondary Assist']) 
+                for dataset in datas_loc:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_loc_list
+                    if dataset['label'] == 'First Assist':
+                        dataset['data'] = f_loc_list
+                    if dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_loc_list
+
+            ## Driver code by kapil END
+            #Driver Code for location End
+
+
+                #Driver code for procedures of sub-speciality start
+
+                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":datas,"granted_Data":datas_loc,"labels_site":labels_site,'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month
                 ,"users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
                 return render(request, 'home/sample.html', context)
 
@@ -2710,7 +3331,8 @@ def generate_bar_chart(request):
              
             }
             
-            context = {"keys":keys,"values":values,"final_data_specialty_chart":grt_Data, "labels_data":labels_data, 'granted_Data': granted_Data, 'labels_site': labels_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
+            context = {"keys":keys,"values":values,"final_data_specialty_chart":'grt_Data', "labels_data":labels_data, 'granted_Data': granted_Data, 'labels_site': labels_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
+
             "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
             if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
