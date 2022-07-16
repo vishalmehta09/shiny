@@ -3086,18 +3086,26 @@ role_bar = document.getElementById('Role-bar-chart');
         df = {{ keys | safe}}
         df1 = {{ values | safe}}
         console.log("ROLES",df)
+        console.log("TYPE",typeof(df))
+        var total_roles = ['Primary Surgeon','Secondary Assist','First Assist']
+
+
 
         reducer = (accumulator, currentValue) => accumulator + currentValue;
         var total1 = df1.reduce(reducer);
-      
-        role_pie_config = {
+        if (df == 'Primary Surgeon'){
+          role_pie_config = {
         type: 'pie',
+
         data: {
             datasets: [{
 
                 label: "Role-pie-chart",
                 data: df1,
-                backgroundColor: ["#1A374D", "#D8D2CB", "#398AB9",],
+                backgroundColor: ["#398AB9",],
+
+
+               
             }],
             labels: df,
         },
@@ -3125,6 +3133,325 @@ role_bar = document.getElementById('Role-bar-chart');
             responsive: true
         },
     };
+        }
+
+  //for second one 
+  if (df == 'Secondary Assist'){
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#1A374D",],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+
+  //for third one
+
+  if (df == 'First Assist'){
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#D8D2CB",],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+
+  //for fourth one
+
+  if (df.includes('Secondary Assist') &&  df.includes('First Assist') && df.includes('Primary Surgeon')){
+    console.log("tir")
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#1A374D", "#D8D2CB", "#398AB9",],
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+  
+  //fifth one
+
+  if (df.includes('Secondary Assist') && df.includes('Primary Surgeon') && !df.includes("First Assist")){
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#1A374D", "#D8D2CB"],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+
+// sixth one
+
+if (df.includes('Primary Surgeon') && df.includes('First Assist') && !df.includes("Secondary Assist")){
+  console.log("existe in last")
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#D8D2CB", "#398AB9"],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+// seventh one
+if (df.includes('First Assist') && df.includes('Secondary Assist') &&!df.includes('Primary Surgeon')){
+  console.log("existe")
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#1A374D", "#398AB9"],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+
+
+        if (df.includes('Primary Surgeon') && df.includes('Secondary Assist') &&!df.includes('First Assist')){
+  console.log("existe")
+          role_pie_config = {
+        type: 'pie',
+
+        data: {
+            datasets: [{
+
+                label: "Role-pie-chart",
+                data: df1,
+                backgroundColor: ["#1A374D", "#398AB9"],
+
+
+               
+            }],
+            labels: df,
+        },
+        options: { 
+          title: {
+      display: true,
+      text:'Procedures by Role'
+          },
+          plugins: 
+           {
+            datalabels:
+             {
+              formatter: function (value, ctx) {
+                  return ((value * 100) / total1).toFixed(2) + '%'; 
+                },
+                fontStyle: "bold",
+                display: true,
+                color: '#fff',
+            }
+    },       
+          legend: {
+        display: true,
+        position: 'bottom'
+    }, 
+            responsive: true
+        },
+    };
+        }
+
+
+
+
+
+
+
+
+
+
+
      
     var mypiehartsss = new Chart(role_pie, role_pie_config);
 
