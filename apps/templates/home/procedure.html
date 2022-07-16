@@ -195,7 +195,7 @@ th {
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="nav_video_photo">
-                    {%if request.user.profile_photo%}
+                    {%if request.user.profile_photo %}
                     <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                     {%elif request.user.is_superuser%}
                     <img src="/profile_pic" alt="Profile Photo">
@@ -486,7 +486,7 @@ th {
             <!---Start pill--->
             <div class="edit_profile_bg" style="width:100%;">
               <div class="search_procedure">
-                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Coded Case">
               </div>
               <div class="procedure_table">
                 {{greek|safe}}
@@ -604,29 +604,29 @@ function myFunction() {
 
 
 //
-$(document).ready(function(){
-    $('#procedure_table').after('<div id="nav"></div>');
-    var rowsShown = 20;
-    var rowsTotal = $('#procedure_table tbody tr').length;
-    var numPages = rowsTotal/rowsShown;
-    for(i = 0;i < numPages;i++) {
-        var pageNum = i + 1;
-        $('#nav').append('<a href="#" rel="'+i+'">'+pageNum+'</a> ');
-    }
-    $('#procedure_table tbody tr').hide();
-    $('#procedure_table tbody tr').slice(0, rowsShown).show();
-    $('#nav a:first').addClass('active');
-    $('#nav a').bind('click', function(){
+// $(document).ready(function(){
+//     $('#procedure_table').after('<div id="nav"></div>');
+//     var rowsShown = 20;
+//     var rowsTotal = $('#procedure_table tbody tr').length;
+//     var numPages = rowsTotal/rowsShown;
+//     for(i = 0;i < numPages;i++) {
+//         var pageNum = i + 1;
+//         $('#nav').append('<a href="#" rel="'+i+'">'+pageNum+'</a> ');
+//     }
+//     $('#procedure_table tbody tr').hide();
+//     $('#procedure_table tbody tr').slice(0, rowsShown).show();
+//     $('#nav a:first').addClass('active');
+//     $('#nav a').bind('click', function(){
 
-        $('#nav a').removeClass('active');
-        $(this).addClass('active');
-        var currPage = $(this).attr('rel');
-        var startItem = currPage * rowsShown;
-        var endItem = startItem + rowsShown;
-        $('#procedure_table tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
-        css('display','table-row').animate({opacity:1}, 300);
-    });
-});
+//         $('#nav a').removeClass('active');
+//         $(this).addClass('active');
+//         var currPage = $(this).attr('rel');
+//         var startItem = currPage * rowsShown;
+//         var endItem = startItem + rowsShown;
+//         $('#procedure_table tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
+//         css('display','table-row').animate({opacity:1}, 300);
+//     });
+// });
 
 
 </script>

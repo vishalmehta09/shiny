@@ -49,7 +49,7 @@ function w3_close() {
               </li>
               {%if not request.user.is_superuser%}
               <li>
-                <a href="{% url 'change_password' %}">
+                <a href="{% url 'UserProfile' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
@@ -187,8 +187,7 @@ Upload Excel File
                     <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                     {%elif request.user.is_superuser%}
                     <img src="/profile_pic" alt="Profile Photo">
-                    {%elif request.user.is_supervisor%}
-                    <img src="/profile_pic" alt="Profile Photo">
+
                     {%else%}
                     <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
                       <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
@@ -230,9 +229,10 @@ Upload Excel File
                     <form method="GET">
                       <div class="usr_list">
                     <select class="form-select" aria-label="Default select example" name="user_id">
+                      
                       <option selected>User List</option>
                       {% for u in users %}
-                      <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option>
+                      <option value="{{u.id}}" {% if u.id|slugify == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option>
                       {% endfor %}
                       <input type="hidden" value="is_admin">
                     </select>
@@ -261,12 +261,11 @@ Upload Excel File
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav_video_photo">
-                              {%if request.user.profile_photo%}
+                              {%if request.user.profile_photo and not request.user.is_superuser and not request.user.is_supervisor %}
                               <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                               {%elif request.user.is_superuser%}
                               <img src="/profile_pic" alt="Profile Photo">
-                              {%elif request.user.is_supervisor%}
-                              <img src="/profile_pic" alt="Profile Photo">
+                             
                               {%else%}
                               <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
                                 <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
@@ -299,12 +298,14 @@ Upload Excel File
                  
                 </li>
                 {% if not request.user.is_superuser %}
+                {% if not request.user.is_supervisor %}
                 <li>
                   <a href="{% url 'Procedure' %}">
                     <i class="fa fa-bars"></i>
                     <p>Procedures</p>
                   </a>
                 </li>
+                {%endif%}
                 {%endif%}
                  {%if not request.user.is_superuser%}
                 <li>
@@ -922,6 +923,7 @@ role_bar = document.getElementById('Role-bar-chart');
     role_pie = document.getElementById('Role-pie-chart')
         df = {{ keys | safe}}
         df1 = {{ values | safe}}
+        console.log("ROLES",df)
 
         reducer = (accumulator, currentValue) => accumulator + currentValue;
         var total1 = df1.reduce(reducer);
@@ -1169,54 +1171,40 @@ role_bar = document.getElementById('Role-bar-chart');
       display: true,
       text:'Role over Time'
           },
-          
           scales: {
         xAxes: [{
             gridLines: {
                 drawOnChartArea: false
-            }
-            
+            },
+            scaleLabel: {
+        display: true,
+        labelString: 'Date',
+        fontSize:15,
+        family:'vazir',
+        pading:100,
+        fontStyle:"bold",
+        fontColor:"#398AB9",
+        align:'center'
+
+      }
         }],
         yAxes: [{
             gridLines: {
                 drawOnChartArea: false
-            }
+            },
+            scaleLabel: {
+        display: true,
+        labelString: 'Number of Procedures',
+        fontSize:15,
+        family:'vazir',
+        pading:100,
+        fontStyle:"bold",
+        fontColor:"#398AB9",
+        align:'center'
+
+      }
         }]
-        
     },
-      
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Number of Procedures',
-            fontSize:15,
-            family:'vazir',
-            pading:100,
-            fontStyle:"bold",
-            fontColor:"#398AB9",
-            align:'center'
-            
-          
-    
-          }
-        }],
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Year to month',
-            fontSize:17,
-            family:'vazir',
-            fontStyle:"bold",
-            fontColor:"#398AB9",
-            align:'center'
-          }
-        }]
-
-      },   
-
-    
-
           legend: {
         display: true,
         position: 'bottom',

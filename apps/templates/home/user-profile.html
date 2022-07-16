@@ -33,7 +33,9 @@ div.a {
                   <p>Dashboard</p>
                 </a>
               </li>
+              
               <li>
+                
                 <a href="{% url 'Procedure' %}">
                   <i class="fa fa-bars"></i>
                   <p>Procedures</p>
@@ -41,7 +43,7 @@ div.a {
               </li>
               {%if not request.user.is_superuser%}
               <li>
-                <a href="{% url 'change_password' %}">
+                <a href="{% url 'UserProfile' %}">
                   <i class="fa fa-user-o" aria-hidden="true"></i>
                   <p>User Profile</p>
                 </a>
@@ -193,7 +195,7 @@ Upload Excel File
                   <div class="container-fluid">
                   
                     
-                    <div class="user_cntain">
+                    <!-- <div class="user_cntain">
                       {% if request.user.is_superuser or request.user.is_supervisor %}
             
                     <form method="GET">
@@ -211,7 +213,7 @@ Upload Excel File
                     </div>
                   </form>
                    {%endif%}
-                  </div>
+                  </div> -->
                    
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <i class="fa fa-bars"></i>
@@ -230,12 +232,11 @@ Upload Excel File
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav_video_photo">
-                              {%if request.user.profile_photo%}
+                              {%if request.user.profile_photo  %}
                               <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                               {%elif request.user.is_superuser%}
                               <img src="/profile_pic" alt="Profile Photo">
-                              {%elif request.user.is_supervisor%}
-                              <img src="/profile_pic" alt="Profile Photo">
+                              
                               {%else%}
                               <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
                                 <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>
@@ -266,15 +267,17 @@ Upload Excel File
                         <p>Dashboard</p>
                       </a>
                     </li>
+                    {% if not request.user.is_supervisor %}
                     <li>
                         <a href="{% url 'Procedure' %}">
                           <i class="fa fa-bars"></i>
                           <p>Procedures</p>
                         </a>
                       </li>
+                      {%endif%}
                      {%if not request.user.is_superuser%}
                     <li>
-                      <a href="{% url 'change_password' %}">
+                      <a href="{% url 'UserProfile' %}">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         <p>User Profile</p>
                       </a>

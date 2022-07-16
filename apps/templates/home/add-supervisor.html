@@ -166,7 +166,7 @@ Upload Excel File
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="nav_video_photo">
-                    {%if request.user.profile_photo%}
+                    {%if request.user.profile_photo and not request.user.is_superuser %}
                     <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                     {%elif request.user.is_superuser%}
                     <img src="/profile_pic" alt="Profile Photo">
@@ -225,7 +225,7 @@ Upload Excel File
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav_video_photo">
-                              {%if request.user.profile_photo%}
+                              {%if request.user.profile_photo and not request.user.is_superuser %}
                               <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                               {%elif request.user.is_superuser%}
                               <img src="/profile_pic" alt="Profile Photo">

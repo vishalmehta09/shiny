@@ -49,6 +49,7 @@ def color_line_chart(key):
 @login_required(login_url="/login/")
 def generate_bar_chart(request):
 
+
       
     if request.method == 'GET':
 
@@ -448,8 +449,8 @@ def generate_bar_chart(request):
             context_dict = {}
             roles = {}
             # print(data['Date'].dt.strftime('%b-%Y'))
-            for i in data['Date'].dt.strftime('%b'):
-                context_dict[i] =  data[data['Date'].dt.strftime('%b') == i]
+            for i in data['Date'].dt.strftime('%b-%Y'):
+                context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
         
@@ -488,13 +489,22 @@ def generate_bar_chart(request):
                 
                 "datasets": final_data,   
             }
+
+            try:
+                if request.user.is_superuser:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                else:
+                    sups = Supervisor.objects.filter(username=request.user.username)[0]
+                    users = NewUser.objects.filter(supervisor=sups.id)
+            except:
+                users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
           
 
             context = { 'keys':keys , 'values':values,'sub_speciality_label':total_sub,
-            "labels_data":labels_data,
+            "labels_data":total_sub,
             "final_data_specialty_chart":datas,
             "granted_Data":datas_site,
-            "labels_site":labels_site,
+            "labels_site":total_site,
              'final_data': final_final_data,
               'labels': labels, 'dashboard23':dashboard23,
                "total_cases":total_cases, "count_of_current_year":count_of_current_year,
@@ -502,15 +512,23 @@ def generate_bar_chart(request):
                 'count_of_this_month':count_of_this_month,"final_data_list":datasets,"names":name_set,
                  "get_staff":get_staff,"get_role_data":get_role_data,
                   "get_sub_specialty":get_sub_specialty, "get_location":get_location, 
-                  "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False),"get_pgy":get_pgy,
+                  "users":users,"get_pgy":get_pgy,
                   'institute':institute, 'supervisor':supervisor}
           
 
             return render(request, 'home/sample.html', context)
         else:
+            try:
+                if request.user.is_superuser:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                else:
+                    sups = Supervisor.objects.filter(username=request.user.username)[0]
+                    users = NewUser.objects.filter(supervisor=sups.id)
+            except:
+                users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
 
 
-            return render(request, 'home/sample.html',{'users':NewUser.objects.filter(is_superuser=False,is_supervisor=False), 'institute':institute, 'supervisor':supervisor})
+            return render(request, 'home/sample.html',{'users':users, 'institute':institute, 'supervisor':supervisor})
     
     if request.method == 'POST':
 
@@ -604,7 +622,7 @@ def generate_bar_chart(request):
                 pass
 
         a = data['Staff']
-        print(a)
+
         get_staff = list(a.unique())
 
         b = data['Sub-Specialty']
@@ -618,6 +636,8 @@ def generate_bar_chart(request):
 
         e = data['PGY']
         get_pgy = list(e.unique())
+
+                             
 
        
         if request.POST.getlist("Staff") and request.POST.getlist("Sub-Specialty") and request.POST.getlist("location") and request.POST.getlist("role") and request.POST.getlist("pgy"):
@@ -1144,8 +1164,8 @@ def generate_bar_chart(request):
 
                 context_dict = {}
                 roles = {}
-                for i in get_g_pgy['Date'].dt.strftime('%b'):
-                    context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.strftime('%b') == i]
+                for i in get_g_pgy['Date'].dt.strftime('%b-%Y'):
+                    context_dict[i] =  get_g_pgy[get_g_pgy['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
      
                 _data = {}
@@ -1318,8 +1338,11 @@ def generate_bar_chart(request):
                 sub_specialty = {}
                 sub_specialty_raw = []
                 polished_data = []
+                speciality_label = []
                 for i in get_g_pgy['Sub-Specialty']:
                     context_dib[i] =  get_g_pgy[get_g_pgy['Sub-Specialty'] == i]
+                    if i not in speciality_label:
+                        speciality_label.append(i)
                     sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
                 for sub in sub_specialty:
@@ -1394,8 +1417,11 @@ def generate_bar_chart(request):
                 polish_location_data = []
                 location_data = {}
                 location_raw = []
+                location_label = []
                 for i in get_g_pgy['Location']:
                     context_dib[i] =  get_g_pgy[get_g_pgy['Location'] == i]
+                    if i not in location_label:
+                        location_label.append(i)
                     location_data[i] = dict(Counter(context_dib[i]['Role']))
 
                 for loc in location_data:
@@ -1432,10 +1458,18 @@ def generate_bar_chart(request):
 
             ## Driver code by kapil END
             #Driver Code for location End
+                try:
+                    if request.user.is_superuser:
+                        users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                    else:
+                        sups = Supervisor.objects.filter(username=request.user.username)[0]
+                        users = NewUser.objects.filter(supervisor=sups.id)
+                except:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
 
-                context = {"keys":keys,"values":values,"labels_data":labels_data, "final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
+                context = {"keys":keys,"values":values,"labels_data":speciality_label, "final_data_specialty_chart":datas,"labels_site":location_label,"granted_Data":datas_loc,
                  'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
-                 "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+                 "users":users}
                 return render(request, 'home/sample.html', context)
 
            
@@ -1650,8 +1684,8 @@ def generate_bar_chart(request):
                 
                 context_dict = {}
                 roles = {}
-                for i in get_g_role['Date'].dt.strftime('%b'):
-                    context_dict[i] =  get_g_role[get_g_role['Date'].dt.strftime('%b') == i]
+                for i in get_g_role['Date'].dt.strftime('%b-%Y'):
+                    context_dict[i] =  get_g_role[get_g_role['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
                 _data = {}
@@ -1749,8 +1783,11 @@ def generate_bar_chart(request):
                 sub_specialty = {}
                 sub_specialty_raw = []
                 polished_data = []
+                speciality_label = []
                 for i in get_g_role['Sub-Specialty']:
                     context_dib[i] =  get_g_role[get_g_role['Sub-Specialty'] == i]
+                    if i not in speciality_label:
+                        speciality_label.append(i)
                     sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
                 for sub in sub_specialty:
@@ -1825,8 +1862,11 @@ def generate_bar_chart(request):
                 polish_location_data = []
                 location_data = {}
                 location_raw = []
+                location_label = []
                 for i in get_g_role['Location']:
                     context_dib[i] =  get_g_role[get_g_role['Location'] == i]
+                    if i not in location_label:
+                        location_label.append(i)
                     location_data[i] = dict(Counter(context_dib[i]['Role']))
 
                 for loc in location_data:
@@ -1864,9 +1904,18 @@ def generate_bar_chart(request):
             ## Driver code by kapil END
             #Driver Code for location End
 
-                context = {"keys":keys,"values":values,"labels_data":labels_data,"final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
+                try:
+                    if request.user.is_superuser:
+                        users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                    else:
+                        sups = Supervisor.objects.filter(username=request.user.username)[0]
+                        users = NewUser.objects.filter(supervisor=sups.id)
+                except:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+
+                context = {"keys":keys,"values":values,"labels_data":speciality_label,"final_data_specialty_chart":datas,"labels_site":location_label,"granted_Data":datas_loc,
                     'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
-                    "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+                    "users":users}
                 return render(request, 'home/sample.html', context)
                 
             else:
@@ -1955,7 +2004,7 @@ def generate_bar_chart(request):
                             "backgroundColor": color_line_chart(i.get("label"))
                         }
                     grt_Data.append(d)    
-                print(grt_Data,"grt_Data")
+
 
 
                 site_chart = {}
@@ -2110,8 +2159,8 @@ def generate_bar_chart(request):
                 
                 context_dict = {}
                 roles = {}
-                for i in get_g_specialty['Date'].dt.strftime('%b'):
-                    context_dict[i] =  get_g_specialty[get_g_specialty['Date'].dt.strftime('%b') == i]
+                for i in get_g_specialty['Date'].dt.strftime('%b-%Y'):
+                    context_dict[i] =  get_g_specialty[get_g_specialty['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
 
     
@@ -2169,7 +2218,8 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                this_year_ps = get_date['Role'] == 'Primary Surgeon'
+                date_equal =  get_g_specialty[get_g_specialty['Date'] == str(current_year)+'-'+'07-01'] 
+                this_year_ps = date_equal['Role'] == 'Primary Surgeon'
 
                 count_of_current = 0
                 for i in this_year_ps:
@@ -2213,8 +2263,11 @@ def generate_bar_chart(request):
                 sub_specialty = {}
                 sub_specialty_raw = []
                 polished_data = []
+                speciality_label = []
                 for i in get_g_specialty['Sub-Specialty']:
                     context_dib[i] =  get_g_specialty[get_g_specialty['Sub-Specialty'] == i]
+                    if i not in speciality_label:
+                        speciality_label.append(i)
                     sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
                 for sub in sub_specialty:
@@ -2299,8 +2352,11 @@ def generate_bar_chart(request):
                 polish_location_data = []
                 location_data = {}
                 location_raw = []
+                location_label = []
                 for i in get_g_specialty['Location']:
                     context_dib[i] =  get_g_specialty[get_g_specialty['Location'] == i]
+                    if i not in location_label:
+                        location_label.append(i)
                     location_data[i] = dict(Counter(context_dib[i]['Role']))
 
                 for loc in location_data:
@@ -2337,13 +2393,166 @@ def generate_bar_chart(request):
 
             ## Driver code by kapil END
             #Driver Code for location End
-                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":datas,"granted_Data":datas_loc, "labels_site":labels_site, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'procedure_site_speciality':labels_site}
+                try:
+                    if request.user.is_superuser:
+                        users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                    else:
+                        sups = Supervisor.objects.filter(username=request.user.username)[0]
+                        users = NewUser.objects.filter(supervisor=sups.id)
+                except:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                context = {"keys":keys,"values":values, "labels_data":speciality_label, "final_data_specialty_chart":datas,"granted_Data":datas_loc, "labels_site":location_label, 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'procedure_site_speciality':labels_site,"users":users}
                 return render(request, 'home/sample.html', context)
                 
 
                 
             else:
-                pass
+                #Driver code for procedures of sub-speciality start
+                                ## Driver code by kapil START
+                sub_specialty = {}
+                sub_specialty_raw = []
+                polished_data = []
+                roles={}
+                total_roles = []
+                total_sub=[]
+                raw_list=[]
+                for i in data['Role']:
+                    sub_specialty[i] = data[data['Role'] == i]
+                    roles[i] = dict(Counter(sub_specialty[i]['Sub-Specialty']))
+
+                for single_role in roles.keys():
+                    total_roles.append(single_role)
+
+                for sub in total_roles:
+                    for m in roles[sub].keys():
+                        if m not in total_sub:
+                            total_sub.append(m)
+
+                i = 0
+                while i<len(total_sub):
+                    final_data = {
+                                    "name": total_sub[i],
+                                    "Primary Surgeon": roles['Primary Surgeon'].get(total_sub[i],0),
+                                    "First Assist": roles['First Assist'].get(total_sub[i],0),
+                                    "Secondary Assist": roles['Secondary Assist'].get(total_sub[i],0)
+                                }
+                    raw_list.append(final_data)
+                    i=i+1
+                
+                for i in raw_list:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polished_data.append(i)
+                shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                p_spec_list = []
+                f_spec_list = []
+                s_spec_list = []
+                for d in shorted_data_list:
+                    p_spec_list.append(d['Primary Surgeon']) 
+                    f_spec_list.append(d['First Assist']) 
+                    s_spec_list.append(d['Secondary Assist']) 
+
+                datas = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                for dataset in datas:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_spec_list
+                    elif dataset['label'] == 'First Assist':
+                        dataset['data'] = f_spec_list
+                    elif dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_spec_list
+
+                #Driver code for location
+
+                raw_site_data = []
+                polish_site_data = []
+                roles_site = []
+                total_site = []
+                roles_loc = {}
+                loc_site = {}
+
+                for i in data['Role']:
+                    loc_site[i] = data[data['Role'] == i]
+                    roles_loc[i] = dict(Counter(loc_site[i]['Location']))
+
+                for role_location in roles_loc.keys():
+                    roles_site.append(role_location)
+    
+                for sub in roles_site:
+                    for m in roles_loc[sub].keys():
+                        if m not in total_site:
+                            total_site.append(m)
+
+                i = 0
+                while i<len(total_site):
+                    final_site_data = {
+                    "name": total_site[i],
+                    "Primary Surgeon": roles_loc['Primary Surgeon'].get(total_site[i],0),
+                    "First Assist": roles_loc['First Assist'].get(total_site[i],0),
+                    "Secondary Assist": roles_loc['Secondary Assist'].get(total_site[i],0)
+                    }
+                    raw_site_data.append(final_site_data)
+                    i= i+1
+
+                for i in raw_site_data:
+                    total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
+                    i['Total'] = total
+                    polish_site_data.append(i)
+
+                shorted_site_data = sorted(polish_site_data, key=lambda x: x['Total'], reverse=True)
+                p_site_list = []
+                f_site_list = []
+                s_site_list = []
+                for d in shorted_site_data:
+                    p_site_list.append(d['Primary Surgeon']) 
+                    f_site_list.append(d['First Assist']) 
+                    s_site_list.append(d['Secondary Assist']) 
+
+                datas_site = [
+                    {
+                    "label": 'Primary Surgeon',
+                    "backgroundColor": '#398AB9',
+                    "data": []
+                    },
+                    {
+                    "label": 'First Assist',
+                    "backgroundColor": '#D8D2CB',
+                    "data": []
+                    },
+                    {
+                    "label": 'Secondary Assist',
+                    "backgroundColor": '#1A374D',
+                    "data": []
+                    }
+                ]
+                for dataset in datas_site:
+                    if dataset['label'] == 'Primary Surgeon':
+                        dataset['data'] = p_site_list
+                    elif dataset['label'] == 'First Assist':
+                        dataset['data'] = f_site_list
+                    elif dataset['label'] == 'Secondary Assist':
+                        dataset['data'] = s_site_list
+
+                
+
+            # Driver code by kapil END
+
+        #     # Driver code by kapil END
                 #ADD CODE HERE
                 # specialty_chart = {}
                 # roles = {}
@@ -2590,8 +2799,8 @@ def generate_bar_chart(request):
 
                 context_dict = {}
                 roles = {}
-                for i in data['Date'].dt.strftime('%b'):
-                    context_dict[i] =  get_g_location[get_g_location['Date'].dt.strftime('%b') == i]
+                for i in data['Date'].dt.strftime('%b-%Y'):
+                    context_dict[i] =  get_g_location[get_g_location['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
                 
@@ -2692,8 +2901,11 @@ def generate_bar_chart(request):
                 sub_specialty = {}
                 sub_specialty_raw = []
                 polished_data = []
+                speciality_label = []
                 for i in get_g_location['Sub-Specialty']:
                     context_dib[i] =  get_g_location[get_g_location['Sub-Specialty'] == i]
+                    if i not in speciality_label:
+                        speciality_label.append(i)
                     sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
                 for sub in sub_specialty:
@@ -2769,8 +2981,11 @@ def generate_bar_chart(request):
                 polish_location_data = []
                 location_data = {}
                 location_raw = []
+                location_label = []
                 for i in get_g_location['Location']:
                     context_dib[i] =  get_g_location[get_g_location['Location'] == i]
+                    if i not in location_label:
+                        location_label.append(i)
                     location_data[i] = dict(Counter(context_dib[i]['Role']))
 
                 for loc in location_data:
@@ -2809,9 +3024,18 @@ def generate_bar_chart(request):
             #Driver Code for location End
 
             # Driver code by kapil END
-                context = {"keys":keys,"values":values,"final_data_list":datasets,"names":name_set,"labels_data":labels_data, "final_data_specialty_chart":datas,"labels_site":labels_site,"granted_Data":datas_loc,
+                try:
+                    if request.user.is_superuser:
+                        users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                    else:
+                        sups = Supervisor.objects.filter(username=request.user.username)[0]
+                        users = NewUser.objects.filter(supervisor=sups.id)
+                except:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+
+                context = {"keys":keys,"values":values,"final_data_list":datasets,"names":name_set,"labels_data":speciality_label, "final_data_specialty_chart":datas,"labels_site":location_label,"granted_Data":datas_loc,
                  'final_data': final_final_data, 'labels': labels, "get_staff":get_staff,"get_pgy":get_pgy,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23,"total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,
-                 "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                 "users":users
                 }
                 return render(request, 'home/sample.html', context)
                 
@@ -3009,7 +3233,7 @@ def generate_bar_chart(request):
                             "backgroundColor": color_line_chart(i.get("label"))
                         }
                     grt_Data.append(d)    
-                print(grt_Data,"grt_Data")
+   
 
                 site_chart = {}
                 roles_list = {}
@@ -3066,8 +3290,8 @@ def generate_bar_chart(request):
 
                 context_dict = {}
                 roles = {}
-                for i in data['Date'].dt.strftime('%b'):
-                    context_dict[i] =  data[data['Date'].dt.strftime('%b') == i]
+                for i in data['Date'].dt.strftime('%b-%Y'):
+                    context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                
                 _data = {}
@@ -3166,8 +3390,11 @@ def generate_bar_chart(request):
                 sub_specialty = {}
                 sub_specialty_raw = []
                 polished_data = []
+                speciality_label = []
                 for i in get_g_staff['Sub-Specialty']:
                     context_dib[i] =  get_g_staff[get_g_staff['Sub-Specialty'] == i]
+                    if i not in speciality_label:
+                        speciality_label.append(i)
                     sub_specialty[i] = dict(Counter(context_dib[i]['Role']))
 
                 for sub in sub_specialty:
@@ -3243,8 +3470,11 @@ def generate_bar_chart(request):
                 polish_location_data = []
                 location_data = {}
                 location_raw = []
+                location_label = []
                 for i in get_g_staff['Location']:
                     context_dib[i] =  get_g_staff[get_g_staff['Location'] == i]
+                    if i not in location_label:
+                        location_label.append(i)
                     location_data[i] = dict(Counter(context_dib[i]['Role']))
 
                 for loc in location_data:
@@ -3284,15 +3514,22 @@ def generate_bar_chart(request):
 
 
                 #Driver code for procedures of sub-speciality start
-
-                context = {"keys":keys,"values":values, "labels_data":labels_data, "final_data_specialty_chart":datas,"granted_Data":datas_loc,"labels_site":labels_site,'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month
-                ,"users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+                try:
+                    if request.user.is_superuser:
+                        users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                    else:
+                        sups = Supervisor.objects.filter(username=request.user.username)[0]
+                        users = NewUser.objects.filter(supervisor=sups.id)
+                except:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                context = {"keys":keys,"values":values, "labels_data":speciality_label, "final_data_specialty_chart":datas,"granted_Data":datas_loc,"labels_site":location_label,'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data, "get_sub_specialty":get_sub_specialty,"get_pgy":get_pgy, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month
+                ,"users":users}
                 return render(request, 'home/sample.html', context)
 
             context_dict = {}
             roles = {}
-            for i in data['Date'].dt.strftime('%b'):
-                context_dict[i] =  data[data['Date'].dt.strftime('%b') == i]
+            for i in data['Date'].dt.strftime('%b-%Y'):
+                context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
             _data = {}
@@ -3330,10 +3567,18 @@ def generate_bar_chart(request):
                 "datasets": final_data,
              
             }
+            try:
+                if request.user.is_superuser:
+                    users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
+                else:
+                    sups = Supervisor.objects.filter(username=request.user.username)[0]
+                    users = NewUser.objects.filter(supervisor=sups.id)
+            except:
+                users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
             
-            context = {"keys":keys,"values":values,"final_data_specialty_chart":'grt_Data', "labels_data":labels_data, 'granted_Data': granted_Data, 'labels_site': labels_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
+            context = {"keys":keys,"values":values,"final_data_specialty_chart":datas, "labels_data":total_sub, 'granted_Data': datas_site, 'labels_site': total_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
 
-            "users":NewUser.objects.filter(is_superuser=False,is_supervisor=False)}
+            "users":users}
             if request.FILES.get('document'):
                 messages.success(request, "File uploaded successfully")
                 return render(request, 'home/sample.html', context)
@@ -3438,8 +3683,9 @@ def AddUser(request):
     return render(request, 'home/add-user.html', {"get_user":get_user, "institute":institute, "supervisor":supervisor})
 
 def UserProfile(request):
+
     if request.method =="POST":
-        print(request.user)
+ 
         get_profile = NewUser.objects.get(username=request.user)
         get_profile.profile_photo=request.FILES.get('profile_photo')
         get_profile.save()
