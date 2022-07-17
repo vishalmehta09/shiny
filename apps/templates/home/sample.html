@@ -2203,12 +2203,16 @@ label.color_change{
                   <p>Dashboard</p>
                 </a>
               </li>
+              {% if not request.user.is_superuser %}
+              {% if not request.user.is_supervisor %}
               <li>
-                <a href="{% url 'generate_bar_chart' %}">
+                <a href="{% url 'Procedure' %}">
                   <i class="fa fa-bars"></i>
                   <p>Procedures</p>
                 </a>
               </li>
+              {%endif%}
+              {%endif%}
               {%if not request.user.is_superuser%}
               <li>
                 <a href="{% url 'UserProfile' %}">
@@ -2220,12 +2224,40 @@ label.color_change{
 
               {%if request.user.is_superuser%}
               <li>
-                <a href="{% url 'delete_user' %}">
-                  <i class="fa fa-user-o" aria-hidden="true"></i>
-                  <p>User List</p>
+                <a href="{% url 'institute' %}">
+                  <i class="fa fa-building" aria-hidden="true"></i>
+                  <p>INSTITUTE</p>
                 </a>
               </li>
               {%endif%}
+
+              {%if request.user.is_superuser%}
+              <li>
+                <a href="{% url 'supervisor' %}">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  <p>Supervisors</p>
+                </a>
+              </li>
+              {%endif%}
+
+              {%if request.user.is_superuser%}
+              <li>
+                <a href="{% url 'user' %}">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+              {%endif%}
+
+     
+              <li>
+                <a href="#" id="downloadPdf">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  <p>Export to PDF</p>
+                </a>
+              </li>
+  
+
               <li>
                 <a href="{% url 'logout' %}">
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -2237,19 +2269,16 @@ label.color_change{
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
               <ul>
-                <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
+                <!-- <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
                 <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+                <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li> -->
 
               </ul>  
             </div>
           </div>
-          <div class="user_profile_section">
-            <ul>
-              <li><a href="/UserProfile"><i class="fa fa-id-badge"></i>User Profile</a></li>
-          </ul>
-          </div>
+      
           <!----End Sidebar User--->
+          {% if get_location %}
           <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
             <!-- main screen -->
          <option selected>Select Filter</option>
@@ -2259,6 +2288,7 @@ label.color_change{
          <option value="Role">Role</option>
          <option value="PGY">PGY</option>
            </select>
+           {%endif%}
 
            <form method="post" action="">
             {% csrf_token %}
@@ -2345,11 +2375,11 @@ Upload Excel File
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="nav_video_photo">
-                    {%if request.user.profile_photo%}
+                    {%if request.user.profile_photo and not request.user.is_superuser and not request.user.is_supervisor %}
                     <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                     {%elif request.user.is_superuser%}
                     <img src="/profile_pic" alt="Profile Photo">
-
+                   
                     {%else%}
                     <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
                       <p style="padding-top: 3px;  font-size: 15px;" >{{ request.user.first_name.0 }}{{ request.user.last_name.0 }}</p>

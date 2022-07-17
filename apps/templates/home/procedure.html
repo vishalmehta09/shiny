@@ -2245,9 +2245,7 @@ th {
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
               <ul>
-                  <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                  <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                  <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+
                   <li>              
                     <a href="{% url 'logout' %}">
                       <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -2262,15 +2260,7 @@ th {
           </ul>
           </div> -->
           <!----End Sidebar User--->
-          <select class="form-select select_box_sidebar fg country" aria-label="Default select example">
-            <!-- main screen -->
-         <option selected>Select Filter</option>
-         <option value="Staff">Staff</option>
-         <option value="Sub-Specialty">Sub-Specialty</option>
-         <option value="Location">Location</option>
-         <option value="Role">Role</option>
-         <option value="PGY">PGY</option>
-           </select>
+
            <form method="post" action="">
             {% csrf_token %}
           <div class="get_location get_scroll">
@@ -2335,9 +2325,7 @@ th {
   
   <div class="col-md-9  col-xs-9 top_header side_br_mbl_cntr">
     {% if not request.user.is_superuser  and not request.user.is_supervisor %}
-<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Upload Excel File
-</button>
+
 
 {%endif%}
 <div class="user_cntain mobile_conatin_user"> {% if request.user.is_superuser or request.user.is_supervisor %} <form method="GET"> <div class="usr_list"> <select class="form-select" aria-label="Default select example" name="user_id"> <option selected>User List</option> {% for u in users %} <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option> {% endfor %} <input type="hidden" value="is_admin"> </select> </div> <div class="usr_btn"> <input type="submit"> </div> </form> {%endif%} </div>
@@ -2509,9 +2497,7 @@ th {
               <div class="d-flex align-items-start orlog_book_sidebar">
                 <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
                   <ul>
-                      <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                      <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                      <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+
                   </ul>  
                 </div>
               </div>

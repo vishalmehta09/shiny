@@ -2210,20 +2210,31 @@
               </li>
               {%endif%}
 
-              <li>
-                <a href="{% url 'logout' %}">
-                  <i class="fa fa-sign-out" aria-hidden="true"></i>
-                  <p>Logout</p>
-                </a>
-              </li>
+  
         </ul>
           <!---Start Sidebar User-->
           <div class="d-flex align-items-start orlog_book_sidebar">
             <div class="nav flex-column side_bar_tabs" id="v-pills-tab">
               <ul>
-                  <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Add Supervisor</a></li>
-                  <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Add Institute</a></li>
-                  <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Add User</a></li>
+                <li>
+                  <a href="{% url 'institute' %}">
+                    <i class="fa fa-building" aria-hidden="true"></i>
+                    <p>INSTITUTE</p>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'supervisor' %}">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <p>Supervisors</p>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="{% url 'user' %}">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <p>Users</p>
+                  </a>
+                </li>
                   <li>
                     <a href="{% url 'logout' %}">
                       <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -2312,7 +2323,7 @@ Upload Excel File
 </button>
 
 {%endif%}
-<div class="user_cntain mobile_conatin_user"> {% if request.user.is_superuser or request.user.is_supervisor %} <form method="GET"> <div class="usr_list"> <select class="form-select" aria-label="Default select example" name="user_id"> <option selected>User List</option> {% for u in users %} <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option> {% endfor %} <input type="hidden" value="is_admin"> </select> </div> <div class="usr_btn"> <input type="submit"> </div> </form> {%endif%} </div>
+<div class="user_cntain mobile_conatin_user"> {% if request.user.is_supefruser or request.user.is_superfvisor %} <form method="GET"> <div class="usr_list"> <select class="form-select" aria-label="Default select example" name="user_id"> <option selected>User List</option> {% for u in users %} <option value="{{u.id}}" {% if u.id == request.GET.user_id %} selected {%endif%} name="checks" >{{ u.username }}</option> {% endfor %} <input type="hidden" value="is_admin"> </select> </div> <div class="usr_btn"> <input type="submit"> </div> </form> {%endif%} </div>
   </div>
   <div class="col-md-1  col-xs-1 side_bar_rygt_mbl">
     <nav class="navbar navbar-expand-lg lg_in_out">
