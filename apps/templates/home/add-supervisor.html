@@ -2611,6 +2611,7 @@ Upload Excel File
                       <th>Username</th>
                       <th>Password</th>
                       <th>Confirm Password</th>
+                      <th>Actions</th>
                     </tr>
                     {%for values in get_values%}
                     <tr>
@@ -2618,6 +2619,9 @@ Upload Excel File
                       <td>{{values.username}}</td>
                       <td>*******</td>
                       <td>*******</td>
+                      <td class="action_delet">
+                        <a href="{% url 'deletesupervisor' values.id %}" class="delt_btn_tbl">Delete</a>
+                        </td>
                       
                     </tr>
                     {%endfor%}

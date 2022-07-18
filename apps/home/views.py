@@ -288,9 +288,9 @@ def generate_bar_chart(request):
             while i<len(total_sub):
                 final_data = {
                                 "name": total_sub[i],
-                                "Primary Surgeon": roles['Primary Surgeon'].get(total_sub[i],0),
-                                "First Assist": roles['First Assist'].get(total_sub[i],0),
-                                "Secondary Assist": roles['Secondary Assist'].get(total_sub[i],0)
+                                "Primary Surgeon": roles.get('Primary Surgeon', {}).get(total_sub[i],0),
+                                "First Assist": roles.get('First Assist', {}).get(total_sub[i],0),
+                                "Secondary Assist": roles.get('Secondary Assist', {}).get(total_sub[i],0)
                             }
                 raw_list.append(final_data)
                 i=i+1
@@ -393,9 +393,9 @@ def generate_bar_chart(request):
             while i<len(total_site):
                 final_site_data = {
                     "name": total_site[i],
-                    "Primary Surgeon": roles_list['Primary Surgeon'].get(total_site[i],0),
-                    "First Assist": roles_list['First Assist'].get(total_site[i],0),
-                    "Secondary Assist": roles_list['Secondary Assist'].get(total_site[i],0)
+                    "Primary Surgeon": roles_list.get('Primary Surgeon', {}).get(total_site[i],0),
+                    "First Assist": roles_list.get('First Assist', {}).get(total_site[i],0),
+                    "Secondary Assist": roles_list.get('Secondary Assist', {}).get(total_site[i],0)
                 }
                 raw_site_data.append(final_site_data)
                 i= i+1
@@ -2432,9 +2432,9 @@ def generate_bar_chart(request):
                 while i<len(total_sub):
                     final_data = {
                                     "name": total_sub[i],
-                                    "Primary Surgeon": roles['Primary Surgeon'].get(total_sub[i],0),
-                                    "First Assist": roles['First Assist'].get(total_sub[i],0),
-                                    "Secondary Assist": roles['Secondary Assist'].get(total_sub[i],0)
+                                    "Primary Surgeon": roles.get('Primary Surgeon', {}).get(total_sub[i],0),
+                                    "First Assist": roles.get('First Assist', {}).get(total_sub[i],0),
+                                    "Secondary Assist": roles.get('Secondary Assist', {}).get(total_sub[i],0)
                                 }
                     raw_list.append(final_data)
                     i=i+1
@@ -2502,9 +2502,9 @@ def generate_bar_chart(request):
                 while i<len(total_site):
                     final_site_data = {
                     "name": total_site[i],
-                    "Primary Surgeon": roles_loc['Primary Surgeon'].get(total_site[i],0),
-                    "First Assist": roles_loc['First Assist'].get(total_site[i],0),
-                    "Secondary Assist": roles_loc['Secondary Assist'].get(total_site[i],0)
+                    "Primary Surgeon": roles_loc.get('Primary Surgeon', {}).get(total_site[i],0),
+                    "First Assist": roles_loc.get('First Assist', {}).get(total_site[i],0),
+                    "Secondary Assist": roles_loc.get('Secondary Assist', {}).get(total_site[i],0)
                     }
                     raw_site_data.append(final_site_data)
                     i= i+1
@@ -3720,3 +3720,13 @@ def delete(request,id):
     obj = NewUser.objects.get(id=id)
     obj.delete()
     return redirect('user')
+
+def deletesupervisor(request,id):
+    delsupervisor=Supervisor.objects.get(id=id)
+    delsupervisor.delete()
+    return redirect('supervisor')
+
+def deleteinstitute(request,id):
+    delinstitute=Institution.objects.get(id=id)
+    delinstitute.delete()
+    return redirect("institute")

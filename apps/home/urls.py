@@ -18,6 +18,8 @@ urlpatterns = [
     path('Profile', views.UserProfile, name='UserProfile'),
     path('Procedure', views.Procedure, name='Procedure'),
     path('delete/<int:id>', views.delete, name='delete'),
+    path('deletesupervisor/<int:id>', views.deletesupervisor, name='deletesupervisor'),
+    path('deleteinstitute/<int:id>', views.deleteinstitute, name='deleteinstitute'),
 
     
 

@@ -2618,11 +2618,15 @@ Upload Excel File
                   <table id="institute_name">
                     <tr>
                       <th>Institute Name</th>
+                      <th>Actions</th>
                     </tr>
                     {%for inst in get_institute%}
                     <tr>
                      
                       <td>{{inst.institute}}</td>
+                      <td class="action_delet">
+                        <a href="{% url 'deleteinstitute' inst.id %}" class="delt_btn_tbl">Delete</a>
+                        </td>
                     
                     </tr>
                     {%endfor%}

@@ -2234,7 +2234,7 @@ label.color_change{
               {%if request.user.is_superuser%}
               <li>
                 <a href="{% url 'supervisor' %}">
-                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  <i class="fa fa-user" aria-hidden="true"></i>
                   <p>Supervisors</p>
                 </a>
               </li>
@@ -2245,6 +2245,15 @@ label.color_change{
                 <a href="{% url 'user' %}">
                   <i class="fa fa-user" aria-hidden="true"></i>
                   <p>Users</p>
+                </a>
+              </li>
+              {%endif%}
+
+              {%if request.user.is_superuser%}
+              <li>
+                <a href="{% url 'change_password' %}">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  <p>Change Password</p>
                 </a>
               </li>
               {%endif%}
@@ -2534,9 +2543,10 @@ Upload Excel File
                 <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Institute</a></li>
                   <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Supervisors</a></li>
                   <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Users</a></li>
+                  <li><a href="{% url 'change_password' %}"><i class="fa fa-user"></i>Change Password</a></li>
                   <li><a href="#" id="downloadPdf"><i class="fa fa-user"></i>Export to PDF</a></li>
                   <li>
-                 
+
                     <a href="{% url 'logout' %}">
                       <i class="fa fa-sign-out" aria-hidden="true"></i>
                       <p>Logout</p>
