@@ -72,6 +72,7 @@ def generate_bar_chart(request):
             supervisor = Supervisor.objects.all()
         
             file_path = obj.upload.path
+            print(file_path)
             data = read_data(file_path)
 
 
