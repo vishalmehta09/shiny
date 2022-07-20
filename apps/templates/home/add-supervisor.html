@@ -2463,8 +2463,7 @@ Upload Excel File
                     <li><a href="{% url 'institute' %}"><i class="fa fa-building"></i>Institute</a></li>
                       <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Supervisors</a></li>
                       <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Users</a></li>
-                      <li>                      <a href="{% url 'logout' %}">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>
                         <p>Logout</p>
                       </a>
                     </li>
@@ -2611,6 +2610,7 @@ Upload Excel File
                       <th>Username</th>
                       <th>Password</th>
                       <th>Confirm Password</th>
+                      <th>Institute</th>
                       <th>Actions</th>
                     </tr>
                     {%for values in get_values%}
@@ -2619,6 +2619,7 @@ Upload Excel File
                       <td>{{values.username}}</td>
                       <td>*******</td>
                       <td>*******</td>
+                      <td>{{values.institute}}</td>
                       <td class="action_delet">
                         <a href="{% url 'deletesupervisor' values.id %}" class="delt_btn_tbl">Delete</a>
                         </td>
@@ -2644,15 +2645,26 @@ Upload Excel File
           {% csrf_token %}
           <div class="form-group">
             <label>Username</label>
-            <input type="text" name="username" value="" placeholder="user name">
+            <input type="text" name="username" value="" placeholder="Username">
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" name="password" value="" placeholder="password ">
+            <input type="password" name="password" value="" placeholder="Password ">
           </div>
           <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" name="confirm_password" value="" placeholder="confirm_password">
+            <input type="password" name="confirm_password" value="" placeholder="Confirm Password">
+          </div>
+          <div class="form-group">
+            <label>Institute</label>
+          <select class="form-select" aria-label="Default select example" name="institute" id="selected_value" required>
+            <option value="" selected>Select institute </option>
+            {% for u in institute %}
+            <option value="{{u.institute}}">{{ u.institute }}</option>
+            {% endfor %}
+           
+            <input type="hidden" value="is_admin">
+          </select>
           </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Submit</button>

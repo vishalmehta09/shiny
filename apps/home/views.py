@@ -3617,13 +3617,13 @@ def AddSupervisor(request):
             user.password=make_password(password)
             user.is_supervisor=True
             user.save()
-            supervisor = Supervisor.objects.create(username=username)
+            supervisor = Supervisor.objects.create(username=username,institute=Institution.objects.get(institute=request.POST.get('institute')))
             messages.success(request, "Supervisor created successfully")
             return redirect("/supervisor")
         else:
             messages.error(request, "Password doesn't matched")
             return redirect("/supervisor")
-    return render(request, 'home/add-supervisor.html', {"get_values":get_values})
+    return render(request, 'home/add-supervisor.html', {"get_values":get_values,'institute':Institution.objects.all()})
 
 def AddInstitute(request):
     get_institute= Institution.objects.all()
