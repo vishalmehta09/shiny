@@ -101,6 +101,7 @@ def generate_bar_chart(request):
             obj = obj.last()
         
             file_path = obj.upload.path
+            print(file_path)
         
             data = read_data(file_path)
 
