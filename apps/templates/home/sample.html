@@ -2260,7 +2260,7 @@ label.color_change{
 
      
               <li>
-                <a href="#" id="downloadPdf">
+                <a href="#" id="downloadPdf2">
                   <i class="fa fa-download" aria-hidden="true"></i>
                   <p>Export to PDF</p>
                 </a>
@@ -2517,7 +2517,8 @@ Upload Excel File
                 </li>
                 {% endif %}
                 {%if not request.user.is_superuser%}
-                <li><a href="#" id="downloadPdf"><i class="fa fa-download"></i>Export to PDF</a></li>    {%endif%}
+                <li><a href="#" id="downloadPdf"><i class="fa fa-user"></i>Export to PDF</a></li>{%endif%}
+        
                 {%if not request.user.is_superuser%}
               
                 <li>
@@ -2544,7 +2545,7 @@ Upload Excel File
                   <li><a href="{% url 'supervisor' %}"><i class="fa fa-plus"></i>Supervisors</a></li>
                   <li><a href="{% url 'user' %}"><i class="fa fa-user"></i>Users</a></li>
                   <li><a href="{% url 'change_password' %}"><i class="fa fa-user"></i>Change Password</a></li>
-                  <li><a href="#" id="downloadPdf"><i class="fa fa-user"></i>Export to PDF</a></li>
+                  <li><a href="#" id="downloadPdf3"><i class="fa fa-user"></i>Export to PDF</a></li>
                   <li>
 
                     <a href="{% url 'logout' %}">
@@ -3790,6 +3791,7 @@ if (df.includes('First Assist') && df.includes('Secondary Assist') &&!df.include
 
 // for PDF
 $('#downloadPdf').click(function(event) {
+  console.log("Trigger")
     // get size of report page
     var reportPageHeight = $('#main').innerHeight();
     var reportPageWidth = $('#main').innerWidth();
@@ -3848,7 +3850,138 @@ $('#downloadPdf').click(function(event) {
     pdf.text(today, 980,70).setFont('bold');
     
     // download the pdf
-    pdf.save('download.pdf');
+    pdf.save('dashboard.pdf');
+    
+  });
+
+
+
+  $('#downloadPdf2').click(function(event) {
+  console.log("Trigger")
+    // get size of report page
+    var reportPageHeight = $('#main').innerHeight();
+    var reportPageWidth = $('#main').innerWidth();
+  
+    console.log(reportPageHeight,"reportPageHeight")
+
+    var tb_h = $('#list_table').innerHeight();
+    var tb_w = $('#list_table').innerWidth();
+    var s="{{request.user.username}}";
+    // var todayDate = new Date().toISOString().slice(0, 10);
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.toLocaleString('default', { month: 'long' });
+    var yyyy = today.getFullYear();
+    var today = "Date"+ ":" +" "+ mm + ' ' + dd + ',' +" "+ yyyy;
+
+    // create a new canvas object that we will populate with all other canvas objects
+    var pdfCanvas = $('<canvas />').attr({
+      id: "canvaspdf",
+      width: reportPageWidth,
+      height: 1500
+    });
+
+    var ch = $('<canvas />')
+   
+    
+    // keep track canvas position
+    var pdfctx = $(pdfCanvas)[0].getContext('2d');
+    var pdfctxX = 0;
+    var pdfctxY = 0;
+    var buffer = 100;
+    
+    // for each chart.js chart
+    $("canvas").each(function(index) {
+      // get the chart height/width
+      var canvasHeight = $(this).innerHeight();
+      var canvasWidth = $(this).innerWidth();
+      
+      // draw the chart into the new canvas
+      pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
+      pdfctxX += canvasWidth + buffer;
+      
+      // our report page is in a grid pattern so replicate that in the new canvas
+      if (index % 2 === 1) {
+        pdfctxX = 0;
+        pdfctxY += canvasHeight + buffer;
+      }
+    });
+
+    // create new pdf and add our new canvas as an image
+    var pdf = new jsPDF('l', 'pt', [reportPageWidth, reportPageHeight]);
+   
+    pdf.addImage($(pdfCanvas)[0], 'PNG', 10, 100);
+    pdf.text( "Name:" +" "+s, 20,70);
+    pdf.text("Operative Log Report", 540,40,'center');
+    pdf.text(today, 980,70).setFont('bold');
+    
+    // download the pdf
+    pdf.save('dashboard.pdf');
+    
+  });
+
+
+  $('#downloadPdf3').click(function(event) {
+  console.log("Trigger")
+    // get size of report page
+    var reportPageHeight = $('#main').innerHeight();
+    var reportPageWidth = $('#main').innerWidth();
+  
+    console.log(reportPageHeight,"reportPageHeight")
+
+    var tb_h = $('#list_table').innerHeight();
+    var tb_w = $('#list_table').innerWidth();
+    var s="{{request.user.username}}";
+    // var todayDate = new Date().toISOString().slice(0, 10);
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.toLocaleString('default', { month: 'long' });
+    var yyyy = today.getFullYear();
+    var today = "Date"+ ":" +" "+ mm + ' ' + dd + ',' +" "+ yyyy;
+
+    // create a new canvas object that we will populate with all other canvas objects
+    var pdfCanvas = $('<canvas />').attr({
+      id: "canvaspdf",
+      width: reportPageWidth,
+      height: 1500
+    });
+
+    var ch = $('<canvas />')
+   
+    
+    // keep track canvas position
+    var pdfctx = $(pdfCanvas)[0].getContext('2d');
+    var pdfctxX = 0;
+    var pdfctxY = 0;
+    var buffer = 100;
+    
+    // for each chart.js chart
+    $("canvas").each(function(index) {
+      // get the chart height/width
+      var canvasHeight = $(this).innerHeight();
+      var canvasWidth = $(this).innerWidth();
+      
+      // draw the chart into the new canvas
+      pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
+      pdfctxX += canvasWidth + buffer;
+      
+      // our report page is in a grid pattern so replicate that in the new canvas
+      if (index % 2 === 1) {
+        pdfctxX = 0;
+        pdfctxY += canvasHeight + buffer;
+      }
+    });
+
+    // create new pdf and add our new canvas as an image
+    var pdf = new jsPDF('l', 'pt', [reportPageWidth, reportPageHeight]);
+   
+    pdf.addImage($(pdfCanvas)[0], 'PNG', 10, 100);
+    pdf.text( "Name:" +" "+s, 20,70);
+    pdf.text("Operative Log Report", 540,40,'center');
+    pdf.text(today, 980,70).setFont('bold');
+    
+    // download the pdf
+    pdf.save('dashboard.pdf');
     
   });
 

@@ -72,7 +72,6 @@ def generate_bar_chart(request):
             supervisor = Supervisor.objects.all()
         
             file_path = obj.upload.path
-            print(file_path)
             data = read_data(file_path)
 
 
@@ -949,7 +948,6 @@ def generate_bar_chart(request):
             for i in range(0, len(get_data_pgy)):
                 get_data_pgy[i] = int(get_data_pgy[i])
             get_g_pgy = data[data["PGY"].isin(get_data_pgy)]
-            print(get_g_pgy)
 
         context_di = {}
 
@@ -3321,7 +3319,6 @@ def generate_bar_chart(request):
                 roles = {}
                 line_chrt = data['Date']
                 for i in line_chrt.dropna().dt.strftime('%b-%Y'):
-                    print("hey",data[data['Date'].dt.strftime('%b-%Y') == i])
                     context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                
