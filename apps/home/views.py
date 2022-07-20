@@ -96,7 +96,8 @@ def generate_bar_chart(request):
             get_location = list(c.unique())
 
             d = data['Role']
-            get_role_data = list(d.unique())
+            filt_d = d.dropna()
+            get_role_data = list(filt_d.unique())
 
             e = data['PGY']
             get_pgy = list(e.unique())
@@ -148,7 +149,8 @@ def generate_bar_chart(request):
                     pass
 
             coded_case = []
-            for i in data['Coded Case']:
+            data_code = data['Coded Case']
+            for i in data_code.dropna():
 
                 coded_case.append(i)
 
@@ -223,7 +225,8 @@ def generate_bar_chart(request):
 
             
             role = []
-            for i in data['Role']:
+            m = data['Role']
+            for i in m.dropna():
                 role.append(i)
             
             dashboard1 = dict(Counter(role))
@@ -233,7 +236,8 @@ def generate_bar_chart(request):
     #add new code here
             specialty_chart = {}
             roles = {}
-            for i in data['Role']:
+            z=data['Role']
+            for i in z.dropna():
                 specialty_chart[i] = data[data['Role'] == i]
                 roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
@@ -341,7 +345,8 @@ def generate_bar_chart(request):
             
             site_chart = {}
             roles_list = {}
-            for i in data['Role']:
+            m = data['Role']
+            for i in m.dropna():
                 site_chart[i] = data[data['Role'] == i]
                 roles_list[i] = dict(Counter(site_chart[i]['Location']))
             
@@ -633,7 +638,8 @@ def generate_bar_chart(request):
         get_location = list(c.unique())
 
         d = data['Role']
-        get_role_data = list(d.unique())
+        filt = d.dropna()
+        get_role_data = list(filt.unique())
 
         e = data['PGY']
         get_pgy = list(e.unique())
@@ -949,7 +955,8 @@ def generate_bar_chart(request):
 
         staff = {}
 
-        for i in data['Staff']:
+        stf = data['Staff']
+        for i in stf.dropna():
 
             context_di[i] = data[data['Staff'] == i]
 
@@ -1033,7 +1040,8 @@ def generate_bar_chart(request):
                 #ADD ROLE
 
                 role=[]
-                for i in get_g_pgy['Role']:
+                pg_role = get_g_pgy['Role']
+                for i in pg_role.dropna():
                     role.append(i)
 
                 
@@ -1049,7 +1057,8 @@ def generate_bar_chart(request):
 
                 specialty_chart = {}
                 roles = {}
-                for i in get_g_pgy['Role']:
+                get_pg = get_g_pgy['Role']
+                for i in get_pg.dropna():
                     specialty_chart[i] = get_g_pgy[get_g_pgy['Role'] == i]
                     roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
@@ -1108,7 +1117,8 @@ def generate_bar_chart(request):
 
                 site_chart = {}
                 roles_list = {}
-                for i in get_g_pgy['Role']:
+                pg = get_g_pgy['Role']
+                for i in pg.dropna():
                     site_chart[i] = get_g_pgy[get_g_pgy['Role'] == i]
                     roles_list[i] = dict(Counter(site_chart[i]['Location']))
 
@@ -1210,7 +1220,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                for i in get_g_pgy['Coded Case']:
+                data_code = get_g_pgy['Coded Case']
+                for i in data_code.dropna():
                     coded_case.append(i)
             
                 dashboard63 = dict(Counter(coded_case))
@@ -1299,7 +1310,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                tdate_equal =  get_g_pgy[get_g_pgy['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_pgy[get_g_pgy['Date'] == str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
@@ -1730,7 +1741,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                for i in get_g_role['Coded Case']:
+                data_code = get_g_role['Coded Case']
+                for i in data_code:
                     coded_case.append(i)
             
                 dashboard23 = dict(Counter(coded_case))
@@ -1921,7 +1933,8 @@ def generate_bar_chart(request):
                 
             else:
                 role =[]
-                for i in data['Role']:
+                d_rl = data['Role']
+                for i in d_rl.dropna():
                     role.append(i)
                 
                 dashboard22 = dict(Counter(role))
@@ -1932,7 +1945,8 @@ def generate_bar_chart(request):
             
 
                 coded_case = []
-                for i in data['Coded Case']:
+                code_caase = data['Coded Case']
+                for i in code_caase.dropna():
                     coded_case.append(i)
             
                 dashboard31 = dict(Counter(coded_case))
@@ -1944,7 +1958,8 @@ def generate_bar_chart(request):
              
                 specialty_chart = {}
                 roles = {}
-                for i in get_g_specialty['Role']:
+                sub_role = get_g_specialty['Role']
+                for i in sub_role.dropna():
                     specialty_chart[i] = get_g_specialty[get_g_specialty['Role'] == i]
                     roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
@@ -2010,7 +2025,8 @@ def generate_bar_chart(request):
 
                 site_chart = {}
                 roles_list = {}
-                for i in get_g_specialty['Role']:
+                g_speciality = get_g_specialty['Role']
+                for i in g_speciality.dropna():
                     site_chart[i] = get_g_specialty[get_g_specialty['Role'] == i]
                     roles_list[i] = dict(Counter(site_chart[i]['Location']))
 
@@ -2148,7 +2164,8 @@ def generate_bar_chart(request):
 
 
                 role=[]
-                for i in get_g_specialty['Role']:
+                g_spl = get_g_specialty['Role']
+                for i in g_spl.dropna():
                     role.append(i)
                 
                 dashboard121 = dict(Counter(role))
@@ -2205,7 +2222,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                for i in get_g_specialty['Coded Case']:
+                spec_coded = get_g_specialty['Coded Case']
+                for i in spec_coded.dropna():
                     coded_case.append(i)
 
                 total_cases = len(get_g_specialty)
@@ -2417,7 +2435,9 @@ def generate_bar_chart(request):
                 total_roles = []
                 total_sub=[]
                 raw_list=[]
-                for i in data['Role']:
+                
+                ds_role = data['Role']
+                for i in ds_role.dropna():
                     sub_specialty[i] = data[data['Role'] == i]
                     roles[i] = dict(Counter(sub_specialty[i]['Sub-Specialty']))
 
@@ -2486,8 +2506,8 @@ def generate_bar_chart(request):
                 total_site = []
                 roles_loc = {}
                 loc_site = {}
-
-                for i in data['Role']:
+                dt_rl = data['Role']
+                for i in dt_rl.dropna():
                     loc_site[i] = data[data['Role'] == i]
                     roles_loc[i] = dict(Counter(loc_site[i]['Location']))
 
@@ -2602,7 +2622,8 @@ def generate_bar_chart(request):
             if request.POST.getlist("Location"):
 
                 role=[]
-                for i in get_g_location['Role']:
+                loc_role = get_g_location['Role']
+                for i in loc_role.dropna():
                     role.append(i)
                 
                 dashboard121 = dict(Counter(role))
@@ -2690,7 +2711,8 @@ def generate_bar_chart(request):
 
                 specialty_chart = {}
                 roles = {}
-                for i in get_g_location['Role']:
+                loc_role = get_g_location['Role']
+                for i in loc_role.dropna():
                     specialty_chart[i] = get_g_location[get_g_location['Role'] == i]
                     roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
@@ -2750,7 +2772,8 @@ def generate_bar_chart(request):
 
                 site_chart = {}
                 roles_list = {}
-                for i in get_g_location['Role']:
+                loc_role = get_g_location['Role']
+                for i in loc_role.dropna():
                     site_chart[i] = get_g_location[get_g_location['Role'] == i]
                     roles_list[i] = dict(Counter(site_chart[i]['Location']))
 
@@ -2846,7 +2869,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                for i in get_g_location['Coded Case']:
+                code_caase = get_g_location['Coded Case']
+                for i in code_caase.dropna():
                     coded_case.append(i)
             
                 dashboard43 = dict(Counter(coded_case))
@@ -3043,7 +3067,8 @@ def generate_bar_chart(request):
             else:
                 site_chart = {}
                 roles_list = {}
-                for i in data['Role']:
+                rs = data['Role']
+                for i in rs.dropna():
                     site_chart[i] = data[data['Role'] == i]
                     roles_list[i] = dict(Counter(site_chart[i]['Location']))
 
@@ -3157,7 +3182,8 @@ def generate_bar_chart(request):
 
 
                 role=[]
-                for i in get_g_staff['Role']:
+                stf_role = get_g_staff['Role']
+                for i in stf_role.dropna():
                     role.append(i)
                 
                 dashboard212 = dict(Counter(role))
@@ -3177,7 +3203,8 @@ def generate_bar_chart(request):
                 # values1 = list(dashboard3.values())
                 specialty_chart = {}
                 roles = {}
-                for i in get_g_staff['Role']:
+                fil = get_g_staff['Role']
+                for i in fil.dropna():
                     specialty_chart[i] = get_g_staff[get_g_staff['Role'] == i]
                     roles[i] = dict(Counter(specialty_chart[i]['Sub-Specialty']))
 
@@ -3238,7 +3265,8 @@ def generate_bar_chart(request):
 
                 site_chart = {}
                 roles_list = {}
-                for i in get_g_staff['Role']:
+                fils = get_g_staff['Role']
+                for i in fils.dropna():
                     site_chart[i] = get_g_staff[get_g_staff['Role'] == i]
                     roles_list[i] = dict(Counter(site_chart[i]['Location']))
                 
@@ -3291,7 +3319,9 @@ def generate_bar_chart(request):
 
                 context_dict = {}
                 roles = {}
-                for i in data['Date'].dt.strftime('%b-%Y'):
+                line_chrt = data['Date']
+                for i in line_chrt.dropna().dt.strftime('%b-%Y'):
+                    print("hey",data[data['Date'].dt.strftime('%b-%Y') == i])
                     context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                
@@ -3335,7 +3365,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                for i in get_g_staff['Coded Case']:
+                code_caase = get_g_staff['Coded Case']
+                for i in code_caase.dropna():
                     coded_case.append(i)
             
                 dashboard123 = dict(Counter(coded_case))
