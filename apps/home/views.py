@@ -3666,6 +3666,7 @@ def AddInstitute(request):
 
 def AddUser(request):
     get_user= NewUser.objects.filter(is_superuser=False, is_supervisor=False)
+    print(get_user)
     institute = Institution.objects.all()
     supervisor = Supervisor.objects.all()
     if request.method =="POST":
@@ -3752,6 +3753,11 @@ def delete(request,id):
 
 def deletesupervisor(request,id):
     delsupervisor=Supervisor.objects.get(id=id)
+    try:
+        ob = NewUser.objects.get(username=delsupervisor)
+        ob.delete()
+    except:
+        pass
     delsupervisor.delete()
     return redirect('supervisor')
 
