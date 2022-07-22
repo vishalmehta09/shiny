@@ -2388,6 +2388,9 @@ Upload Excel File
                     <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                     {%elif request.user.is_superuser%}
                     <img src="/profile_pic" alt="Profile Photo">
+
+                    {%elif request.user.is_supervisor and request.user.profile_photo %}
+                    <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                    
                     {%else%}
                     <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
@@ -2466,6 +2469,8 @@ Upload Excel File
                               <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                               {%elif request.user.is_superuser%}
                               <img src="/profile_pic" alt="Profile Photo">
+                              {%elif request.user.is_supervisor and request.user.profile_photo %}
+                              <img src="{{request.user.profile_photo.url}}" alt="Profile Photo">
                              
                               {%else%}
                               <div class="text-center align-center a"  style="background: #f9fafb; height: 100px;">
@@ -2691,7 +2696,7 @@ Upload Excel File
                       <i class="fa fa-pie-chart" aria-hidden="true"></i>
                     </div>
                     <div class="col-md-9 design_txt">
-                      <p>Cases last as month as primary </p>
+                      <p>Cases last month as primary </p>
                       <h4>{{count_of_last_month}}</h4>  
                       </div>
                   </div>

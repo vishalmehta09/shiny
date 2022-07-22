@@ -113,7 +113,7 @@ def generate_bar_chart(request):
                 else:
                     pass
            
-            date_equal =  data[data['Date'] == str(current_year)+'-'+'07-01'] 
+            date_equal =  data[data['Date'] >= str(current_year)+'-'+'07-01'] 
             this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
             count_of_current = 0
             for i in this_year_ps:
@@ -591,7 +591,7 @@ def generate_bar_chart(request):
                 count_of_current_year+=1
             else:
                 pass
-        date_equal =  data[data['Date'] == str(current_year)+'-'+'07-01'] 
+        date_equal =  data[data['Date'] >= str(current_year)+'-'+'07-01'] 
         this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
         count_of_current = 0
@@ -1308,7 +1308,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_pgy[get_g_pgy['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_pgy[get_g_pgy['Date'] >= str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
@@ -1755,7 +1755,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_role[get_g_role['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_role[get_g_role['Date'] >= str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
@@ -2235,7 +2235,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_specialty[get_g_specialty['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_specialty[get_g_specialty['Date'] >= str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon'
 
                 count_of_current = 0
@@ -2885,7 +2885,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_location[get_g_location['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_location[get_g_location['Date'] >= str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
@@ -3380,7 +3380,7 @@ def generate_bar_chart(request):
                         count_of_current_year+=1
                     else:
                         pass
-                date_equal =  get_g_staff[get_g_staff['Date'] == str(current_year)+'-'+'07-01'] 
+                date_equal =  get_g_staff[get_g_staff['Date'] >= str(current_year)+'-'+'07-01'] 
                 this_year_ps = date_equal['Role'] == 'Primary Surgeon' 
 
                 count_of_current = 0
@@ -3713,6 +3713,11 @@ def AddUser(request):
     return render(request, 'home/add-user.html', {"get_user":get_user, "institute":institute, "supervisor":supervisor})
 
 def UserProfile(request):
+    try:
+        get_institute=Supervisor.objects.get(username=request.user)
+        final_get_institute=get_institute.institute
+    except:
+        final_get_institute=''
 
     if request.method =="POST":
  
@@ -3721,7 +3726,7 @@ def UserProfile(request):
         get_profile.save()
         messages.success(request, "Profile Updated Sucessfully")
         return redirect("/Profile")
-    return render(request, 'home/user-profile.html')
+    return render(request, 'home/user-profile.html',{"final_get_institute":final_get_institute})
 
 def Procedure(request):
     try:

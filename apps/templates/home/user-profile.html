@@ -2623,7 +2623,7 @@ div.a {
 
                         </div>
 
-                      
+                      {% if not request.user.is_supervisor %}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -2654,6 +2654,25 @@ div.a {
                                     </div>
                                 </div>
                         </div>
+                        {%endif%}
+                        {% if request.user.is_supervisor %} 
+                        <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label>Username</label>
+                                  <input type="text" name="" value="{{request.user.username}}" placeholder="First Name" readonly>
+                              </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Affiliated institution</label>
+                                  <select class="form-select" aria-label="Default select example">
+                                    <option selected>{{final_get_institute}}</option>
+                                  </select>
+                              </div>
+                              </div>
+                      </div>
+                        {%endif%}
                         <div class="row">
                             <div class="col-md-6">
                                 
