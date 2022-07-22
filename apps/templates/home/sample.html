@@ -3063,9 +3063,11 @@ role_bar = document.getElementById('Role-bar-chart');
           legend: {
         display: true,
         position: 'bottom',
+    
     }, 
         scales: {
             xAxes: [{    
+              offset: true,
           gridLines: {
                 drawOnChartArea: false,
             },
@@ -3178,9 +3180,10 @@ role_bar = document.getElementById('Role-bar-chart');
     }, 
             responsive: true
         },
+        
     };
         }
-
+      
   //for second one 
   if (df == 'Secondary Assist'){
           role_pie_config = {
@@ -3201,8 +3204,11 @@ role_bar = document.getElementById('Role-bar-chart');
         options: { 
           title: {
       display: true,
+      
       text:'Procedures by Role'
           },
+ 
+          
           plugins: 
            {
             datalabels:
@@ -3214,13 +3220,20 @@ role_bar = document.getElementById('Role-bar-chart');
                 display: true,
                 color: '#fff',
             }
+            
     },       
           legend: {
         display: true,
         position: 'bottom'
     }, 
+    
+
             responsive: true
         },
+  
+
+
+  
     };
         }
 
@@ -3349,6 +3362,7 @@ role_bar = document.getElementById('Role-bar-chart');
     },       
           legend: {
         display: true,
+        
         position: 'bottom'
     }, 
             responsive: true
@@ -3378,6 +3392,7 @@ if (df.includes('Primary Surgeon') && df.includes('First Assist') && !df.include
         options: { 
           title: {
       display: true,
+     
       text:'Procedures by Role'
           },
           plugins: 
@@ -3580,18 +3595,48 @@ if (df.includes('First Assist') && df.includes('Secondary Assist') &&!df.include
       
     }
   },
+ 
    title: {
       display: true,
       text: 'Procedures by Sub-Specialty '
       
           },
+          scales: {
+        xAxes: [{
+          ticks: {
+                beginAtZero: true,
+               
+            },
+            stacked: true,
+            offset: true,
+
+            
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }],
+        yAxes: [{
+          ticks: {
+                beginAtZero: true
+            },
+            stacked: true,
+            gridLines: {
+                drawOnChartArea: false
+            }
+        }],
+      },
             responsive: true,
             legend: {
         display: true,
+   
         position: 'bottom',
             },
-        }, 
+          },
+        
+ 
+ 
       };
+      
 
 
     var myPieChart = new Chart(specialty_bar, specialty_bar_config);
@@ -3621,9 +3666,13 @@ if (df.includes('First Assist') && df.includes('Secondary Assist') &&!df.include
           scales: {
         xAxes: [{
           ticks: {
-                beginAtZero: true
+                beginAtZero: true,
+               
             },
             stacked: true,
+            offset: true,
+
+            
             gridLines: {
                 drawOnChartArea: false
             }
