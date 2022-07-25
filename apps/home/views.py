@@ -89,7 +89,8 @@ def generate_bar_chart(request):
 
     
             a = data['Staff']
-            get_staff = list(a.unique())
+            remove_na_a = a.dropna()
+            get_staff = list(remove_na_a.unique())
 
             b = data['Sub-Specialty']
             get_sub_specialty = list(b.unique())
@@ -630,8 +631,9 @@ def generate_bar_chart(request):
                 pass
 
         a = data['Staff']
+        rem_na = a.dropna()
 
-        get_staff = list(a.unique())
+        get_staff = list(rem_na.unique())
 
         b = data['Sub-Specialty']
         get_sub_specialty = list(b.unique())
@@ -1232,8 +1234,9 @@ def generate_bar_chart(request):
                 context_dib = {}
 
                 staffs = {}
+                get_pgy_staff_filt = get_g_pgy['Staff']
 
-                for i in get_g_pgy['Staff']:
+                for i in get_pgy_staff_filt.dropna():
                     context_dib[i] =  get_g_pgy[get_g_pgy['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
@@ -1624,8 +1627,9 @@ def generate_bar_chart(request):
                 context_dib = {}
 
                 staffs = {}
+                role_staff_filt = get_g_role['Staff']
 
-                for i in get_g_role['Staff']:
+                for i in role_staff_filt.dropna():
                     context_dib[i] =  get_g_role[get_g_role['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
@@ -2092,8 +2096,9 @@ def generate_bar_chart(request):
                 context_dib = {}
 
                 staffs = {}
+                filt_stf = get_g_specialty['Staff']
 
-                for i in get_g_specialty['Staff']:
+                for i in filt_stf.dropna():
                     context_dib[i] =  get_g_specialty[get_g_specialty['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
@@ -2638,8 +2643,9 @@ def generate_bar_chart(request):
                 context_dib = {}
 
                 staffs = {}
+                filter_staff_loc = get_g_location['Staff']
 
-                for i in get_g_location['Staff']:
+                for i in filter_staff_loc.dropna():
                     context_dib[i] =  get_g_location[get_g_location['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
@@ -3112,7 +3118,9 @@ def generate_bar_chart(request):
 
                 staffs = {}
 
-                for i in get_g_staff['Staff']:
+                get_g_staff_filt = get_g_staff['Staff']
+
+                for i in get_g_staff_filt.dropna():
                     context_dib[i] =  get_g_staff[get_g_staff['Staff'] == i]
                     staffs[i] = dict(Counter(context_dib[i]['Role']))
 
