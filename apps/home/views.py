@@ -51,6 +51,7 @@ def generate_bar_chart(request):
 
 
       
+
     if request.method == 'GET':
 
         institute = Institution.objects.all()
@@ -75,10 +76,12 @@ def generate_bar_chart(request):
             data = read_data(file_path)
 
 
+
             context_di = {}
             staff = {}
+            stf_na = data['Staff']
             
-            for i in data['Staff']:
+            for i in stf_na.dropna():
                 context_di[i] =  data[data['Staff'] == i]
 
 
