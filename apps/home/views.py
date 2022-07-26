@@ -1746,7 +1746,8 @@ def generate_bar_chart(request):
                 }
 
                 coded_case = []
-                data_code = get_g_role['Coded Case']
+                role_code_filt = get_g_role['Coded Case']
+                data_code = role_code_filt.dropna()
                 for i in data_code:
                     coded_case.append(i)
             
