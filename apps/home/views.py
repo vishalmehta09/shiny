@@ -1494,8 +1494,8 @@ def generate_bar_chart(request):
                 # add Role
 
                 role =[]
-                
-                for i in get_g_role['Role']:
+                role_fil = get_g_role['Role']
+                for i in role_fil.dropna():
                     role.append(i)
                 
                 dashboard111 = dict(Counter(role))
