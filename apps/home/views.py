@@ -103,7 +103,8 @@ def generate_bar_chart(request):
             get_role_data = list(filt_d.unique())
 
             e = data['PGY']
-            get_pgy = list(e.unique())
+            e_pgy = e.dropna()
+            get_pgy = list(e_pgy.unique())
     
 
             total_cases = len(data)
@@ -457,8 +458,9 @@ def generate_bar_chart(request):
      
             context_dict = {}
             roles = {}
+            pg_fil = data['Date']
             # print(data['Date'].dt.strftime('%b-%Y'))
-            for i in data['Date'].dt.strftime('%b-%Y'):
+            for i in pg_fil.dropna().dt.strftime('%b-%Y'):
                 context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
@@ -646,7 +648,9 @@ def generate_bar_chart(request):
         get_role_data = list(filt.unique())
 
         e = data['PGY']
-        get_pgy = list(e.unique())
+        e_pgy = e.dropna()
+        get_pgy = list(e_pgy.unique())
+     
 
                              
 
@@ -1701,7 +1705,8 @@ def generate_bar_chart(request):
                 
                 context_dict = {}
                 roles = {}
-                for i in get_g_role['Date'].dt.strftime('%b-%Y'):
+                get_g_dt = get_g_role['Date']
+                for i in get_g_dt.dropna().dt.strftime('%b-%Y'):
                     context_dict[i] =  get_g_role[get_g_role['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
@@ -2184,7 +2189,8 @@ def generate_bar_chart(request):
                 
                 context_dict = {}
                 roles = {}
-                for i in get_g_specialty['Date'].dt.strftime('%b-%Y'):
+                get_g_spl_date = get_g_specialty['Date']
+                for i in get_g_spl_date.dropna().dt.strftime('%b-%Y'):
                     context_dict[i] =  get_g_specialty[get_g_specialty['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
 
@@ -2831,7 +2837,8 @@ def generate_bar_chart(request):
 
                 context_dict = {}
                 roles = {}
-                for i in data['Date'].dt.strftime('%b-%Y'):
+                filt_lo = data["Date"]
+                for i in filt_lo.dropna().dt.strftime('%b-%Y'):
                     context_dict[i] =  get_g_location[get_g_location['Date'].dt.strftime('%b-%Y') == i]
                     roles[i] = dict(Counter(context_dict[i]['Role']))
                 
@@ -3569,7 +3576,8 @@ def generate_bar_chart(request):
 
             context_dict = {}
             roles = {}
-            for i in data['Date'].dt.strftime('%b-%Y'):
+            post_up = data['Date']
+            for i in post_up.dropna().dt.strftime('%b-%Y'):
                 context_dict[i] =  data[data['Date'].dt.strftime('%b-%Y') == i]
                 roles[i] = dict(Counter(context_dict[i]['Role']))
             
