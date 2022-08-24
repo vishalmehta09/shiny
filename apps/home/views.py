@@ -309,7 +309,11 @@ def generate_bar_chart(request):
                 i['Total'] = total
                 polished_data.append(i)
 
+            name_sets = []
             shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+            for i in range(len(shorted_data_list)):
+                name_sets.append(shorted_data_list[i]['name'])
+                
             p_spec_list = []
             f_spec_list = []
             s_spec_list = []
@@ -512,7 +516,7 @@ def generate_bar_chart(request):
           
 
             context = { 'keys':keys , 'values':values,'sub_speciality_label':total_sub,
-            "labels_data":total_sub,
+            "labels_data":name_sets,
             "final_data_specialty_chart":datas,
             "granted_Data":datas_site,
             "labels_site":total_site,
@@ -2477,7 +2481,11 @@ def generate_bar_chart(request):
                     total = i['Primary Surgeon'] + i['First Assist'] + i['Secondary Assist']
                     i['Total'] = total
                     polished_data.append(i)
+                
+                name_label = []
                 shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                for i in range(len(shorted_data_list)):
+                    name_label.append(shorted_data_list[i]['name'])
                 p_spec_list = []
                 f_spec_list = []
                 s_spec_list = []
@@ -3479,6 +3487,12 @@ def generate_bar_chart(request):
                     polished_data.append(i)
 
                 shorted_data_list = sorted(polished_data, key=lambda x: x['Total'], reverse=True)
+                print("here=---",shorted_data_list)
+                label_data = []
+                for  i in shorted_data_list:
+                    label_data.append(i['name'])
+                
+
                 p_spec_list = []
                 f_spec_list = []
                 s_spec_list = []
@@ -3625,7 +3639,7 @@ def generate_bar_chart(request):
             except:
                 users = NewUser.objects.filter(is_superuser=False,is_supervisor=False)
             
-            context = {"keys":keys,"values":values,"final_data_specialty_chart":datas, "labels_data":total_sub, 'granted_Data': datas_site, 'labels_site': total_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
+            context = {"keys":keys,"values":values,"final_data_specialty_chart":datas, "labels_data":name_label, 'granted_Data': datas_site, 'labels_site': total_site , 'final_data': final_final_data, 'labels': labels,"final_data_list":datasets,"names":name_set, "get_staff":get_staff,"get_role_data":get_role_data,"get_pgy":get_pgy, "get_sub_specialty":get_sub_specialty, "get_location":get_location, "dashboard23":dashboard23, "total_cases":total_cases, "count_of_current_year":count_of_current_year, "count_of_current":count_of_current,"count_of_last_month":count_of_last_month, 'count_of_this_month':count_of_this_month,'institute':institute, 'supervisor':supervisor,
 
             "users":users}
             if request.FILES.get('document'):
